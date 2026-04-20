@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frontier AI and the Future of Intelligence — Raia Hadsell, Google DeepMind — Research Notes</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #5b5b55;
+    --rule: #e6e3d9;
+    --link: #0969da;
+    --mark: #fff3a0;
+    --callout-bg: #eef4fa;
+    --callout-bar: #5684d6;
+    --tldr-bg: #fbf6e4;
+    --tldr-bar: #c8a93a;
+    --ann-bg: #f4f1e8;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+
+  body {
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 48px 72px;
+  }
+
+  .eyebrow {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font: 600 38px/1.15 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+
+  .meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .meta .dot { margin: 0 8px; color: var(--rule); }
+
+  .tldr {
+    background: var(--tldr-bg);
+    border-left: 3px solid var(--tldr-bar);
+    padding: 18px 22px 14px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  .tldr h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a6a1a;
+    margin: 0 0 10px;
+  }
+  .tldr ul { margin: 0; padding: 0 0 0 18px; }
+  .tldr li { margin: 4px 0; font-size: 15px; }
+
+  .columns {
+    columns: 2;
+    column-gap: 2.25rem;
+    column-fill: balance;
+    column-rule: 1px solid var(--rule);
+  }
+
+  .columns > section {
+    break-inside: avoid-column;
+    margin: 0 0 18px;
+  }
+
+  .columns h2 {
+    font: 600 19px/1.25 Charter, "Iowan Old Style", Georgia, serif;
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .columns h2 .ts {
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: rgba(0,0,0,0.04);
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+
+  .columns p {
+    margin: 0 0 10px;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .columns mark {
+    background: var(--mark);
+    padding: 0 2px;
+    border-radius: 1px;
+  }
+
+  .columns sup {
+    font-size: 10px;
+    vertical-align: super;
+    line-height: 0;
+    margin-left: 1px;
+  }
+  .columns sup a {
+    color: var(--link);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .columns aside.callout {
+    break-inside: avoid;
+    background: var(--callout-bg);
+    border-left: 3px solid var(--callout-bar);
+    padding: 12px 14px;
+    margin: 10px 0 14px;
+    font-size: 14px;
+    color: #1a2742;
+    border-radius: 2px;
+  }
+
+  .annotations {
+    margin: 48px 0 0;
+    padding: 28px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .annotations h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .annotations ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.25rem; }
+  .annotations li {
+    break-inside: avoid;
+    background: var(--ann-bg);
+    padding: 10px 12px;
+    margin: 0 0 10px;
+    border-radius: 2px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+  }
+  .annotations .ann-num {
+    font: 600 12px/1.4 Charter, Georgia, serif;
+    color: #7a6a1a;
+    min-width: 18px;
+  }
+  .annotations a { color: var(--link); text-decoration: none; }
+  .annotations a:hover { text-decoration: underline; }
+
+  .footer {
+    margin: 48px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer a { color: var(--link); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 860px) {
+    .page { padding: 32px 22px 48px; }
+    h1 { font-size: 30px; }
+    .columns, .annotations ol { columns: 1; column-rule: none; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { padding: 24px; max-width: none; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">YouTube Research · April 19, 2026</p>
+    <h1>Frontier AI and the Future of Intelligence — Raia Hadsell, Google DeepMind</h1>
+    <p class="meta">
+      <strong>AI Engineer</strong>
+      <span class="dot">·</span>April 18, 2026
+      <span class="dot">·</span>24:38
+      <span class="dot">·</span><a href="https://www.youtube.com/watch?v=zZsTVBXcbow" rel="noopener">Watch on YouTube →</a>
+    </p>
+
+    <div class="tldr">
+      <h2>TL;DR</h2>
+      <ul>
+        <li>Hadsell, who now leads ~1,200 scientists across ten DeepMind labs<sup><a href="#ann-11">11</a></sup>, uses the talk to show that the frontier of AI is no longer just language models.</li>
+        <li>She picks three non-LLM bets — omnimodal embeddings, weather forecasting, and playable world models — to argue where the next compounding gains will come from.</li>
+        <li>Embedding models, inspired by the brain's "Jennifer Aniston cell", give a single vector for text, video, audio and PDFs, with Matryoshka nesting so you can trade cost for expressiveness.</li>
+        <li>GraphCast, GenCast and the new cyclone-first FGN have moved AI weather models from research curiosity to operational use — the US National Hurricane Center is already running FGN live.</li>
+        <li>Genie 3 is a real-time, playable, memory-consistent world model; Hadsell ends with a pitch that adversarially prompting someone else's world is a new genre of gaming and a tool for education.</li>
+      </ul>
+    </div>
+
+    <div class="columns">
+
+      <section>
+        <h2>Three things that aren't language models<span class="ts">[01:19]</span></h2>
+        <p>Hadsell opens with a decades-at-a-glance biography — 90s philosophy of religion undergrad, a 2000s pivot into computer science and a PhD on convolutional and Siamese networks with Yann LeCun<sup><a href="#ann-2">2</a></sup>, then joining DeepMind in the early 2010s when it was "a small group of 30, 40 people" working on Atari, Go and StarCraft.<sup><a href="#ann-11">11</a></sup> She now runs roughly 1,200 researchers and engineers across ten labs and is the UK's AI ambassador.</p>
+        <p>The organising idea of the talk is deliberately contrarian for a 2026 audience: <mark>"the theme of this talk overall is things that are not directly language models."</mark> She picks three — embeddings, weather, world models — to show that DeepMind's frontier work still reaches well beyond the chatbot stack.</p>
+      </section>
+
+      <section>
+        <h2>The Jennifer Aniston cell<span class="ts">[05:05]</span></h2>
+        <p>To motivate embeddings, Hadsell borrows from neuroscience. In the human medial temporal lobe, <mark>a small group of neurons will activate for a specific concept — a particular person or place — regardless of modality</mark>: a written name, a photograph, a voice clip all light up the same cells.<sup><a href="#ann-1">1</a></sup> The brain uses this invariance for fast retrieval, recognition and comparison.</p>
+        <p>Embedding models are the artificial analogue: a network trained with a contrastive loss to place the same concept at the same point in a vector space, no matter the input modality. Hadsell notes this is a direct descendant of the Siamese-network work she did under LeCun in the 2000s<sup><a href="#ann-2">2</a></sup> — "sometimes we want to generate, sometimes we want to retrieve," and the retriever half has quietly become as important as the generator.</p>
+      </section>
+
+      <section>
+        <h2>Gemini Embedding 2 and the Matryoshka trick<span class="ts">[07:32]</span></h2>
+        <p>Google's new Gemini Embedding 2 is the practical payoff.<sup><a href="#ann-4">4</a></sup> It is, in her framing, "fully omnimodal": <mark>a single vector that represents text up to 8K tokens, 128 seconds of video, 80 seconds of audio, or a full PDF</mark>. Because it's derived from Gemini itself, it inherits the base model's world knowledge rather than stapling together modality-specific encoders end-to-end.</p>
+        <p>The other half of the story is Matryoshka Representation Learning<sup><a href="#ann-3">3</a></sup>: the same network produces nested embeddings — start a retrieval with 256 dimensions for cheap approximate recall, then widen out to more dimensions only when you need the precision. One model, many operating points.</p>
+        <aside class="callout">
+          MRL, introduced by Kusupati et al. at NeurIPS 2022, reports up to <strong>14× smaller vectors</strong> at the same ImageNet-1K accuracy as fixed-width baselines, with no extra inference cost — which is why nearly every major embedding release in 2024–2026 (OpenAI's v3, Cohere, Gemini) now ships Matryoshka-style dimensionality.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Learning the weather from 40 years of data<span class="ts">[09:52]</span></h2>
+        <p>The second "not a language model" story starts with a question from the UK Met Office: can neural networks beat physics simulations at rainfall?<sup><a href="#ann-12">12</a></sup> The answer, given forty years of global reanalysis data, was yes — and the team has iterated three times since.</p>
+        <p>GraphCast runs a spherical graph neural network over an icosahedral mesh that wraps the Earth, auto-regressively predicting roughly one hundred atmospheric variables — wind, temperature, humidity — up to fifteen days out.<sup><a href="#ann-5">5</a></sup> Hadsell uses Hurricane Lee as the canonical demo: <mark>GraphCast nailed the Nova Scotia landfall nine days in advance, versus six days for the gold-standard physics models</mark> — three days that matter when you're evacuating a coast.<sup><a href="#ann-8">8</a></sup></p>
+        <p>GenCast went further by making the model probabilistic, which matters because <mark>"the weather is fundamentally chaotic"</mark> and a point forecast throws away the tails you actually want to plan for. Against 1,320 gold-standard benchmarks GenCast is more accurate 97% of the time, and <mark>generates a 15-day forecast in eight minutes on a single chip instead of hours on a supercomputer</mark>.<sup><a href="#ann-6">6</a></sup></p>
+        <p>The current frontier is FGN — a Functional Generative Network that skips the "predict weather, then detect cyclones" pipeline and instead learns cyclone category, trajectory, wind speed and eye formation directly end-to-end. It's already running operationally at the US National Hurricane Center.<sup><a href="#ann-7">7</a></sup></p>
+      </section>
+
+      <section>
+        <h2>From Genie 1 to Genie 3<span class="ts">[14:33]</span></h2>
+        <p>The final act is world models, which Hadsell traces back to DeepMind's long line of Atari, Go, StarCraft and MuJoCo work. The shift: stop training just the agent, start generating the environment itself.</p>
+        <p>Genie 1 produced a few seconds of a 2D platformer that responded to left/right input. Genie 2 lifted that into slow, interactive 3D. And in parallel, Veo 3 showed that photoreal video generation was solved — but non-interactive and not real-time.<sup><a href="#ann-10">10</a></sup> Genie 3 unifies the two: <mark>a playable, real-time, high-quality 3D world you can steer through a text prompt</mark>.<sup><a href="#ann-9">9</a></sup> Hadsell's live demo didn't cooperate with the conference Wi-Fi, but she described walking a muddy lane in Kent, skiing, and inhabiting an origami lizard world.</p>
+        <aside class="callout">
+          The consistency claim is the technically interesting one: you can run in one direction for a minute, turn around, run back, and <strong>the world is where you left it</strong> — a hard problem for diffusion video models, which usually forget. Genie 3 is now rolled out to Google AI Ultra subscribers.
+        </aside>
+        <p>Her closing pitch is about what this unlocks. <mark>"Adversarially prompting your experience of a world"</mark> is a new genre of gaming — inject surprises into a friend's scene in real time — and the same capability reframes education as something you can step inside of rather than read about.</p>
+      </section>
+
+    </div>
+
+    <section class="annotations">
+      <h2>Annotations &amp; Sources</h2>
+      <ol>
+        <li id="ann-1">
+          <span class="ann-num">1</span>
+          <span class="ann-body">
+            Quiroga, Reddy, Kreiman, Koch &amp; Fried (<em>Nature</em> 435, 2005) recorded from medial temporal lobe neurons in epilepsy patients and found individual cells that fired selectively to many different images of the same person — most famously Jennifer Aniston — and even to their written name, evidence for an abstract, cross-modal representation.
+            <a href="https://www.nature.com/articles/nature03687" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-2">
+          <span class="ann-num">2</span>
+          <span class="ann-body">
+            Hadsell completed her PhD under Yann LeCun at NYU on Siamese-net embeddings and deep learning for off-road robots — work that underpins modern contrastive/triplet losses. In November 2025 she was appointed an AI Ambassador to the UK's Department for Science, Innovation and Technology.
+            <a href="https://raiahadsell.com/index.html" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-3">
+          <span class="ann-num">3</span>
+          <span class="ann-body">
+            Kusupati et al. (NeurIPS 2022) train a single embedding whose nested prefixes are each independently usable, yielding up to 14× smaller vectors at matching ImageNet-1K accuracy and real-world retrieval speedups with no extra inference cost.
+            <a href="https://arxiv.org/abs/2205.13147" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-4">
+          <span class="ann-num">4</span>
+          <span class="ann-body">
+            Announced in March 2026, Gemini Embedding 2 is Google's first natively multimodal embedding model, mapping text, images, video (up to 128s), audio (up to 80s) and documents into a single vector space via the Gemini API and Vertex AI.
+            <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-embedding-2/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-5">
+          <span class="ann-num">5</span>
+          <span class="ann-body">
+            Lam et al. (<em>Science</em>, 2023) present GraphCast, a graph neural network on a multi-scale icosahedral mesh that issues 10-day 0.25° forecasts of 227 variables in under a minute and beats ECMWF's HRES on more than 90% of 1,380 targets.
+            <a href="https://www.science.org/doi/10.1126/science.adi2336" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-6">
+          <span class="ann-num">6</span>
+          <span class="ann-body">
+            Price et al. (<em>Nature</em>, Dec 2024) introduce GenCast, a diffusion-based ensemble model on a 0.25° sphere that generates a stochastic 15-day forecast in ~8 minutes on a TPUv5 and outperforms ECMWF's ENS on 97.2% of 1,320 target/lead-time combinations.
+            <a href="https://www.nature.com/articles/s41586-024-08252-9" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-7">
+          <span class="ann-num">7</span>
+          <span class="ann-body">
+            In June 2025 DeepMind announced a partnership with the U.S. National Hurricane Center to incorporate its experimental Functional Generative Network cyclone model — which produces 50-member 15-day track-and-intensity ensembles and beats ENS's 5-day track error by ~140 km — into NHC's live forecasting workflow.
+            <a href="https://deepmind.google/blog/how-were-supporting-better-tropical-cyclone-prediction-with-ai/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-8">
+          <span class="ann-num">8</span>
+          <span class="ann-body">
+            NOAA's official Tropical Cyclone Report (AL132023) confirms Hurricane Lee was a 2023 Atlantic storm — it peaked as a Category 5 on 7 Sept 2023 and made landfall as a post-tropical cyclone on western Nova Scotia on 16 Sept 2023. (Hadsell said "late 2024" in the talk; the event was actually September 2023.)
+            <a href="https://www.nhc.noaa.gov/data/tcr/AL132023_Lee.pdf" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-9">
+          <span class="ann-num">9</span>
+          <span class="ann-body">
+            Genie 3 generates promptable, navigable 720p worlds at 24 fps from a text prompt and maintains multi-minute consistency; a prototype built on it has been rolled out to Google AI Ultra subscribers for text- and image-prompted world creation.
+            <a href="https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-10">
+          <span class="ann-num">10</span>
+          <span class="ann-body">
+            Announced at Google I/O in May 2025, Veo 3 is DeepMind's state-of-the-art generative video model with native synchronized audio, improved real-world physics and prompt adherence, and SynthID watermarking on all outputs.
+            <a href="https://deepmind.google/models/veo/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-11">
+          <span class="ann-num">11</span>
+          <span class="ann-body">
+            DeepMind Technologies was founded in London in September 2010 by Demis Hassabis, Shane Legg and Mustafa Suleyman, and acquired by Google on 26 January 2014 for a reported $400–650M, with a binding ethics board and a prohibition on military use.
+            <a href="https://en.wikipedia.org/wiki/Google_DeepMind" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-12">
+          <span class="ann-num">12</span>
+          <span class="ann-body">
+            Ravuri et al. (<em>Nature</em>, 30 Sept 2021) introduce a deep generative model for 5–90-minute radar precipitation nowcasting; in blinded evaluation by more than fifty Met Office forecasters it was ranked best for accuracy and usefulness in 88% of cases versus leading baselines.
+            <a href="https://www.nature.com/articles/s41586-021-03854-z" rel="noopener">source →</a>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span><a href="https://www.youtube.com/watch?v=zZsTVBXcbow" rel="noopener">youtube.com/watch?v=zZsTVBXcbow</a></span>
+      <span>Generated April 19, 2026 · annotations grounded in real sources</span>
+    </footer>
+  </main>
+</body>
+</html>

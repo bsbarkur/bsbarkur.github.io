@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ಉತ್ತಮ್ ಗೌಡ × ಮುಂದೆ ಬನ್ನಿ — ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #5b5b55;
+    --rule: #e6e3d9;
+    --link: #0969da;
+    --mark: #fff3a0;
+    --callout-bg: #eef4fa;
+    --callout-bar: #5684d6;
+    --tldr-bg: #fbf6e4;
+    --tldr-bar: #c8a93a;
+    --ann-bg: #f4f1e8;
+    --fig-bg: #efece2;
+    --note-bg: #fef6e7;
+    --note-bar: #a37a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font: 16px/1.75 "Tiro Kannada", "Noto Sans Kannada", "Nirmala UI", "Kannada Sangam MN", "Kedage", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 56px 48px 72px; }
+  .eyebrow { font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  h1 {
+    font: 600 34px/1.4 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    letter-spacing: -0.005em;
+    margin: 0 0 14px;
+  }
+  .meta { font-size: 13px; color: var(--muted); margin: 0 0 22px; line-height: 1.65; }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .meta .dot { margin: 0 8px; color: var(--rule); }
+  .source-banner {
+    background: var(--note-bg);
+    border-left: 3px solid var(--note-bar);
+    padding: 12px 18px;
+    border-radius: 2px;
+    margin: 0 0 30px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4d3d0e;
+  }
+  .source-banner a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .source-banner a:hover { text-decoration: underline; }
+  .tldr {
+    background: var(--tldr-bg);
+    border-left: 3px solid var(--tldr-bar);
+    padding: 18px 22px 14px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  .tldr h2 { font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #7a6a1a; margin: 0 0 12px; }
+  .tldr ul { margin: 0; padding: 0 0 0 18px; }
+  .tldr li { margin: 6px 0; font-size: 15px; line-height: 1.75; }
+  .columns {
+    columns: 2;
+    column-gap: 2.25rem;
+    column-fill: balance;
+    column-rule: 1px solid var(--rule);
+  }
+  .columns > section { break-inside: avoid-column; margin: 0 0 22px; }
+  .columns h2 {
+    font: 600 20px/1.4 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    margin: 0 0 10px;
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .columns h2 .ts {
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: rgba(0,0,0,0.04);
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+  .columns p { margin: 0 0 12px; text-align: justify; }
+  .columns mark { background: var(--mark); padding: 0 2px; border-radius: 1px; }
+  .columns a.t-jump, .columns a.t-jump:visited { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(0,0,0,0.25); }
+  .columns a.t-jump:hover { border-bottom-color: var(--link); }
+  .columns sup { font-size: 10px; vertical-align: super; line-height: 0; margin-left: 1px; }
+  .columns sup a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .columns figure.shot {
+    break-inside: avoid;
+    margin: 14px 0;
+    padding: 0;
+    background: var(--fig-bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .columns figure.shot img { display: block; width: 100%; height: auto; }
+  .columns figure.shot figcaption {
+    padding: 12px 14px 14px;
+    color: #2a2a24;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .columns figure.shot .quote {
+    display: block;
+    font: italic 14px/1.55 Charter, Georgia, serif;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .columns figure.shot .gloss { display: block; }
+  .columns figure.shot .qts {
+    display: block;
+    font: 500 10px/1 ui-monospace, Menlo, monospace;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 8px 0 0;
+    text-transform: uppercase;
+  }
+  .columns figure.shot .qts a { color: var(--link); text-decoration: none; }
+  .columns aside.callout {
+    break-inside: avoid;
+    background: var(--callout-bg);
+    border-left: 3px solid var(--callout-bar);
+    padding: 12px 14px;
+    margin: 10px 0 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1a2742;
+    border-radius: 2px;
+  }
+  .annotations { margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid var(--rule); }
+  .annotations h2 { font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
+  .annotations ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.25rem; }
+  .annotations li {
+    break-inside: avoid;
+    background: var(--ann-bg);
+    padding: 10px 12px;
+    margin: 0 0 10px;
+    border-radius: 2px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    display: flex;
+    gap: 10px;
+  }
+  .annotations .ann-num { font: 600 12px/1.4 Charter, Georgia, serif; color: #7a6a1a; min-width: 18px; }
+  .annotations a { color: var(--link); text-decoration: none; }
+  .annotations a:hover { text-decoration: underline; }
+  .transcript { margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid var(--rule); }
+  .transcript summary { cursor: pointer; list-style: none; font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); padding: 6px 0; }
+  .transcript summary::-webkit-details-marker { display: none; }
+  .transcript summary:before { content: "▸ "; display: inline-block; transition: transform 0.15s; }
+  .transcript[open] summary:before { transform: rotate(90deg); }
+  .transcript .t-hint { display: block; font: 400 12px/1.6 "Tiro Kannada", "Noto Sans Kannada", "Kannada Sangam MN", -apple-system, sans-serif; letter-spacing: 0; text-transform: none; color: var(--muted); margin-top: 8px; }
+  .transcript .t-body { max-height: 70vh; overflow-y: auto; padding: 16px 4px 16px 16px; margin-top: 10px; background: #f7f4e7; border-radius: 3px; font: 13.5px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .transcript .t-body p { margin: 0; padding: 3px 6px; }
+  .transcript .t-body p:target { background: var(--mark); border-radius: 2px; }
+  .transcript .t-time { display: inline-block; min-width: 44px; font: 500 11px/1.4 ui-monospace, Menlo, monospace; color: var(--muted); margin-right: 8px; }
+  .footer { margin: 48px 0 0; padding: 20px 0 0; border-top: 1px solid var(--rule); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .footer a { color: var(--link); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  @media (max-width: 860px) {
+    .page { padding: 32px 22px 48px; }
+    h1 { font-size: 28px; }
+    .columns, .annotations ol { columns: 1; column-rule: none; }
+  }
+  @media print { body { background: #fff; } .page { padding: 24px; max-width: none; } a { color: inherit; text-decoration: none; } .transcript { display: none; } }
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">YouTube ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು · ಏಪ್ರಿಲ್ 20, 2026</p>
+    <h1>"ಅವತಾರ ಪುರುಷ" ಎಂಬ ನಂಬಿಕೆಯಿಂದ ₹11,000 ಕೋಟಿ ತನಕ — ಉತ್ತಮ್ ಗೌಡ, Captain Fresh</h1>
+    <p class="meta">
+      <strong>ಮುಂದೆ ಬನ್ನಿ ಪಾಡ್‌ಕಾಸ್ಟ್</strong> · ಆತಿಥೇಯರು: ವಸಂತ್ ಮತ್ತು ಕಿರಣ್ · ಅತಿಥಿ: ಉತ್ತಮ್ ಗೌಡ
+      <span class="dot">·</span>ವೀಡಿಯೋ ಪ್ರಕಟಣೆ: ಏಪ್ರಿಲ್ 10, 2026
+      <span class="dot">·</span>1:22:34
+      <span class="dot">·</span><a href="https://www.youtube.com/watch?v=T2IKux3hQFs" rel="noopener">YouTube ನಲ್ಲಿ ಪೂರ್ಣವಾಗಿ ನೋಡಿ →</a>
+    </p>
+
+    <div class="source-banner">
+      ಇದು ಒಂದು <strong>ಸಂಶೋಧನಾ ಸಾರಾಂಶ</strong> — ಸಂಪೂರ್ಣ ಸಂಭಾಷಣೆಯ ಅನುವಾದ ಅಲ್ಲ. ಸ್ಕ್ರೀನ್‌ಶಾಟ್‌ಗಳ ಜೊತೆಗಿನ ಯಥಾವತ್ ಉಲ್ಲೇಖಗಳು ಪಾಡ್‌ಕಾಸ್ಟ್‌ನ ತಮ್ಮದೇ ಆಂಗ್ಲ ಸಬ್‌ಟೈಟಲ್‌ಗಳಿಂದ ಬಂದವು (ಮೂಲ ಭಾಷಣ ಕನ್ನಡದಲ್ಲಿದ್ದರೂ ವೀಡಿಯೋದ ಸಬ್‌ಟೈಟಲ್‌ಗಳು ಆಂಗ್ಲದಲ್ಲಿವೆ); ಪ್ರತಿಯೊಂದಕ್ಕೂ ಕನ್ನಡ ವಿವರಣೆ ಸೇರಿಸಲಾಗಿದೆ. ಪೂರ್ಣ ಅನುಭವಕ್ಕೆ <a href="https://www.youtube.com/watch?v=T2IKux3hQFs" rel="noopener">YouTube ನಲ್ಲಿ ಎಪಿಸೋಡ್ ನೋಡಿ</a>.
+    </div>
+
+    <div class="tldr">
+      <h2>ಸಂಕ್ಷಿಪ್ತ ಸಾರಾಂಶ</h2>
+      <ul>
+        <li>ಮೈಸೂರಿನ ಒಬ್ಬ ಸಾಮಾನ್ಯ ಹುಡುಗ — ವ್ಯಾಪಾರಿ ಕುಟುಂಬ ಹಿನ್ನೆಲೆಯಿಲ್ಲದೆ — 7 ವರ್ಷಗಳಲ್ಲಿ ಜಾಗತಿಕ ಸಮುದ್ರ-ಆಹಾರ ಸಂಸ್ಥೆ Captain Fresh ಕಟ್ಟಿದ ಕಥೆ.<sup><a href="#ann-1">1</a></sup></li>
+        <li>ತಾಯಿಯ ಮಾತು — "ನೀನು ಅವತಾರ ಪುರುಷ, ವಿಶೇಷವಾದದ್ದನ್ನು ಮಾಡಲು ಹುಟ್ಟಿದವನು"<sup><a href="#ann-11">11</a></sup> — ಇಡೀ ಎಪಿಸೋಡ್‌ನ ಆಧಾರ-ಚೌಕಟ್ಟು.</li>
+        <li>NITK ಸುರತ್ಕಲ್, S.P. Jain Mumbai ಮತ್ತು ~₹40 ಕೋಟಿ PE ಫಂಡ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡಿದ ನಂತರ 2020ರಲ್ಲಿ Captain Fresh ಆರಂಭ.<sup><a href="#ann-2">2</a></sup></li>
+        <li>ಬೆಂಗಳೂರಿನ Russell Market ನಲ್ಲಿ ಆರಂಭಿಕ ವಿರೋಧ — ಸಾಂಪ್ರದಾಯಿಕ ಮೀನು ವ್ಯಾಪಾರಿ ಜಾಲಗಳಿಂದ ಬೆದರಿಕೆ.<sup><a href="#ann-6">6</a></sup></li>
+        <li>₹900 ಕೋಟಿ ಆದಾಯ ತಲುಪಿದ ಭಾರತ ವ್ಯವಹಾರವನ್ನೇ ಮುಚ್ಚಿ — ಯುನಿಟ್ ಎಕನಾಮಿಕ್ಸ್ ಸರಿಯಿಲ್ಲ ಎಂಬ ಒಂದೇ ಕಾರಣಕ್ಕೆ — ಜಾಗತಿಕವಾಗಿ ಪರಿವರ್ತನೆ ಮಾಡಿಕೊಂಡರು.</li>
+        <li>USA ದ CenSea ಸ್ವಾಧೀನದಿಂದ ಆರಂಭಿಸಿ Spain ನ Frime ತನಕ — ಇಂದು 33+ ದೇಶಗಳಲ್ಲಿ ವ್ಯಾಪಾರ.<sup><a href="#ann-13">13</a></sup><sup><a href="#ann-14">14</a></sup> ಮುಂದಿನ ಗುರಿ: ₹1 ಲಕ್ಷ ಕೋಟಿ.</li>
+      </ul>
+    </div>
+
+    <div class="columns">
+
+      <section>
+        <h2>ಅವತಾರ ಪುರುಷನ ಆತ್ಮವಿಶ್ವಾಸ<span class="ts">[00:00]</span></h2>
+        <p>ಎಪಿಸೋಡ್ ಆರಂಭವಾಗುವ ಮುನ್ನವೇ ಒಂದು ಚಿಕ್ಕ trailer — ಉತ್ತಮ್ ಸ್ವತಃ ಹೇಳಿಕೊಳ್ಳುವ ಮಾತು. ತಾಯಿ ಬಾಲ್ಯದಿಂದ ಹೇಳುತ್ತಿದ್ದದ್ದು ಒಂದೇ: ನೀನು ಸಾಮಾನ್ಯನಲ್ಲ. ಇದನ್ನು ಲಘುವಾಗಿ ತೆಗೆದುಕೊಳ್ಳುವ ಬದಲು ಆತ ಮನಸ್ಸಲ್ಲಿ ಕಟ್ಟಿಕೊಂಡ.</p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-000025.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 00:00:25">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-000025">"You are an avatar purusha, born to do something special."</a></mark></span>
+            <span class="gloss">ತಾಯಿಯ ಮಾತಿನ ತೂಕ — ನೀನು <mark>ಅವತಾರ ಪುರುಷ</mark>,<sup><a href="#ann-11">11</a></sup> ವಿಶೇಷವಾದದ್ದನ್ನು ಮಾಡಲು ಹುಟ್ಟಿದವನು. ಇದು ಎಪಿಸೋಡ್‌ನ ಭಾವನಾತ್ಮಕ ಬೆನ್ನೆಲುಬು.</span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-000025">00:25</a></span>
+          </figcaption>
+        </figure>
+        <p>ವಸಂತ್ ಎಪಿಸೋಡ್ ಆರಂಭಿಸುವಾಗ KGF ಸಿನಿಮಾದ ಒಂದು ದೃಶ್ಯವನ್ನು ಉಲ್ಲೇಖಿಸುತ್ತಾರೆ — Rocky Bhai ಗೆ "What do you want, man?" ಎಂದು ಕೇಳಿದಾಗ "I want the world" ಎಂದು ಉತ್ತರ.<sup><a href="#ann-3">3</a></sup> ಉತ್ತಮ್ ಗೌಡನ ಮಹತ್ವಾಕಾಂಕ್ಷೆಯೂ ಅದೇ ಪ್ರಮಾಣದ್ದು. Captain Fresh ಇಂದು ಸುಮಾರು ₹11,000 ಕೋಟಿ ಮೌಲ್ಯ, FY25ರಲ್ಲಿ ಲಾಭಕ್ಕೆ ಮರಳಿದೆ ಮತ್ತು GMV 2.5x ಬೆಳೆದಿದೆ.<sup><a href="#ann-13">13</a></sup></p>
+      </section>
+
+      <section>
+        <h2>ಮೈಸೂರಿನ ಹುಡುಗ — pedigree ಇಲ್ಲದಿರುವುದೇ ಶಕ್ತಿ<span class="ts">[09:31]</span></h2>
+        <p>NITK ಸುರತ್ಕಲ್‌ನಲ್ಲಿ engineering, ನಂತರ Mumbai ಯ S.P. Jain ನಲ್ಲಿ management.<sup><a href="#ann-5">5</a></sup><sup><a href="#ann-12">12</a></sup> Tata Strategic, o3 Capital ಮುಂತಾದ ಕಂಪನಿಗಳಲ್ಲಿ consulting ಮತ್ತು finance ಪಾತ್ರ; ಜೊತೆಗೆ "Money Wise" ಎಂಬ ಪುಸ್ತಕವನ್ನೂ ಬರೆದಿದ್ದಾರೆ.<sup><a href="#ann-9">9</a></sup> ವ್ಯಾಪಾರಿ ಕುಟುಂಬ ಹಿನ್ನೆಲೆ ಇಲ್ಲ — ಆದರೆ ಆತನ ದೃಷ್ಟಿಯಲ್ಲಿ ಅದೇ ಶಕ್ತಿ.</p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-000905.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 00:09:05">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-000905">"The most dangerous person in a game… is a man who doesn't have anything to lose."</a></mark></span>
+            <span class="gloss">ಆಟದಲ್ಲಿ <mark>ಅತ್ಯಂತ ಅಪಾಯಕಾರಿ ವ್ಯಕ್ತಿ — ಕಳೆದುಕೊಳ್ಳಲು ಏನೂ ಇಲ್ಲದವನು</mark>. ಯಾವ background ಇಲ್ಲ ಎಂದರೆ ಸಾಬೀತು ಪಡಿಸಲು ಏನೂ ಇಲ್ಲ — ಮನಸ್ಸು ಸ್ವತಂತ್ರ.</span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-000905">9:05</a></span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>~₹40 ಕೋಟಿ ಫಂಡ್‌ನಿಂದ ಮೀನು ವ್ಯವಹಾರಕ್ಕೆ<span class="ts">[19:24]</span></h2>
+        <p>ಒಂದು ~₹40 ಕೋಟಿ family-office ಫಂಡ್‌ನಲ್ಲಿ ಸುಮಾರು ಐದು ಕಂಪನಿಗಳಲ್ಲಿ ಬಂಡವಾಳ ಹೂಡಿಕೆ. ಸುಮಾರು 50 ಫೌಂಡರ್‌ಗಳನ್ನು ಭೇಟಿಯಾಗಿ ಭಾರತದಲ್ಲಿ ಏನು ನಡೆಯುತ್ತಿದೆ ಎಂದು ಅರ್ಥ ಮಾಡಿಕೊಂಡ ಮೇಲೆ ಒಂದು ಸ್ಪಷ್ಟತೆ ಬಂದಿತು — "ಅವರ insights ನನ್ನಿಗಿಂತ ಚೆನ್ನಾಗಿಲ್ಲ; ಅವರು ಈ risk ತೆಗೆದುಕೊಳ್ಳುತ್ತಿದ್ದರೆ ನಾನೂ ಯಾಕೆ ತೆಗೆದುಕೊಳ್ಳಬಾರದು?"</p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-002343.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 00:23:43">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-002343">"In my mind, I am an avatar purusha."</a></mark></span>
+            <span class="gloss">ಬಾಲ್ಯದ ತಾಯಿಯ ಮಾತು ಈಗ ಸ್ವತಃ ಆತನ ಸ್ವ-ಪರಿಭಾಷೆ. ಯಾವುದೇ ಬಾಹ್ಯ pedigree ಇಲ್ಲದಿದ್ದರೂ <mark>ಆಂತರಿಕ ಸ್ವ-ನಂಬಿಕೆ</mark>ಯೇ ಆಧಾರ.</span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-002343">23:43</a></span>
+          </figcaption>
+        </figure>
+        <p>ಮೀನು ಮತ್ತು ಸಮುದ್ರ-ಆಹಾರ ಉದ್ಯಮ ಭಾರತದಲ್ಲಿ unorganized; ಆದರೆ ರಫ್ತು ಪ್ರಮಾಣ ಬೃಹತ್ — FY25ರಲ್ಲಿ 17 ಲಕ್ಷ ಟನ್, ಸುಮಾರು ₹62,000 ಕೋಟಿ.<sup><a href="#ann-10">10</a></sup> ಈ ಅಂತರವೇ ಅವಕಾಶವಾಯಿತು.</p>
+        <aside class="callout">
+          <strong>Russell Market, Bengaluru:</strong> 1933ರಲ್ಲಿ British ರಿಂದ ನಿರ್ಮಿತ Indo-Saracenic ಶೈಲಿಯ ಮಾರುಕಟ್ಟೆ.<sup><a href="#ann-6">6</a></sup> ಶತಮಾನದ ಹಳೆಯ ವ್ಯಾಪಾರಿ ಜಾಲಗಳ ಬಿಗಿಮುಷ್ಟಿಯಿಂದಾಗಿ ಹೊಸ ಪ್ರವೇಶಿಗರಿಗೆ ಪ್ರವೇಶ ಬಹಳ ಕಷ್ಟ — Captain Fresh ಆರಂಭದಲ್ಲಿ ಬೆದರಿಕೆಯನ್ನೂ ಎದುರಿಸಿತು.
+        </aside>
+      </section>
+
+      <section>
+        <h2>₹900 ಕೋಟಿ ವ್ಯವಹಾರ ಮುಚ್ಚಿ ಜಾಗತಿಕ ಪರಿವರ್ತನೆ<span class="ts">[30:06]</span></h2>
+        <p>ಭಾರತದಲ್ಲಿ Captain Fresh ₹900 ಕೋಟಿ ಆದಾಯ ತಲುಪಿತ್ತು — ಆದರೆ ಯುನಿಟ್ ಎಕನಾಮಿಕ್ಸ್ ಸರಿಯಿರಲಿಲ್ಲ. ಬಹುಪಾಲು founders ಆ ಹಂತದಲ್ಲಿ "ಬೆಳವಣಿಗೆಯೇ ಎಲ್ಲ" ಎಂದು ಮುಂದುವರಿಸುತ್ತಾರೆ; ಉತ್ತಮ್ ಆ ವ್ಯವಹಾರವನ್ನೇ ಮುಚ್ಚಿ pivot ಮಾಡಿದರು — ಜಾಗತಿಕ B2B ಸಮುದ್ರ-ಆಹಾರ ಸರಪಳಿ ಕಡೆಗೆ.</p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-002917.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 00:29:17">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-002917">"We were a one-stop solution."</a></mark></span>
+            <span class="gloss">ಮೊದಲಿನಿಂದಲೇ ಒಂದು ತತ್ವ — ಗ್ರಾಹಕನಿಗೆ <mark>ಎಲ್ಲ ಸಮುದ್ರ-ಆಹಾರಕ್ಕೆ ಒಂದೇ ಕಡೆ ಪರಿಹಾರ</mark>. ಈ ಸ್ಪಷ್ಟತೆಯೇ ಮುಂದೆ ಜಾಗತಿಕ ಮಟ್ಟದಲ್ಲಿಯೂ ಗೆಲ್ಲಿಸಿತು.</span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-002917">29:17</a></span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>30 ದೇಶಗಳಿಂದ ಸಂಗ್ರಹಣೆ — Miami ಯಿಂದ Barcelona ಗೆ<span class="ts">[44:01]</span></h2>
+        <p>"ಮೂರು ಸಮುದ್ರಗಳಲ್ಲಿಯೂ ನಾನು ಇರಬೇಕು" ಎಂಬ ಜಾಗತಿಕ ದೃಷ್ಟಿಕೋನ. ಮೊದಲ ದೊಡ್ಡ ಹೆಜ್ಜೆ — 2024ರಲ್ಲಿ USA ದ ಒಂದು ಪ್ರಮುಖ ಸಮುದ್ರ-ಆಹಾರ ಆಮದುದಾರ CenSea ಸ್ವಾಧೀನ.<sup><a href="#ann-8">8</a></sup> ನಂತರ Poland (Koral), France (Senecrus), Mexico (Ocean Garden), ಮತ್ತು 2026ರ ಆರಂಭದಲ್ಲಿ Spain ನ ಬೃಹತ್ tuna processor Frime — ಯುರೋಪಿನ yellowfin tuna ಮಾರುಕಟ್ಟೆಯ 20%ಕ್ಕಿಂತ ಹೆಚ್ಚು ಪಾಲು.<sup><a href="#ann-14">14</a></sup></p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-004124.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 00:41:24">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-004124">"Just like how I sourced from 200 places in India… going global, I must source from 30 countries."</a></mark></span>
+            <span class="gloss">ಭಾರತದಲ್ಲಿ ಒಂದು ಸ್ಟೋರ್‌ಗೆ ಮಾರಾಟ ಮಾಡಲೂ 200 ಕಡೆಯಿಂದ ಕಚ್ಚಾಮಾಲು ತರಿಸುತ್ತಿದ್ದರು; ಈಗ ಜಾಗತಿಕ ಮಟ್ಟದಲ್ಲಿ <mark>30 ದೇಶಗಳಿಂದ sourcing</mark>. Captain Fresh ನ ಪ್ರಮುಖ ಬಂಡವಾಳ ಹೂಡಿಕೆದಾರರು — Accel, Tiger Global, Prosus.<sup><a href="#ann-7">7</a></sup></span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-004124">41:24</a></span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>ಮೂರು ಭಯಗಳು ಮತ್ತು ₹1 ಲಕ್ಷ ಕೋಟಿ<span class="ts">[1:02:21]</span></h2>
+        <p>ಎಪಿಸೋಡ್‌ನ ಕೊನೆಯ ಭಾಗದಲ್ಲಿ ಉತ್ತಮ್ ತಮ್ಮ ತತ್ವಶಾಸ್ತ್ರವನ್ನು ತೆರೆದಿಡುತ್ತಾರೆ — ಹೆಚ್ಚಿನ ಉದ್ಯಮಿಗಳನ್ನು ತಡೆಯುವ ಮೂರು ಭಯಗಳು (ಹಣದ, ಮಾನ್ಯತೆಯ, ಮತ್ತು ನಿಯಂತ್ರಣದ) ಮತ್ತು Hindu ಪರಂಪರೆಯ "ಎಲ್ಲವೂ ಅನಿತ್ಯ" ಎಂಬ ಪಾಠ.</p>
+        <figure class="shot">
+          <img src="T2IKux3hQFs/frame-010412.jpg" alt="ಉತ್ತಮ್ ಗೌಡ — 01:04:12">
+          <figcaption>
+            <span class="quote"><mark><a class="t-jump" href="#t-010412">"Money is actually not that useful. It's very overrated. After some time, it doesn't have much use."</a></mark></span>
+            <span class="gloss">ಒಂದು ಹಂತದಾಚೆ <mark>ಹಣದ ಪ್ರಯೋಜನ ತೀರಾ ಅತಿರಂಜಿತ</mark>; ಮಾನ್ಯತೆಯೂ ಅಷ್ಟೇ — ಯಾರಿಗೂ ನಿಮ್ಮ ಬಗ್ಗೆ ಯೋಚಿಸಲು ಸಮಯವಿಲ್ಲ. ಈ ಅರಿವೇ ಮುಂದೆ ಬೆಳೆಯಲು ಬೇಕಾದ ಹಗುರತೆ.</span>
+            <span class="qts">ಉತ್ತಮ್ ಗೌಡ · <a href="#t-010412">1:04:12</a></span>
+          </figcaption>
+        </figure>
+        <p>ಮುಂದಿನ ಗುರಿ ಬಹಳ ಸ್ಪಷ್ಟ: ಪ್ರಸ್ತುತ ~₹11,000 ಕೋಟಿಯಿಂದ <mark>₹1 ಲಕ್ಷ ಕೋಟಿಗೆ</mark>. ಈ ಹಂತದಲ್ಲಿ ಸಂಸ್ಥೆ ಲಾಭದಾಯಕವಾಗಿ ಮಾರ್ಪಟ್ಟಿದೆ ಮತ್ತು 2025–26ರಲ್ಲಿ pre-IPO round ಗಳನ್ನು ಮುಗಿಸಿ DRHP ಸಲ್ಲಿಕೆಯ ಹಂತದಲ್ಲಿದೆ.<sup><a href="#ann-7">7</a></sup></p>
+        <aside class="callout">
+          ಎಪಿಸೋಡ್‌ನ ಸ್ಫೂರ್ತಿಮಯ ಚೌಕಟ್ಟು <strong>ಮುಂದೆ ಬನ್ನಿ</strong>ಯ ಮೂಲ ಉದ್ದೇಶಕ್ಕೆ ಹೊಂದಿಕೊಳ್ಳುತ್ತದೆ:<sup><a href="#ann-4">4</a></sup> ಕೋಲಾರ-ಮೈಸೂರು-ಧಾರವಾಡದ ಹುಡುಗನಿಗೆ Elon Musk ಬೇಡ — ಮೈಸೂರಿನ ಉತ್ತಮ್ ಗೌಡನ ಕಥೆಯೇ ಹೆಚ್ಚು ಸಂಬಂಧಿತ.
+        </aside>
+      </section>
+
+    </div>
+
+    <section class="annotations">
+      <h2>ಟಿಪ್ಪಣಿಗಳು ಮತ್ತು ಮೂಲಗಳು</h2>
+      <ol>
+        <li id="ann-1">
+          <span class="ann-num">1</span>
+          <span class="ann-body">
+            Captain Fresh ತನ್ನನ್ನು "technology-enabled multi-species, multi-geography seafood platform" ಎಂದು ವಿವರಿಸಿಕೊಳ್ಳುತ್ತದೆ; ಸಂಸ್ಥಾಪಕ ಉತ್ತಮ್ ಕಬ್ಬಲಗೆರೆ ಸ್ವಾಮಿ ಗೌಡ; ಭಾರತ, USA (CenSea), Poland (Koral), Mexico ಮತ್ತು ವಿಶಾಲ ಯುರೋಪ್‌ನಲ್ಲಿ ಕಾರ್ಯಾಚರಣೆ.
+            <a href="https://www.captainfresh.in/about-us" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-2">
+          <span class="ann-num">2</span>
+          <span class="ann-body">
+            ಉತ್ತಮ್ ಮೈಸೂರಿನಲ್ಲಿ ಬೆಳೆದರು; NITK ಸುರತ್ಕಲ್‌ನಿಂದ B.Tech, Mumbai ಯ S.P. Jain ನಿಂದ marketing PGDM; Tata Strategic, Kriscore, o3 Capital ಮತ್ತು Nekkanti Sea Foods ನಲ್ಲಿ EVP ಆಗಿ ಕೆಲಸ ಮಾಡಿ ಜೂನ್ 2020ರಲ್ಲಿ Captain Fresh ಆರಂಭಿಸಿದರು.
+            <a href="https://www.founderthesis.com/p/how-utham-gowda-built-captain-fresh" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-3">
+          <span class="ann-num">3</span>
+          <span class="ann-body">
+            KGF (Kolar Gold Fields) — Prashanth Neel ನಿರ್ದೇಶನದ Hombale Films ನಿರ್ಮಿತ ಕನ್ನಡ action ಸಿರೀಸ್; ಯಶ್ ಅಭಿನಯದ Rocky Bhai ಪಾತ್ರ — ಕರ್ನಾಟಕದ ಮಹತ್ವಾಕಾಂಕ್ಷೆಯ ಸಾಂಸ್ಕೃತಿಕ ಪ್ರತೀಕ.
+            <a href="https://en.wikipedia.org/wiki/KGF_(film_series)" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-4">
+          <span class="ann-num">4</span>
+          <span class="ann-body">
+            ಮುಂದೆ ಬನ್ನಿ — ಕನ್ನಡ "ಮುಂದೆ ಬನ್ನಿ" ಎಂಬರ್ಥ; ವಸಂತ್ ಶೆಟ್ಟಿ ಮತ್ತು ಕಿರಣ್ ಕೊಡ್ಲಡಿ ನಡೆಸುವ ಸಮುದಾಯ-ಆಧಾರಿತ ಚಳವಳಿ; ಕರ್ನಾಟಕದಿಂದ 1,00,000 ಉದ್ಯಮಿಗಳನ್ನು ಸೃಷ್ಟಿಸುವ ಗುರಿ — ವಿಶೇಷವಾಗಿ ಟಿಯರ್-2/3 ಊರುಗಳಿಂದ.
+            <a href="https://mundhebanni.org/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-5">
+          <span class="ann-num">5</span>
+          <span class="ann-body">
+            NITK ಸುರತ್ಕಲ್ — ಮಂಗಳೂರು ಸಮೀಪ, 1960ರಲ್ಲಿ KREC ಆಗಿ ಸ್ಥಾಪನೆಯಾಗಿ 2002ರಲ್ಲಿ NITK ಆಗಿ ಬಡ್ತಿ; ಭಾರತದ Institutes of National Importance ಗಳಲ್ಲಿ ಒಂದು.
+            <a href="https://www.nitk.ac.in/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-6">
+          <span class="ann-num">6</span>
+          <span class="ann-body">
+            Russell Market — ಬೆಂಗಳೂರಿನ ಶಿವಾಜಿನಗರದಲ್ಲಿರುವ Indo-Saracenic ಶೈಲಿಯ ಆವೃತ ಮಾರುಕಟ್ಟೆ; British ರಿಂದ 1927ರಲ್ಲಿ ನಿರ್ಮಾಣ, 1933ರಲ್ಲಿ ಉದ್ಘಾಟನೆ; ಮೀನು, ಮಾಂಸ ಮತ್ತು ತರಕಾರಿಯ ಸಾಂಪ್ರದಾಯಿಕ ವ್ಯಾಪಾರಿ ಜಾಲಗಳ ಬಿಗಿಯ ಹಿಡಿತ.
+            <a href="https://en.wikipedia.org/wiki/Russell_Market" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-7">
+          <span class="ann-num">7</span>
+          <span class="ann-body">
+            ಜನವರಿ 2025ರಲ್ಲಿ Captain Fresh Prosus Ventures, Accel ಮತ್ತು Tiger Global ನೇತೃತ್ವದಲ್ಲಿ ₹250 ಕೋಟಿ pre-IPO round ಸಂಗ್ರಹಿಸಿತು; ಒಟ್ಟು ಸಂಗ್ರಹ ಸುಮಾರು $177 ಮಿಲಿಯನ್; $350–400 ಮಿಲಿಯನ್ IPO ಗಾಗಿ ಗೌಪ್ಯ DRHP ಸಲ್ಲಿಸಿದೆ.
+            <a href="https://www.business-standard.com/companies/start-ups/seafood-tech-firm-captain-fresh-raises-rs-250-cr-in-ongoing-pre-ipo-round-125013101653_1.html" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-8">
+          <span class="ann-num">8</span>
+          <span class="ann-body">
+            ಫೆಬ್ರವರಿ 2024ರಲ್ಲಿ Captain Fresh USA ದ CenSea — 800+ distributor/foodservice/retail ಗ್ರಾಹಕರ ಜಾಲ ಹೊಂದಿದ ಒಂದು ದೊಡ್ಡ ಕುಟುಂಬ-ಸ್ವಾಮ್ಯದ ಆಮದುದಾರ — ಸ್ವಾಧೀನಪಡಿಸಿಕೊಂಡಿತು; ಇದು ಸಂಸ್ಥೆಯ ಮೊದಲ ಪ್ರಮುಖ ವಿದೇಶಿ ಸ್ವಾಧೀನ.
+            <a href="https://entrackr.com/2024/02/captain-fresh-acquires-us-based-censea/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-9">
+          <span class="ann-num">9</span>
+          <span class="ann-body">
+            ಉತ್ತಮ್ ಗೌಡ "Money Wise" ಎಂಬ ಪುಸ್ತಕ ಬರೆದಿದ್ದಾರೆಂದು ದ್ವಿತೀಯಕ ಮೂಲಗಳು ಉಲ್ಲೇಖಿಸುತ್ತವೆ. (ಗಮನಿಸಿ: Amazon ನಲ್ಲಿರುವ ಪ್ರಸಿದ್ಧ "Money Wise" ಪುಸ್ತಕದ ಲೇಖಕ ಶರತ್ ಕೋಮಾರ್ರಾಜು.)
+            <a href="https://www.india.com/business/meet-man-who-left-high-paying-job-to-start-his-own-business-now-he-is-owner-of-rs-4000-crore-company-his-business-is-7397456/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-10">
+          <span class="ann-num">10</span>
+          <span class="ann-body">
+            MPEDA ಪ್ರಕಾರ FY 2024-25ರಲ್ಲಿ ಭಾರತ 16,98,170 ಮೆಟ್ರಿಕ್ ಟನ್ ಸಮುದ್ರ-ಆಹಾರವನ್ನು ₹62,408.45 ಕೋಟಿ ($7.45 ಶತಕೋಟಿ) ಮೌಲ್ಯಕ್ಕೆ ರಫ್ತು ಮಾಡಿತು; frozen shrimp ಪ್ರಧಾನ ಉತ್ಪನ್ನ (~$5.2B), USA ಅತಿ ದೊಡ್ಡ ಗ್ರಾಹಕ.
+            <a href="https://mpeda.gov.in/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-11">
+          <span class="ann-num">11</span>
+          <span class="ann-body">
+            ಹಿಂದೂ ಪರಂಪರೆಯಲ್ಲಿ "ಅವತಾರ" — ಧರ್ಮವನ್ನು ಪುನಃ ಸ್ಥಾಪಿಸಲು ದೈವ ಪ್ರತ್ಯಕ್ಷವಾಗುವ ಪರಿಕಲ್ಪನೆ; "ಪುರುಷ ಅವತಾರ"ಗಳು (ವಾಸುದೇವ, ಸಂಕರ್ಷಣ, ಪ್ರದ್ಯುಮ್ನ, ಅನಿರುದ್ಧ) ವೈಷ್ಣವ ಪರಂಪರೆಯ ಮೂಲ ರೂಪಗಳು; ಆಡುಮಾತಿನಲ್ಲಿ "ವಿಶೇಷ ಉದ್ದೇಶಕ್ಕಾಗಿ ಹುಟ್ಟಿದ ವ್ಯಕ್ತಿ" ಎಂಬರ್ಥ.
+            <a href="https://www.britannica.com/summary/avatar-Hinduism" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-12">
+          <span class="ann-num">12</span>
+          <span class="ann-body">
+            S.P. Jain Institute of Management and Research (SPJIMR) — Mumbai ಯ ಭಾರತೀಯ ವಿದ್ಯಾ ಭವನದ ಒಂದು ಸಂಸ್ಥೆ (1981); Triple Crown accreditation (AACSB, EQUIS, AMBA) ಹೊಂದಿದೆ; ಭಾರತದ ಪ್ರಮುಖ B-school ಗಳಲ್ಲಿ ಒಂದು.
+            <a href="https://www.spjimr.org/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-13">
+          <span class="ann-num">13</span>
+          <span class="ann-body">
+            FY25ರಲ್ಲಿ Captain Fresh ಲಾಭಕ್ಕೆ ಮರಳಿತು; GMV 2.5x ಬೆಳೆಯಿತು; ಜಾಗತಿಕ sourcing — ಭಾರತ, ವಿಯೆಟ್ನಾಂ, ಇಂಡೋನೇಷಿಯಾ, ನಾರ್ವೆ, ಪೋಲೆಂಡ್, ಈಕ್ವೆಡಾರ್, ಮೆಕ್ಸಿಕೊ — USA ಮತ್ತು ಯುರೋಪ್‌ನಲ್ಲಿ ವಿತರಣೆ.
+            <a href="https://entrackr.com/fintrackr/captain-fresh-turns-profitable-in-fy25-gmv-jumps-25x-10883587" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-14">
+          <span class="ann-num">14</span>
+          <span class="ann-body">
+            2026ರ ಆರಂಭದಲ್ಲಿ Captain Fresh ಸ್ಪೇನ್‌ನ Barcelona-ಆಧಾರಿತ tuna processor Frime ನ 100% ಸ್ವಾಧೀನವನ್ನು ಪೂರ್ಣಗೊಳಿಸಿತು; Frime — 1937ರಲ್ಲಿ ಸ್ಥಾಪನೆ, €180 ಮಿಲಿಯನ್+ ಆದಾಯ, ಯುರೋಪ್‌ನ yellowfin tuna ಮಾರುಕಟ್ಟೆಯ 20%+ ಪಾಲು, 33 ದೇಶಗಳ ವ್ಯಾಪ್ತಿ.
+            <a href="https://www.seafoodsource.com/news/business-finance/captain-fresh-finalizes-its-acquisition-of-spanish-tuna-giant-frime" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <details class="transcript">
+      <summary>ಪೂರ್ಣ ಉಪಶೀರ್ಷಿಕೆ (ಆಂಗ್ಲ)
+        <span class="t-hint">ಮೇಲಿನ ಹಳದಿ ಬಣ್ಣದ ಯಾವುದೇ ಉಲ್ಲೇಖವನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿದರೆ ಆ ನಿಖರ ಸಾಲಿಗೆ ಸಾಗುತ್ತದೆ. ವೀಡಿಯೋದ ಮೂಲ ಭಾಷಣ ಕನ್ನಡದಲ್ಲಿದ್ದರೂ Mundhe Banni ತಂಡ ಒದಗಿಸಿರುವ ಸಬ್‌ಟೈಟಲ್‌ಗಳು ಆಂಗ್ಲದಲ್ಲಿವೆ.</span>
+      </summary>
+      <div class="t-body">
+<p id="t-000000"><span class="t-time">00:00</span> We&#x27;ve done three in the US, and we&#x27;ve done</p>
+<p id="t-000005"><span class="t-time">00:05</span> France, Poland, Denmark,</p>
+<p id="t-000012"><span class="t-time">00:12</span> In the movie, they ask a question in</p>
+<p id="t-000018"><span class="t-time">00:18</span> Today, we have with us an entrepreneur</p>
+<p id="t-000021"><span class="t-time">00:21</span> So, not having any kind of fear is very</p>
+<p id="t-000025"><span class="t-time">00:25</span> Since childhood, my mother used to say one thing:</p>
+<p id="t-000029"><span class="t-time">00:29</span> special.&quot;</p>
+<p id="t-000032"><span class="t-time">00:32</span> Mr. Utham Gowda, a proper</p>
+<p id="t-000038"><span class="t-time">00:38</span> Then, what was the reason for leaving the India</p>
+<p id="t-000042"><span class="t-time">00:42</span> At a city level, the mafia... in the Russell</p>
+<p id="t-000046"><span class="t-time">00:46</span> started sketching plans against us. In fact,</p>
+<p id="t-000050"><span class="t-time">00:50</span> Yet, building a 10,000 crore turnover business</p>
+<p id="t-000055"><span class="t-time">00:55</span> To put it simply, where you</p>
+<p id="t-000100"><span class="t-time">01:00</span> height is, what your weight is... none of it matters.</p>
+<p id="t-000104"><span class="t-time">01:04</span> is. I realized that I couldn&#x27;t become</p>
+<p id="t-000109"><span class="t-time">01:09</span> I had an understanding of the game. So, I built</p>
+<p id="t-000112"><span class="t-time">01:12</span> empire, empire, empire... that was</p>
+<p id="t-000116"><span class="t-time">01:16</span> There, they say everything in the chariot is theirs;</p>
+<p id="t-000120"><span class="t-time">01:20</span> In every businessman, there is an Agastya,</p>
+<p id="t-000128"><span class="t-time">01:28</span> I got goosebumps when I heard it.</p>
+<p id="t-000145"><span class="t-time">01:45</span> So, a request to all the viewers watching the</p>
+<p id="t-000150"><span class="t-time">01:50</span> please subscribe to our YouTube channel, press</p>
+<p id="t-000153"><span class="t-time">01:53</span> Do this because we are making this with a lot</p>
+<p id="t-000159"><span class="t-time">01:59</span> we must celebrate our Karnataka</p>
+<p id="t-000203"><span class="t-time">02:03</span> learn, and we must draw inspiration</p>
+<p id="t-000207"><span class="t-time">02:07</span> entrepreneurs with big dreams, even from our</p>
+<p id="t-000211"><span class="t-time">02:11</span> only through entrepreneurship can we build</p>
+<p id="t-000216"><span class="t-time">02:16</span> That&#x27;s what I believe. Therefore, may your support</p>
+<p id="t-000220"><span class="t-time">02:20</span> too. A lot of business-related</p>
+<p id="t-000224"><span class="t-time">02:24</span> advantage of it. Subscribe to our</p>
+<p id="t-000228"><span class="t-time">02:28</span> government schemes, and what&#x27;s happening</p>
+<p id="t-000230"><span class="t-time">02:30</span> we bring out just one newsletter</p>
+<p id="t-000234"><span class="t-time">02:34</span> of that as well.</p>
+<p id="t-000240"><span class="t-time">02:40</span> Hello everyone. Welcome to a new</p>
+<p id="t-000244"><span class="t-time">02:44</span> I am your host,</p>
+<p id="t-000247"><span class="t-time">02:47</span> Kiran. Hi Kiran. So today, in our</p>
+<p id="t-000253"><span class="t-time">02:53</span> it feels very special to me. Why?</p>
+<p id="t-000258"><span class="t-time">02:58</span> In the movie,</p>
+<p id="t-000303"><span class="t-time">03:03</span> in one scene: &quot;What do you want, man?&quot;</p>
+<p id="t-000308"><span class="t-time">03:08</span> Just like that, when it comes to ambition,</p>
+<p id="t-000315"><span class="t-time">03:15</span> and how that character was portrayed...</p>
+<p id="t-000319"><span class="t-time">03:19</span> is with us today.</p>
+<p id="t-000324"><span class="t-time">03:24</span> After that, around seven years ago, he</p>
+<p id="t-000330"><span class="t-time">03:30</span> The scale of its ambition</p>
+<p id="t-000336"><span class="t-time">03:36</span> growing into a global seafood joint doing a 10,000</p>
+<p id="t-000342"><span class="t-time">03:42</span> and Pacific oceans, they catch fish;</p>
+<p id="t-000347"><span class="t-time">03:47</span> In Europe, they process it;</p>
+<p id="t-000351"><span class="t-time">03:51</span> in places like China and the US, they have offices</p>
+<p id="t-000357"><span class="t-time">03:57</span> They are selling there, and they are building</p>
+<p id="t-000401"><span class="t-time">04:01</span> They are building it from Bangalore.</p>
+<p id="t-000405"><span class="t-time">04:05</span> is still in Bangalore. So today, we have with us</p>
+<p id="t-000410"><span class="t-time">04:10</span> Mr. Utham Kabbalagerepura</p>
+<p id="t-000417"><span class="t-time">04:17</span> welcome to the show!</p>
+<p id="t-000420"><span class="t-time">04:20</span> happy that you came to join us.</p>
+<p id="t-000425"><span class="t-time">04:25</span> for Kannada entrepreneurs.</p>
+<p id="t-000429"><span class="t-time">04:29</span> Thank you so much.</p>
+<p id="t-000432"><span class="t-time">04:32</span> Seafood is a huge favorite of ours; we like</p>
+<p id="t-000438"><span class="t-time">04:38</span> Another thing is, while studying about you,</p>
+<p id="t-000443"><span class="t-time">04:43</span> &quot;Wow, what a story!&quot; This is a hidden gem.</p>
+<p id="t-000448"><span class="t-time">04:48</span> &quot;We must talk about this fisherman!&quot; With that thought,</p>
+<p id="t-000452"><span class="t-time">04:52</span> interesting. Usually, when it comes to a business,</p>
+<p id="t-000458"><span class="t-time">04:58</span> or the jewelry industry,</p>
+<p id="t-000502"><span class="t-time">05:02</span> and they say, &quot;I&#x27;ll just carry it forward.&quot; That&#x27;s how this generation</p>
+<p id="t-000508"><span class="t-time">05:08</span> with no family connection, no connection to the fisheries</p>
+<p id="t-000513"><span class="t-time">05:13</span> years, running a business with a 10,000 crore turnover...</p>
+<p id="t-000519"><span class="t-time">05:19</span> It&#x27;s a thrilling story. And that too in a heavily perishable</p>
+<p id="t-000527"><span class="t-time">05:27</span> How did this story begin? How did this Mysore boy&#x27;s</p>
+<p id="t-000534"><span class="t-time">05:34</span> in this world begin?</p>
+<p id="t-000538"><span class="t-time">05:38</span> Yeah, I started as an average boy.</p>
+<p id="t-000544"><span class="t-time">05:44</span> grew up there initially.</p>
+<p id="t-000550"><span class="t-time">05:50</span> went to Sadvidya.</p>
+<p id="t-000552"><span class="t-time">05:52</span> After that, I did my PU there itself. My first 12</p>
+<p id="t-000558"><span class="t-time">05:58</span> in Mysore. Now, if I think back,</p>
+<p id="t-000607"><span class="t-time">06:07</span> connect to my life? Well,</p>
+<p id="t-000612"><span class="t-time">06:12</span> I enjoyed it a lot.</p>
+<p id="t-000615"><span class="t-time">06:15</span> Even till now, my best time was that education</p>
+<p id="t-000622"><span class="t-time">06:22</span> Even now, all my best friends are from there.</p>
+<p id="t-000627"><span class="t-time">06:27</span> Also, my wife... from 10th standard</p>
+<p id="t-000633"><span class="t-time">06:33</span> Okay.</p>
+<p id="t-000637"><span class="t-time">06:37</span> Okay.</p>
+<p id="t-000640"><span class="t-time">06:40</span> Right, a proper Mysore boy.</p>
+<p id="t-000643"><span class="t-time">06:43</span> Mysore boy.</p>
+<p id="t-000646"><span class="t-time">06:46</span> After that... one thing is, my mother isn&#x27;t very</p>
+<p id="t-000653"><span class="t-time">06:53</span> 7th standard.</p>
+<p id="t-000659"><span class="t-time">06:59</span> What happened was, since childhood she used to say one thing.</p>
+<p id="t-000703"><span class="t-time">07:03</span> She would say it like this:</p>
+<p id="t-000709"><span class="t-time">07:09</span> special.&quot;</p>
+<p id="t-000711"><span class="t-time">07:11</span> You know? That was always in my mind.</p>
+<p id="t-000717"><span class="t-time">07:17</span> I have to do something, do something larger than life.</p>
+<p id="t-000723"><span class="t-time">07:23</span> So closing the loop... you started with</p>
+<p id="t-000727"><span class="t-time">07:27</span> There is another dialogue in KGF.</p>
+<p id="t-000733"><span class="t-time">07:33</span> that powerful people come from</p>
+<p id="t-000739"><span class="t-time">07:39</span> Powerful people make places powerful.&quot; So,</p>
+<p id="t-000746"><span class="t-time">07:46</span> to put it simply, where</p>
+<p id="t-000751"><span class="t-time">07:51</span> what your family is, what your height is, what your</p>
+<p id="t-000758"><span class="t-time">07:58</span> Only one thing matters: how your mind</p>
+<p id="t-000803"><span class="t-time">08:03</span> How tough are you</p>
+<p id="t-000808"><span class="t-time">08:08</span> All of that is fully 99.9%</p>
+<p id="t-000814"><span class="t-time">08:14</span> There is Dhoni on one side, or our Rohit Sharma,</p>
+<p id="t-000820"><span class="t-time">08:20</span> there are people like Rohan Gavaskar. Now,</p>
+<p id="t-000827"><span class="t-time">08:27</span> It is not the size of the dog</p>
+<p id="t-000832"><span class="t-time">08:32</span> it&#x27;s the size of the fight in the dog.</p>
+<p id="t-000839"><span class="t-time">08:39</span> It doesn&#x27;t matter at all where you come from. Once</p>
+<p id="t-000844"><span class="t-time">08:44</span> that it can happen like this, that you can do it,</p>
+<p id="t-000848"><span class="t-time">08:48</span> if you decide &quot;I will do it,&quot; you can do it. So, to a</p>
+<p id="t-000854"><span class="t-time">08:54</span> background at all. But that itself was an</p>
+<p id="t-000859"><span class="t-time">08:59</span> Because,</p>
+<p id="t-000905"><span class="t-time">09:05</span> dangerous person in a game...</p>
+<p id="t-000910"><span class="t-time">09:10</span> lose.</p>
+<p id="t-000915"><span class="t-time">09:15</span> have nothing to prove.</p>
+<p id="t-000919"><span class="t-time">09:19</span> Yes,</p>
+<p id="t-000922"><span class="t-time">09:22</span> Mysore can be called your pedigree.</p>
+<p id="t-000926"><span class="t-time">09:26</span> Okay, so Utham, could you tell us a bit about how</p>
+<p id="t-000931"><span class="t-time">09:31</span> From what we&#x27;ve seen, in a company called</p>
+<p id="t-000935"><span class="t-time">09:35</span> I&#x27;ll go a little further back than that.</p>
+<p id="t-000937"><span class="t-time">09:37</span> Now, I went to Surathkal for engineering...</p>
+<p id="t-000940"><span class="t-time">09:40</span> After going for engineering,</p>
+<p id="t-000945"><span class="t-time">09:45</span> When I went there, I had a huge desire</p>
+<p id="t-000951"><span class="t-time">09:51</span> Okay.</p>
+<p id="t-000954"><span class="t-time">09:54</span> year itself, I had that ambition.</p>
+<p id="t-001001"><span class="t-time">10:01</span> I wanted to be a leader for the first time.</p>
+<p id="t-001007"><span class="t-time">10:07</span> election. The first major setback</p>
+<p id="t-001012"><span class="t-time">10:12</span> Actually, that is the first time I really</p>
+<p id="t-001017"><span class="t-time">10:17</span> That coping wasn&#x27;t so simple.</p>
+<p id="t-001024"><span class="t-time">10:24</span> I would go to the forest every week.</p>
+<p id="t-001030"><span class="t-time">10:30</span> I didn&#x27;t leave any.</p>
+<p id="t-001032"><span class="t-time">10:32</span> I roamed every peak. But at that</p>
+<p id="t-001036"><span class="t-time">10:36</span> year, it was because my course work</p>
+<p id="t-001041"><span class="t-time">10:41</span> in college.</p>
+<p id="t-001048"><span class="t-time">10:48</span> things that I picked up. One is, when you</p>
+<p id="t-001053"><span class="t-time">10:53</span> once you see the goal, the process</p>
+<p id="t-001100"><span class="t-time">11:00</span> just not giving up.</p>
+<p id="t-001102"><span class="t-time">11:02</span> Second,</p>
+<p id="t-001109"><span class="t-time">11:09</span> It&#x27;s not about narcissism.</p>
+<p id="t-001116"><span class="t-time">11:16</span> Even if you leave me in the forest for one day,</p>
+<p id="t-001120"><span class="t-time">11:20</span> I actually get recharged.</p>
+<p id="t-001126"><span class="t-time">11:26</span> Now, if I think back,</p>
+<p id="t-001131"><span class="t-time">11:31</span> all that is okay. But these two character traits,</p>
+<p id="t-001135"><span class="t-time">11:35</span> Okay.</p>
+<p id="t-001140"><span class="t-time">11:40</span> Then I did a technical job at Ittiam</p>
+<p id="t-001145"><span class="t-time">11:45</span> usual, I was confused in life.</p>
+<p id="t-001151"><span class="t-time">11:51</span> Then again, I will connect this maybe</p>
+<p id="t-001156"><span class="t-time">11:56</span> A lot of pressure.</p>
+<p id="t-001201"><span class="t-time">12:01</span> Hmm.</p>
+<p id="t-001203"><span class="t-time">12:03</span> Hmm.</p>
+<p id="t-001206"><span class="t-time">12:06</span> only then it&#x27;s a</p>
+<p id="t-001209"><span class="t-time">12:09</span> Status.</p>
+<p id="t-001211"><span class="t-time">12:11</span> Or else you&#x27;re considered failed.</p>
+<p id="t-001214"><span class="t-time">12:14</span> At that time, in that confused state, everything</p>
+<p id="t-001218"><span class="t-time">12:18</span> comes up. GMAT, this, that, everything comes up.</p>
+<p id="t-001223"><span class="t-time">12:23</span> Ultimately, I didn&#x27;t get into IIMs.</p>
+<p id="t-001231"><span class="t-time">12:31</span> that I thought I could get. I got SP Jain.</p>
+<p id="t-001236"><span class="t-time">12:36</span> Good MBA, because those four years</p>
+<p id="t-001240"><span class="t-time">12:40</span> in college.</p>
+<p id="t-001241"><span class="t-time">12:41</span> Okay.</p>
+<p id="t-001243"><span class="t-time">12:43</span> So these two years, truly the two years</p>
+<p id="t-001248"><span class="t-time">12:48</span> Okay.</p>
+<p id="t-001250"><span class="t-time">12:50</span> Next to SP Jain, there were no forests or hills.</p>
+<p id="t-001255"><span class="t-time">12:55</span> There were no forests or hills. Plus, another thing</p>
+<p id="t-001300"><span class="t-time">13:00</span> there is more responsibility.</p>
+<p id="t-001305"><span class="t-time">13:05</span> your job to go there. You have to study using your own</p>
+<p id="t-001308"><span class="t-time">13:08</span> responsibility. So I studied very seriously</p>
+<p id="t-001315"><span class="t-time">13:15</span> Tata Strategic Management. Okay,</p>
+<p id="t-001321"><span class="t-time">13:21</span> First starting, I was involved in two to three</p>
+<p id="t-001326"><span class="t-time">13:26</span> Starbucks was to be launched in</p>
+<p id="t-001329"><span class="t-time">13:29</span> doing the work. After that, by luck, Cyrus</p>
+<p id="t-001335"><span class="t-time">13:35</span> Okay.</p>
+<p id="t-001338"><span class="t-time">13:38</span> CEO&#x27;s office, Chairman&#x27;s office... they needed some</p>
+<p id="t-001344"><span class="t-time">13:44</span> So I got selected. So for the first time,</p>
+<p id="t-001347"><span class="t-time">13:47</span> working with a leader of that league...</p>
+<p id="t-001354"><span class="t-time">13:54</span> working at the highest level.</p>
+<p id="t-001401"><span class="t-time">14:01</span> where I come and connecting the dots... what</p>
+<p id="t-001407"><span class="t-time">14:07</span> if you have the data, if you have done the work,</p>
+<p id="t-001415"><span class="t-time">14:15</span> or Ratan Tata, or anyone else, they will</p>
+<p id="t-001420"><span class="t-time">14:20</span> Hmm.</p>
+<p id="t-001423"><span class="t-time">14:23</span> Now, you asked the first question: coming from Mysore,</p>
+<p id="t-001428"><span class="t-time">14:28</span> confidence? All these things are small,</p>
+<p id="t-001432"><span class="t-time">14:32</span> In this situation, when you are taking</p>
+<p id="t-001437"><span class="t-time">14:37</span> getting that itself is a joy.</p>
+<p id="t-001440"><span class="t-time">14:40</span> Second, once you get a place at the table,</p>
+<p id="t-001446"><span class="t-time">14:46</span> attention.</p>
+<p id="t-001448"><span class="t-time">14:48</span> Based on your output, people with that kind of profile</p>
+<p id="t-001453"><span class="t-time">14:53</span> Right.</p>
+<p id="t-001456"><span class="t-time">14:56</span> That was my takeaway from there.</p>
+<p id="t-001458"><span class="t-time">14:58</span> After that,</p>
+<p id="t-001504"><span class="t-time">15:04</span> It felt too protected.</p>
+<p id="t-001506"><span class="t-time">15:06</span> After that, I left it. Leaving that,</p>
+<p id="t-001509"><span class="t-time">15:09</span> It was an investment banking startup</p>
+<p id="t-001517"><span class="t-time">15:17</span> The main person there, his logic was simply</p>
+<p id="t-001523"><span class="t-time">15:23</span> I will hire you for the investment</p>
+<p id="t-001526"><span class="t-time">15:26</span> because I need a clean slate.</p>
+<p id="t-001532"><span class="t-time">15:32</span> What he meant by &quot;ready to work&quot;</p>
+<p id="t-001535"><span class="t-time">15:35</span> working continuously for two days, 48 hours.</p>
+<p id="t-001540"><span class="t-time">15:40</span> That kind of work.</p>
+<p id="t-001546"><span class="t-time">15:46</span> those two years were the biggest jump</p>
+<p id="t-001553"><span class="t-time">15:53</span> It was almost like a second MBA.</p>
+<p id="t-001555"><span class="t-time">15:55</span> I didn&#x27;t take a single weekend off.</p>
+<p id="t-001600"><span class="t-time">16:00</span> I even got married. Even for my marriage, I took</p>
+<p id="t-001604"><span class="t-time">16:04</span> Is that so?</p>
+<p id="t-001607"><span class="t-time">16:07</span> We went on Thursday, and by Saturday night we went</p>
+<p id="t-001613"><span class="t-time">16:13</span> Friday was the event, and from Sunday it was work.</p>
+<p id="t-001618"><span class="t-time">16:18</span> But in those two years, I think</p>
+<p id="t-001625"><span class="t-time">16:25</span> banking minds</p>
+<p id="t-001629"><span class="t-time">16:29</span> Okay.</p>
+<p id="t-001632"><span class="t-time">16:32</span> This banker had... he was a guy who had done</p>
+<p id="t-001640"><span class="t-time">16:40</span> large deals, deals worth more than 5, 10, or 15 thousand</p>
+<p id="t-001647"><span class="t-time">16:47</span> So I had the fortune to work with him</p>
+<p id="t-001652"><span class="t-time">16:52</span> So after that,</p>
+<p id="t-001656"><span class="t-time">16:56</span> I got into trading.</p>
+<p id="t-001659"><span class="t-time">16:59</span> Credit cards... I maxed out all</p>
+<p id="t-001703"><span class="t-time">17:03</span> I had a loan of around 15-20 lakhs, plus my marriage</p>
+<p id="t-001708"><span class="t-time">17:08</span> Okay.</p>
+<p id="t-001711"><span class="t-time">17:11</span> company called O3 Capital. There, till</p>
+<p id="t-001717"><span class="t-time">17:17</span> I paid the highest tax.</p>
+<p id="t-001720"><span class="t-time">17:20</span> I drew the highest salary there itself.</p>
+<p id="t-001722"><span class="t-time">17:22</span> Got it? That salary, I drew it for about</p>
+<p id="t-001728"><span class="t-time">17:28</span> I developed a sort of aversion towards money. &quot;Why this much money?&quot;</p>
+<p id="t-001734"><span class="t-time">17:34</span> my salary jumped four times.</p>
+<p id="t-001738"><span class="t-time">17:38</span> skills had developed to,</p>
+<p id="t-001743"><span class="t-time">17:43</span> Right.</p>
+<p id="t-001747"><span class="t-time">17:47</span> invest this back into my career.&quot;</p>
+<p id="t-001750"><span class="t-time">17:50</span> &quot;This much is not needed.&quot;</p>
+<p id="t-001756"><span class="t-time">17:56</span> wife.</p>
+<p id="t-001758"><span class="t-time">17:58</span> Because we have been together since 10th standard,</p>
+<p id="t-001804"><span class="t-time">18:04</span> it should be like that.&quot; There was no need to be</p>
+<p id="t-001808"><span class="t-time">18:08</span> I had it.</p>
+<p id="t-001809"><span class="t-time">18:09</span> Suma.</p>
+<p id="t-001813"><span class="t-time">18:13</span> Suma Raghupathi.</p>
+<p id="t-001820"><span class="t-time">18:20</span> a 60% salary cut, I went to Nekkanti.</p>
+<p id="t-001824"><span class="t-time">18:24</span> I went to Nekkanti; they</p>
+<p id="t-001829"><span class="t-time">18:29</span> Okay.</p>
+<p id="t-001832"><span class="t-time">18:32</span> Uh-huh.</p>
+<p id="t-001835"><span class="t-time">18:35</span> Okay.</p>
+<p id="t-001839"><span class="t-time">18:39</span> Why shouldn&#x27;t it be done?&quot;</p>
+<p id="t-001843"><span class="t-time">18:43</span> I didn&#x27;t have the confidence at that time.</p>
+<p id="t-001849"><span class="t-time">18:49</span> didn&#x27;t do the IPO, for me... I had already taken a</p>
+<p id="t-001855"><span class="t-time">18:55</span> To what extent? I had quit from Bombay,</p>
+<p id="t-001900"><span class="t-time">19:00</span> moved them...</p>
+<p id="t-001903"><span class="t-time">19:03</span> managed business. I had already taken that much</p>
+<p id="t-001907"><span class="t-time">19:07</span> So while taking the next risk,</p>
+<p id="t-001914"><span class="t-time">19:14</span> can happen next?&quot;</p>
+<p id="t-001916"><span class="t-time">19:16</span> At that time, I didn&#x27;t have the vision to become an entrepreneur,</p>
+<p id="t-001924"><span class="t-time">19:24</span> I had invested about one and a half years in</p>
+<p id="t-001928"><span class="t-time">19:28</span> done all these things.</p>
+<p id="t-001933"><span class="t-time">19:33</span> That was the desire. But the idea I got then</p>
+<p id="t-001938"><span class="t-time">19:38</span> So there, among friends, families, and in the seafood</p>
+<p id="t-001943"><span class="t-time">19:43</span> With that, I formed a fund of around 35 to 40</p>
+<p id="t-001949"><span class="t-time">19:49</span> with the whole mandate</p>
+<p id="t-001955"><span class="t-time">19:55</span> seafood startups. And like a</p>
+<p id="t-001959"><span class="t-time">19:59</span> Okay.</p>
+<p id="t-002003"><span class="t-time">20:03</span> companies.</p>
+<p id="t-002006"><span class="t-time">20:06</span> I invested in them too. In Hyderabad,</p>
+<p id="t-002010"><span class="t-time">20:10</span> a couple of companies there. In Chennai, a couple of</p>
+<p id="t-002013"><span class="t-time">20:13</span> Okay.</p>
+<p id="t-002015"><span class="t-time">20:15</span> Basically like a Private Equity.</p>
+<p id="t-002018"><span class="t-time">20:18</span> Private Equity is very big, because</p>
+<p id="t-002023"><span class="t-time">20:23</span> you can call it, or managing a family</p>
+<p id="t-002027"><span class="t-time">20:27</span> Something like that, a 40 crore fund. To make these</p>
+<p id="t-002032"><span class="t-time">20:32</span> but I had met almost 50 people</p>
+<p id="t-002036"><span class="t-time">20:36</span> to see what was happening in India.</p>
+<p id="t-002042"><span class="t-time">20:42</span> months, or a year, I started gaining</p>
+<p id="t-002047"><span class="t-time">20:47</span> Listening to their insights?</p>
+<p id="t-002049"><span class="t-time">20:49</span> Compared to these insights, mine wasn&#x27;t bad.</p>
+<p id="t-002055"><span class="t-time">20:55</span> &quot;Now, when they are taking this much risk, why shouldn&#x27;t</p>
+<p id="t-002100"><span class="t-time">21:00</span> That thought crossed my mind.</p>
+<p id="t-002103"><span class="t-time">21:03</span> But,</p>
+<p id="t-002107"><span class="t-time">21:07</span> into it just yet.</p>
+<p id="t-002112"><span class="t-time">21:12</span> back. Let me convince my-</p>
+<p id="t-002117"><span class="t-time">21:17</span> can give my life to.&quot; If I do it now, I must go all</p>
+<p id="t-002120"><span class="t-time">21:20</span> &quot;Just trying it out for a year or two,</p>
+<p id="t-002127"><span class="t-time">21:27</span> So for almost 90 days,</p>
+<p id="t-002134"><span class="t-time">21:34</span> up to Kolkata,</p>
+<p id="t-002140"><span class="t-time">21:40</span> harbor, to another harbor... that was the kind of</p>
+<p id="t-002142"><span class="t-time">21:42</span> 90 days?</p>
+<p id="t-002145"><span class="t-time">21:45</span> While doing that, every day I would meet all the stakeholders.</p>
+<p id="t-002150"><span class="t-time">21:50</span> These agents, factories,</p>
+<p id="t-002157"><span class="t-time">21:57</span> I would meet them and just talk.</p>
+<p id="t-002202"><span class="t-time">22:02</span> data.</p>
+<p id="t-002207"><span class="t-time">22:07</span> I knew what the size was, what India was about, so I fully knew</p>
+<p id="t-002214"><span class="t-time">22:14</span> Now I just had to go search for the trees</p>
+<p id="t-002218"><span class="t-time">22:18</span> it connects.</p>
+<p id="t-002223"><span class="t-time">22:23</span> at some point, all that data and intuition</p>
+<p id="t-002228"><span class="t-time">22:28</span> and you feel:</p>
+<p id="t-002231"><span class="t-time">22:31</span> Now is the time to take an avatar.</p>
+<p id="t-002234"><span class="t-time">22:34</span> &quot;This is what I was born for.&quot;</p>
+<p id="t-002237"><span class="t-time">22:37</span> The moment had arrived, you felt.</p>
+<p id="t-002240"><span class="t-time">22:40</span> Okay.</p>
+<p id="t-002246"><span class="t-time">22:46</span> to the person I had taken the fund money from.</p>
+<p id="t-002252"><span class="t-time">22:52</span> Okay.</p>
+<p id="t-002255"><span class="t-time">22:55</span> Hmm.</p>
+<p id="t-002300"><span class="t-time">23:00</span> I suppose. Some spark.</p>
+<p id="t-002306"><span class="t-time">23:06</span> &quot;Why all this? Become the CEO right here. Tell me what</p>
+<p id="t-002313"><span class="t-time">23:13</span> Right.</p>
+<p id="t-002315"><span class="t-time">23:15</span> Hmm.</p>
+<p id="t-002317"><span class="t-time">23:17</span> Okay.</p>
+<p id="t-002320"><span class="t-time">23:20</span> &quot;It&#x27;s not about numbers anymore, the game is different now.&quot;</p>
+<p id="t-002323"><span class="t-time">23:23</span> &quot;This game is different.</p>
+<p id="t-002328"><span class="t-time">23:28</span> That...</p>
+<p id="t-002329"><span class="t-time">23:29</span> &quot;I don&#x27;t want anything. I have enough.</p>
+<p id="t-002333"><span class="t-time">23:33</span> Even if I fail, I have this, or that.&quot; Then I told him</p>
+<p id="t-002338"><span class="t-time">23:38</span> underachiever I know.</p>
+<p id="t-002340"><span class="t-time">23:40</span> I didn&#x27;t go to an IIT, I didn&#x27;t go to an IIM.</p>
+<p id="t-002343"><span class="t-time">23:43</span> In my mind, I am an avatar purusha.</p>
+<p id="t-002346"><span class="t-time">23:46</span> But in reality, I am nothing.</p>
+<p id="t-002348"><span class="t-time">23:48</span> So I am the biggest underachiever I know</p>
+<p id="t-002351"><span class="t-time">23:51</span> Hmm hmm.</p>
+<p id="t-002355"><span class="t-time">23:55</span> to correct it.</p>
+<p id="t-002400"><span class="t-time">24:00</span> The worst thing that I can have</p>
+<p id="t-002404"><span class="t-time">24:04</span> at the end of this that I didn&#x27;t try.</p>
+<p id="t-002408"><span class="t-time">24:08</span> regret.&quot;</p>
+<p id="t-002413"><span class="t-time">24:13</span> He said, &quot;How much is left in your bank</p>
+<p id="t-002420"><span class="t-time">24:20</span> that&#x27;s your seed capital.&quot;</p>
+<p id="t-002426"><span class="t-time">24:26</span> Fresh.</p>
+<p id="t-002430"><span class="t-time">24:30</span> I tell this to my wife: &quot;People won&#x27;t give you even 50 rupees,</p>
+<p id="t-002437"><span class="t-time">24:37</span> and he gave me five crores.&quot;</p>
+<p id="t-002443"><span class="t-time">24:43</span> Someone from Mysore... with no family connection,</p>
+<p id="t-002450"><span class="t-time">24:50</span> Yes.</p>
+<p id="t-002455"><span class="t-time">24:55</span> But even now, to me, he is like God.</p>
+<p id="t-002500"><span class="t-time">25:00</span> So that is how Captain Fresh</p>
+<p id="t-002503"><span class="t-time">25:03</span> So, from Nekkanti, this Captain Fresh</p>
+<p id="t-002506"><span class="t-time">25:06</span> started, you weren&#x27;t like Licious or</p>
+<p id="t-002513"><span class="t-time">25:13</span> You were a direct B2B, and focusing only on</p>
+<p id="t-002518"><span class="t-time">25:18</span> that&#x27;s how you started. But</p>
+<p id="t-002523"><span class="t-time">25:23</span> and moving elsewhere... what was the reason for that,</p>
+<p id="t-002526"><span class="t-time">25:26</span> Now, after travelling for 90 days,</p>
+<p id="t-002531"><span class="t-time">25:31</span> I understood that.</p>
+<p id="t-002535"><span class="t-time">25:35</span> we started the business.</p>
+<p id="t-002540"><span class="t-time">25:40</span> Licious was our first customer.</p>
+<p id="t-002543"><span class="t-time">25:43</span> After that,</p>
+<p id="t-002547"><span class="t-time">25:47</span> became customers.</p>
+<p id="t-002551"><span class="t-time">25:51</span> these big retailers,</p>
+<p id="t-002556"><span class="t-time">25:56</span> They weren&#x27;t getting it.</p>
+<p id="t-002557"><span class="t-time">25:57</span> So when they themselves had a problem, why should I</p>
+<p id="t-002603"><span class="t-time">26:03</span> I thought.</p>
+<p id="t-002606"><span class="t-time">26:06</span> the retail customer...</p>
+<p id="t-002610"><span class="t-time">26:10</span> logic.</p>
+<p id="t-002611"><span class="t-time">26:11</span> Another thing is, whatever commodity you</p>
+<p id="t-002616"><span class="t-time">26:16</span> simply, take coconuts.</p>
+<p id="t-002621"><span class="t-time">26:21</span> Oil.</p>
+<p id="t-002626"><span class="t-time">26:26</span> build a supply chain.</p>
+<p id="t-002631"><span class="t-time">26:31</span> brand, a product, and a customer base around it.</p>
+<p id="t-002637"><span class="t-time">26:37</span> Even when I had invested, I always</p>
+<p id="t-002642"><span class="t-time">26:42</span> &quot;If I build a brand first, and try to consistently</p>
+<p id="t-002649"><span class="t-time">26:49</span> if I go that route,&quot;</p>
+<p id="t-002651"><span class="t-time">26:51</span> &quot;But what if you don&#x27;t have a back end?&quot;</p>
+<p id="t-002656"><span class="t-time">26:56</span> what will you do? You will cross-</p>
+<p id="t-002700"><span class="t-time">27:00</span> You will make a loss.</p>
+<p id="t-002703"><span class="t-time">27:03</span> investing.</p>
+<p id="t-002708"><span class="t-time">27:08</span> that I must do B2B only.</p>
+<p id="t-002712"><span class="t-time">27:12</span> Immediately, within three to four</p>
+<p id="t-002718"><span class="t-time">27:18</span> we started supplying to all 600 stores.</p>
+<p id="t-002721"><span class="t-time">27:21</span> Okay.</p>
+<p id="t-002724"><span class="t-time">27:24</span> started sketching plans against us.</p>
+<p id="t-002728"><span class="t-time">27:28</span> To that extent. In fact, two or three people</p>
+<p id="t-002731"><span class="t-time">27:31</span> Hmm.</p>
+<p id="t-002735"><span class="t-time">27:35</span> and run away.</p>
+<p id="t-002736"><span class="t-time">27:36</span> See,</p>
+<p id="t-002741"><span class="t-time">27:41</span> business.</p>
+<p id="t-002745"><span class="t-time">27:45</span> getting that shape,</p>
+<p id="t-002746"><span class="t-time">27:46</span> Then we launched in Hyderabad, we launched in</p>
+<p id="t-002750"><span class="t-time">27:50</span> Whichever city we went to, at a city level,</p>
+<p id="t-002754"><span class="t-time">27:54</span> Right.</p>
+<p id="t-002758"><span class="t-time">27:58</span> kept launching, and went on.</p>
+<p id="t-002800"><span class="t-time">28:00</span> In every city we went to, we would get a 25-30% market</p>
+<p id="t-002805"><span class="t-time">28:05</span> We would.</p>
+<p id="t-002806"><span class="t-time">28:06</span> So we launched in 2020.</p>
+<p id="t-002813"><span class="t-time">28:13</span> around 12 months,</p>
+<p id="t-002818"><span class="t-time">28:18</span> annualized...</p>
+<p id="t-002819"><span class="t-time">28:19</span> we hit 900 crores.</p>
+<p id="t-002822"><span class="t-time">28:22</span> So in my mind, I thought we had conquered</p>
+<p id="t-002825"><span class="t-time">28:25</span> Capturing 20 to 25% market share so quickly,</p>
+<p id="t-002832"><span class="t-time">28:32</span> Quality and operations, yes, those two. But most</p>
+<p id="t-002837"><span class="t-time">28:37</span> delivered all products.</p>
+<p id="t-002842"><span class="t-time">28:42</span> Russell Market would get fish only from Mangalore,</p>
+<p id="t-002848"><span class="t-time">28:48</span> or from Kerala,</p>
+<p id="t-002852"><span class="t-time">28:52</span> That&#x27;s how it was. So, if you are a retail store,</p>
+<p id="t-002857"><span class="t-time">28:57</span> You had to do it.</p>
+<p id="t-002859"><span class="t-time">28:59</span> One supplier just for Rohu and Catla,</p>
+<p id="t-002904"><span class="t-time">29:04</span> like having one guy for each source.</p>
+<p id="t-002910"><span class="t-time">29:10</span> We sourced our supply</p>
+<p id="t-002914"><span class="t-time">29:14</span> All over India.</p>
+<p id="t-002917"><span class="t-time">29:17</span> we were a one-stop solution.</p>
+<p id="t-002919"><span class="t-time">29:19</span> &quot;If we come here, we&#x27;ll get everything.&quot;</p>
+<p id="t-002923"><span class="t-time">29:23</span> We did that.</p>
+<p id="t-002924"><span class="t-time">29:24</span> After that, the app. After that...</p>
+<p id="t-002930"><span class="t-time">29:30</span> Hmm.</p>
+<p id="t-002932"><span class="t-time">29:32</span> That&#x27;s it.</p>
+<p id="t-002936"><span class="t-time">29:36</span> No other drama.</p>
+<p id="t-002940"><span class="t-time">29:40</span> Being professional.</p>
+<p id="t-002943"><span class="t-time">29:43</span> Market people, so you can imagine what happens there. So because of that,</p>
+<p id="t-002948"><span class="t-time">29:48</span> easily 20-30% in every city and state.</p>
+<p id="t-002955"><span class="t-time">29:55</span> cities, we were the largest seafood</p>
+<p id="t-003001"><span class="t-time">30:01</span> five quarters, six quarters.</p>
+<p id="t-003006"><span class="t-time">30:06</span> After that, the stress started.</p>
+<p id="t-003009"><span class="t-time">30:09</span> Profits were not coming in.</p>
+<p id="t-003014"><span class="t-time">30:14</span> all of these mafias started to play the game.</p>
+<p id="t-003016"><span class="t-time">30:16</span> Hmm.</p>
+<p id="t-003021"><span class="t-time">30:21</span> Hmm.</p>
+<p id="t-003024"><span class="t-time">30:24</span> Did they start causing it?</p>
+<p id="t-003027"><span class="t-time">30:27</span> payments.</p>
+<p id="t-003028"><span class="t-time">30:28</span> Payment troubles started.</p>
+<p id="t-003031"><span class="t-time">30:31</span> So we...</p>
+<p id="t-003038"><span class="t-time">30:38</span> rupees we</p>
+<p id="t-003042"><span class="t-time">30:42</span> meaning gross margin.</p>
+<p id="t-003044"><span class="t-time">30:44</span> If I buy fish for 80 rupees, I am selling it for 100 rupees.</p>
+<p id="t-003048"><span class="t-time">30:48</span> So 20 rupees is mine. Out of this 20 rupees, I take care of all other expenses.</p>
+<p id="t-003053"><span class="t-time">30:53</span> Hmm.</p>
+<p id="t-003056"><span class="t-time">30:56</span> the logic was that as we scale, it will get covered.</p>
+<p id="t-003059"><span class="t-time">30:59</span> But after two years, or one, one and a half years, I slowly realized that actually,</p>
+<p id="t-003106"><span class="t-time">31:06</span> I was writing down 20 rupees in my accounts,</p>
+<p id="t-003109"><span class="t-time">31:09</span> but what was really coming in was just 5 rupees. Because 6-7 rupees in inventory,</p>
+<p id="t-003114"><span class="t-time">31:14</span> someone or the other was eating it up. Another 6-7 rupees, the customer wasn&#x27;t even</p>
+<p id="t-003118"><span class="t-time">31:18</span> paying.</p>
+<p id="t-003121"><span class="t-time">31:21</span> he ends up giving 93-94 rupees. So if you cut all that, it&#x27;s just 5 rupees. With 5 rupees, this</p>
+<p id="t-003127"><span class="t-time">31:27</span> business cannot be built.</p>
+<p id="t-003129"><span class="t-time">31:29</span> In India, you can&#x27;t build this business with 5 rupees.</p>
+<p id="t-003132"><span class="t-time">31:32</span> That realization hit in 2022.</p>
+<p id="t-003136"><span class="t-time">31:36</span> Around that time.</p>
+<p id="t-003141"><span class="t-time">31:41</span> business.</p>
+<p id="t-003144"><span class="t-time">31:44</span> with no path to profita-</p>
+<p id="t-003148"><span class="t-time">31:48</span> wall.</p>
+<p id="t-003151"><span class="t-time">31:51</span> main reasons... could we say it was vested interests and unprofessionalism?</p>
+<p id="t-003157"><span class="t-time">31:57</span> No, actually... see, we can say that, but the reality is that people here don&#x27;t have that much</p>
+<p id="t-003204"><span class="t-time">32:04</span> money.</p>
+<p id="t-003207"><span class="t-time">32:07</span> there is no money. Secondly, they eat this category 100% fresh.</p>
+<p id="t-003213"><span class="t-time">32:13</span> When eating it fresh, a lot of stress falls on the back-end supply chain.</p>
+<p id="t-003218"><span class="t-time">32:18</span> And if you have to do everything right in that supply chain, the cost of servicing</p>
+<p id="t-003222"><span class="t-time">32:22</span> is very high.</p>
+<p id="t-003226"><span class="t-time">32:26</span> paying that</p>
+<p id="t-003228"><span class="t-time">32:28</span> We were studying the &quot;Sunday Non-Veg Syndrome&quot;.</p>
+<p id="t-003231"><span class="t-time">32:31</span> Exactly, so that is a major problem.</p>
+<p id="t-003234"><span class="t-time">32:34</span> out of 10,000 hours in a year, 50% of the trade happens in just 200 hours.</p>
+<p id="t-003239"><span class="t-time">32:39</span> So if you are building any supply chain, you can&#x27;t really put investments in</p>
+<p id="t-003243"><span class="t-time">32:43</span> anything, because for the remaining 9,800 hours, it just sits empty.</p>
+<p id="t-003248"><span class="t-time">32:48</span> So how will you recover your investment? So those are all</p>
+<p id="t-003252"><span class="t-time">32:52</span> structural issues.</p>
+<p id="t-003256"><span class="t-time">32:56</span> We will come back.</p>
+<p id="t-003258"><span class="t-time">32:58</span> We will come back, and when we do, we will conquer it.</p>
+<p id="t-003304"><span class="t-time">33:04</span> It will happen. In 5-6 years, it will be ready.</p>
+<p id="t-003307"><span class="t-time">33:07</span> We will come.</p>
+<p id="t-003312"><span class="t-time">33:12</span> to the US and Europe?</p>
+<p id="t-003315"><span class="t-time">33:15</span> So the next phase, that is Captain Fresh 2.0 what I call it,</p>
+<p id="t-003320"><span class="t-time">33:20</span> is where we used the supply that I had built. To export that supply,</p>
+<p id="t-003327"><span class="t-time">33:27</span> an infrastructure is needed. Because you need to convert raw</p>
+<p id="t-003331"><span class="t-time">33:31</span> material into finished products.</p>
+<p id="t-003336"><span class="t-time">33:36</span> disruption I did,</p>
+<p id="t-003340"><span class="t-time">33:40</span> I had the insight that in the factory value chain, in that value chain,</p>
+<p id="t-003346"><span class="t-time">33:46</span> there&#x27;s been a lot of investment.</p>
+<p id="t-003348"><span class="t-time">33:48</span> There&#x27;s an under-utilization problem.</p>
+<p id="t-003352"><span class="t-time">33:52</span> factories.</p>
+<p id="t-003356"><span class="t-time">33:56</span> because of COVID, all these factories were coming out.</p>
+<p id="t-003359"><span class="t-time">33:59</span> These factories were under a lot of stress because all the proprietors, they don&#x27;t</p>
+<p id="t-003404"><span class="t-time">34:04</span> have this kind of capital.</p>
+<p id="t-003408"><span class="t-time">34:08</span> 10 crore loan, and hoping to get another 10 crore in government incentives,</p>
+<p id="t-003412"><span class="t-time">34:12</span> they set up the factory.</p>
+<p id="t-003416"><span class="t-time">34:16</span> they don&#x27;t think about all that. These are all small entrepreneurs, right?</p>
+<p id="t-003421"><span class="t-time">34:21</span> So like that, I took 12 factories on lease in a [ __ ].</p>
+<p id="t-003425"><span class="t-time">34:25</span> Okay, in India?</p>
+<p id="t-003427"><span class="t-time">34:27</span> Okay.</p>
+<p id="t-003430"><span class="t-time">34:30</span> Hmm.</p>
+<p id="t-003434"><span class="t-time">34:34</span> in the seafood industry, if they are in Bhimavaram, Andhra, they just stay in Bhimavaram.</p>
+<p id="t-003440"><span class="t-time">34:40</span> Or if they are in Nellore, they just stay in Nellore. The Gujarat guys never go to Andhra.</p>
+<p id="t-003447"><span class="t-time">34:47</span> So we were the first player</p>
+<p id="t-003450"><span class="t-time">34:50</span> And this is where tech came into play.</p>
+<p id="t-003455"><span class="t-time">34:55</span> Okay.</p>
+<p id="t-003458"><span class="t-time">34:58</span> whatever happens every moment, I should get that information in real-time.</p>
+<p id="t-003502"><span class="t-time">35:02</span> Okay.</p>
+<p id="t-003504"><span class="t-time">35:04</span> factory is in Bhimavaram or in Gujarat, it doesn&#x27;t matter.</p>
+<p id="t-003511"><span class="t-time">35:11</span> &quot;You can take the decisions&quot; – that was the confidence I had.</p>
+<p id="t-003514"><span class="t-time">35:14</span> So immediately, we did around 1400 crores of exports the next year.</p>
+<p id="t-003521"><span class="t-time">35:21</span> Okay.</p>
+<p id="t-003523"><span class="t-time">35:23</span> Right.</p>
+<p id="t-003525"><span class="t-time">35:25</span> So when you were pivoting to the investors,</p>
+<p id="t-003528"><span class="t-time">35:28</span> didn&#x27;t they say, &quot;What man, are you crazy dropping a 900 crore business?&quot;</p>
+<p id="t-003533"><span class="t-time">35:33</span> See, that is one more art of an entrepreneur.</p>
+<p id="t-003536"><span class="t-time">35:36</span> Right? You need to know what the investor can even understand.</p>
+<p id="t-003543"><span class="t-time">35:43</span> Right.</p>
+<p id="t-003547"><span class="t-time">35:47</span> down to zero.&quot; I never said that.</p>
+<p id="t-003552"><span class="t-time">35:52</span> Hmm.</p>
+<p id="t-003554"><span class="t-time">35:54</span> Hmm.</p>
+<p id="t-003557"><span class="t-time">35:57</span> This is profitable.</p>
+<p id="t-003600"><span class="t-time">36:00</span> Quarter on quarter, they saw 100, 200, 300, 400 crores of profitable business.</p>
+<p id="t-003606"><span class="t-time">36:06</span> So while watching it every quarter, by the fourth quarter, they themselves came and said, &quot;Why are you</p>
+<p id="t-003611"><span class="t-time">36:11</span> still doing India?&quot;</p>
+<p id="t-003614"><span class="t-time">36:14</span> So I knew that this is the direction, but in India too, if I had suddenly taken it</p>
+<p id="t-003621"><span class="t-time">36:21</span> to zero in one go,</p>
+<p id="t-003625"><span class="t-time">36:25</span> that much money we would have had to</p>
+<p id="t-003628"><span class="t-time">36:28</span> abandon and come.</p>
+<p id="t-003633"><span class="t-time">36:33</span> If it&#x27;s a 900 crore business, figure that around 150-200 crores was in the market.</p>
+<p id="t-003638"><span class="t-time">36:38</span> Right.</p>
+<p id="t-003642"><span class="t-time">36:42</span> said we are closing</p>
+<p id="t-003645"><span class="t-time">36:45</span> Apart from me,</p>
+<p id="t-003651"><span class="t-time">36:51</span> knew about this plan.</p>
+<p id="t-003656"><span class="t-time">36:56</span> Right.</p>
+<p id="t-003659"><span class="t-time">36:59</span> I had started it somewhere else, in Kochi.</p>
+<p id="t-003702"><span class="t-time">37:02</span> Our India team didn&#x27;t even know that this business existed.</p>
+<p id="t-003705"><span class="t-time">37:05</span> Okay.</p>
+<p id="t-003707"><span class="t-time">37:07</span> Something has come up contributing 50%, this and that...&quot;</p>
+<p id="t-003715"><span class="t-time">37:15</span> Now tell me one thing, this solitude you mentioned...</p>
+<p id="t-003718"><span class="t-time">37:18</span> It&#x27;s very important while building an empire, because the battle is in the mind.</p>
+<p id="t-003722"><span class="t-time">37:22</span> The blueprint is in the mind.</p>
+<p id="t-003728"><span class="t-time">37:28</span> &quot;No man, this will come, this will come, that will come.&quot;</p>
+<p id="t-003731"><span class="t-time">37:31</span> You had it like a full screenplay?</p>
+<p id="t-003736"><span class="t-time">37:36</span> the decisions will cascade like this. We should manage these people like this, those people</p>
+<p id="t-003739"><span class="t-time">37:39</span> like that. We have to do this and that. And the ultimate weapon (Brahmastra) was the 700 crores...</p>
+<p id="t-003743"><span class="t-time">37:43</span> The ultimate weapon was...</p>
+<p id="t-003745"><span class="t-time">37:45</span> The sourcing capability. We knew how to do this, but the execution</p>
+<p id="t-003751"><span class="t-time">37:51</span> and the delivery of it, that requires emotional control.</p>
+<p id="t-003756"><span class="t-time">37:56</span> Without telling anyone, when we were clear... That&#x27;s why, to give you one example,</p>
+<p id="t-003802"><span class="t-time">38:02</span> at our peak, we had 1,500 people with us.</p>
+<p id="t-003806"><span class="t-time">38:06</span> Okay.</p>
+<p id="t-003810"><span class="t-time">38:10</span> This happened in the last three years.</p>
+<p id="t-003813"><span class="t-time">38:13</span> Right? Our business went from 900 crores to... won&#x27;t say 10,500 crores,</p>
+<p id="t-003819"><span class="t-time">38:19</span> it has reached that level.</p>
+<p id="t-003823"><span class="t-time">38:23</span> We have come down.</p>
+<p id="t-003828"><span class="t-time">38:28</span> in that, there was clarity, there was conviction. There is no other route,</p>
+<p id="t-003833"><span class="t-time">38:33</span> but it had to be executed. So in the next one year, I did this thing where...</p>
+<p id="t-003838"><span class="t-time">38:38</span> Now, if you look at our revenues, if you take my reported numbers,</p>
+<p id="t-003844"><span class="t-time">38:44</span> first year was 25 crores, second year 200 crores, third year 800 crores, fourth year 1400</p>
+<p id="t-003853"><span class="t-time">38:53</span> crores.</p>
+<p id="t-003856"><span class="t-time">38:56</span> 1400 crores reported numbers.</p>
+<p id="t-003905"><span class="t-time">39:05</span> crores. After that, we were the first Indian player to</p>
+<p id="t-003909"><span class="t-time">39:09</span> start processing in Indonesia and the Philippines. We went there, took a factory,</p>
+<p id="t-003913"><span class="t-time">39:13</span> sourced raw materials from there, and exported them. We were the first to do that</p>
+<p id="t-003917"><span class="t-time">39:17</span> too. After doing all that, I got confidence.</p>
+<p id="t-003921"><span class="t-time">39:21</span> This leg, you know, buying fish,</p>
+<p id="t-003927"><span class="t-time">39:27</span> processing it, I know this leg. But I didn&#x27;t have much satisfaction. &quot;Is this</p>
+<p id="t-003933"><span class="t-time">39:33</span> the end state?&quot; My satisfaction... from the beginning, my motivation was this:</p>
+<p id="t-003938"><span class="t-time">39:38</span> &quot;Man, so many crores are generated from India. But the guy eating it out there, nobody</p>
+<p id="t-003943"><span class="t-time">39:43</span> knows that this is an Indian item.</p>
+<p id="t-003948"><span class="t-time">39:48</span> rupees, he is selling it for 2,000 rupees.&quot;</p>
+<p id="t-003952"><span class="t-time">39:52</span> Here, the fish is here.</p>
+<p id="t-003959"><span class="t-time">39:59</span> is made. The guy selling it there is making 200-250. For what? Just telling a story,</p>
+<p id="t-004006"><span class="t-time">40:06</span> putting it in a package, understanding what the customer wants and translating that,</p>
+<p id="t-004011"><span class="t-time">40:11</span> getting customer insights. So I am a big believer of vertically integrated products.</p>
+<p id="t-004017"><span class="t-time">40:17</span> And I&#x27;m a big believer that I shouldn&#x27;t think of raw material</p>
+<p id="t-004022"><span class="t-time">40:22</span> as a cost.</p>
+<p id="t-004027"><span class="t-time">40:27</span> Right.</p>
+<p id="t-004030"><span class="t-time">40:30</span> what I need.</p>
+<p id="t-004034"><span class="t-time">40:34</span> I don&#x27;t want to be an India supplier.</p>
+<p id="t-004041"><span class="t-time">40:41</span> I can give it. So what that customer needs is a fish which comes on his</p>
+<p id="t-004047"><span class="t-time">40:47</span> plate 365 days a year.</p>
+<p id="t-004054"><span class="t-time">40:54</span> what should be my capability?</p>
+<p id="t-004057"><span class="t-time">40:57</span> I should have the ability to source fish</p>
+<p id="t-004105"><span class="t-time">41:05</span> Beyond seasons. In one place, the coast will be closed for six months.</p>
+<p id="t-004109"><span class="t-time">41:09</span> If you take one country.</p>
+<p id="t-004113"><span class="t-time">41:13</span> it&#x27;s not enough.</p>
+<p id="t-004117"><span class="t-time">41:17</span> I need to be present.</p>
+<p id="t-004120"><span class="t-time">41:20</span> I had that clarity.</p>
+<p id="t-004124"><span class="t-time">41:24</span> Even back then, &quot;I will be a one-stop solution</p>
+<p id="t-004130"><span class="t-time">41:30</span> when I did it in India, I mentioned that even when selling to the first store, I was sourcing from 200 places.</p>
+<p id="t-004135"><span class="t-time">41:35</span> I was doing that.</p>
+<p id="t-004140"><span class="t-time">41:40</span> just like how I sourced from 200 places in India, when going global, I must source from 30 countries.&quot;</p>
+<p id="t-004145"><span class="t-time">41:45</span> &quot;I have to source like that.&quot;</p>
+<p id="t-004147"><span class="t-time">41:47</span> So, plus, local varieties are needed too, right? Everything is needed everywhere. So, he is looking at seafood,</p>
+<p id="t-004152"><span class="t-time">41:52</span> he is not looking for just Indian shrimp, as a customer.</p>
+<p id="t-004155"><span class="t-time">41:55</span> And I am saying I will cater to your seafood needs.</p>
+<p id="t-004158"><span class="t-time">41:58</span> That&#x27;s it.</p>
+<p id="t-004159"><span class="t-time">41:59</span> That&#x27;s it. He doesn&#x27;t care that I come from Mysore, that I am a small boy, this and that.</p>
+<p id="t-004204"><span class="t-time">42:04</span> If he wants to give me a chance, I should earn it.</p>
+<p id="t-004208"><span class="t-time">42:08</span> And that is 30 countries sourcing. That was a big step.</p>
+<p id="t-004213"><span class="t-time">42:13</span> Right? In this, obviously the investors were like, &quot;No one thinks of this scale,</p>
+<p id="t-004221"><span class="t-time">42:21</span> no one has done it,</p>
+<p id="t-004224"><span class="t-time">42:24</span> startups.&quot; So at that time, there was a lot of resistance.</p>
+<p id="t-004230"><span class="t-time">42:30</span> And my approach was that I won&#x27;t do all this organically.</p>
+<p id="t-004237"><span class="t-time">42:37</span> There are so many companies, I will acquire them. That was my approach.</p>
+<p id="t-004243"><span class="t-time">42:43</span> There was a lot of resistance to that.</p>
+<p id="t-004249"><span class="t-time">42:49</span> Resistance from whom here?</p>
+<p id="t-004253"><span class="t-time">42:53</span> Resistance from all sides, because they hadn&#x27;t seen this.</p>
+<p id="t-004255"><span class="t-time">42:55</span> Also, at that time, there was a lot of noise. Byju&#x27;s had acquired everywhere in a similar way</p>
+<p id="t-004300"><span class="t-time">43:00</span> and collapsed.</p>
+<p id="t-004304"><span class="t-time">43:04</span> So going globally and acquiring, or acquiring in India...</p>
+<p id="t-004308"><span class="t-time">43:08</span> that startup narrative that was there,</p>
+<p id="t-004312"><span class="t-time">43:12</span> it had collapsed.</p>
+<p id="t-004315"><span class="t-time">43:15</span> So there were trust issues: &quot;Can an Indian founder pull this off? Is he mature enough to</p>
+<p id="t-004321"><span class="t-time">43:21</span> do all of this?&quot; Hmm.</p>
+<p id="t-004325"><span class="t-time">43:25</span> It had nothing to do with me, it was about the noise. And no discredit to</p>
+<p id="t-004331"><span class="t-time">43:31</span> them. If I were an investor, maybe I would have thought the same way.</p>
+<p id="t-004334"><span class="t-time">43:34</span> But I was very clear, if I don&#x27;t do this, what future does Captain Fresh&#x27;s</p>
+<p id="t-004339"><span class="t-time">43:39</span> potential have? It won&#x27;t reach its true potential.</p>
+<p id="t-004342"><span class="t-time">43:42</span> So I continued to battle in my own way. I said I want to buy a company.</p>
+<p id="t-004350"><span class="t-time">43:50</span> Now,</p>
+<p id="t-004354"><span class="t-time">43:54</span> our style.</p>
+<p id="t-004356"><span class="t-time">43:56</span> So the first acquisition that I went after,</p>
+<p id="t-004400"><span class="t-time">44:00</span> I was making around a thousand crores at that time. The first acquisition that I went</p>
+<p id="t-004406"><span class="t-time">44:06</span> after was 8000 crores. Mine was a thousand crores, and that company was 8000 crores.</p>
+<p id="t-004415"><span class="t-time">44:15</span> The investors were like, &quot;Is he mad?</p>
+<p id="t-004419"><span class="t-time">44:19</span> Mine was the same, mine was the same. What I explained was just this:</p>
+<p id="t-004424"><span class="t-time">44:24</span> &quot;Whoever we strike, if we strike, do I have to be there full time?&quot;</p>
+<p id="t-004427"><span class="t-time">44:27</span> Hmm.</p>
+<p id="t-004432"><span class="t-time">44:32</span> if we strike, I&#x27;ll have to be there full-time. If I have to be there full-time, I&#x27;ll strike</p>
+<p id="t-004437"><span class="t-time">44:37</span> and come.&quot; That was the logic.</p>
+<p id="t-004444"><span class="t-time">44:44</span> who had decided to sell the company and was sitting there, he had an advisor, right?</p>
+<p id="t-004449"><span class="t-time">44:49</span> The investment bank gatekeeper.</p>
+<p id="t-004451"><span class="t-time">44:51</span> I made a call to him: &quot;I have an interest in taking your item.&quot; He was like, &quot;What is your...</p>
+<p id="t-004459"><span class="t-time">44:59</span> thing?&quot;</p>
+<p id="t-004502"><span class="t-time">45:02</span> &quot;Give me your horoscope (details).&quot;</p>
+<p id="t-004504"><span class="t-time">45:04</span> The guy who had decided to sell the company and was</p>
+<p id="t-004508"><span class="t-time">45:08</span> this much.</p>
+<p id="t-004509"><span class="t-time">45:09</span> The investment bank gatekeeper.</p>
+<p id="t-004511"><span class="t-time">45:11</span> I made a call to him: &quot;I have an interest</p>
+<p id="t-004514"><span class="t-time">45:14</span> Okay.</p>
+<p id="t-004519"><span class="t-time">45:19</span> an 8000 crore company?&quot;</p>
+<p id="t-004519"><span class="t-time">45:19</span> thing?&quot;</p>
+<p id="t-004522"><span class="t-time">45:22</span> &quot;Give me your horoscope (details).&quot;</p>
+<p id="t-004526"><span class="t-time">45:26</span> We&#x27;ll talk about all the details later.</p>
+<p id="t-004528"><span class="t-time">45:28</span> this much.</p>
+<p id="t-004529"><span class="t-time">45:29</span> Right now I am sitting in India. Give me another half an hour. Your office is in Miami, right?&quot;</p>
+<p id="t-004534"><span class="t-time">45:34</span> Okay.</p>
+<p id="t-004534"><span class="t-time">45:34</span> Hmm.</p>
+<p id="t-004536"><span class="t-time">45:36</span> Hmm.</p>
+<p id="t-004539"><span class="t-time">45:39</span> an 8000 crore company?&quot;</p>
+<p id="t-004539"><span class="t-time">45:39</span> And you&#x27;ll come tomorrow?&quot; &quot;Yes, I will come. Just half an hour. For a half-hour meeting,</p>
+<p id="t-004543"><span class="t-time">45:43</span> you&#x27;ll come?&quot; &quot;Yes, I&#x27;ll come. Just half an hour.&quot; I went, I went there. Then he...</p>
+<p id="t-004546"><span class="t-time">45:46</span> We&#x27;ll talk about all the details later.</p>
+<p id="t-004549"><span class="t-time">45:49</span> Right now I am sitting in India. Give me another half an hour. Your office is in Miami, right?&quot;</p>
+<p id="t-004550"><span class="t-time">45:50</span> I listened to the story for half an hour, and</p>
+<p id="t-004554"><span class="t-time">45:54</span> I did that.</p>
+<p id="t-004554"><span class="t-time">45:54</span> Hmm.</p>
+<p id="t-004558"><span class="t-time">45:58</span> Whether they will give the money or not, I</p>
+<p id="t-004600"><span class="t-time">46:00</span> Hmm.</p>
+<p id="t-004603"><span class="t-time">46:03</span> &quot;I will at least try,</p>
+<p id="t-004606"><span class="t-time">46:06</span> Then he said, &quot;Alright, look, after hearing</p>
+<p id="t-004611"><span class="t-time">46:11</span> I want to give you a chance,</p>
+<p id="t-004615"><span class="t-time">46:15</span> front of my client.</p>
+<p id="t-004619"><span class="t-time">46:19</span> I&#x27;ll get him to give you 15 minutes.</p>
+<p id="t-004624"><span class="t-time">46:24</span> you need to take a flight from there. I&#x27;ll get him to give you</p>
+<p id="t-004628"><span class="t-time">46:28</span> Convince him.</p>
+<p id="t-004632"><span class="t-time">46:32</span> Saying &quot;Okay,&quot; that same day,</p>
+<p id="t-004636"><span class="t-time">46:36</span> and went there. The meeting was at 4 o&#x27;clock. That 4</p>
+<p id="t-004642"><span class="t-time">46:42</span> Okay.</p>
+<p id="t-004646"><span class="t-time">46:46</span> Because I had gone there fully</p>
+<p id="t-004649"><span class="t-time">46:49</span> It was not about numbers.</p>
+<p id="t-004652"><span class="t-time">46:52</span> the person.</p>
+<p id="t-004656"><span class="t-time">46:56</span> Yes, capturing the mind. I remember from the opening</p>
+<p id="t-004701"><span class="t-time">47:01</span> His name was X Y.</p>
+<p id="t-004705"><span class="t-time">47:05</span> The opening statement was, &quot;Look, in the seafood</p>
+<p id="t-004711"><span class="t-time">47:11</span> they call you Mr. Y.</p>
+<p id="t-004716"><span class="t-time">47:16</span> Mr. X.&quot;</p>
+<p id="t-004720"><span class="t-time">47:20</span> That sentiment locked him in.</p>
+<p id="t-004727"><span class="t-time">47:27</span> &quot;Third generation... everything that&#x27;s here is my father&#x27;s</p>
+<p id="t-004734"><span class="t-time">47:34</span> he felt. Then I gave him... &quot;Look, my tech,</p>
+<p id="t-004741"><span class="t-time">47:41</span> hmm,</p>
+<p id="t-004744"><span class="t-time">47:44</span> I have a 15,000 crore plan.&quot;</p>
+<p id="t-004746"><span class="t-time">47:46</span> &quot;Take your 8.&quot;</p>
+<p id="t-004748"><span class="t-time">47:48</span> &quot;Like this, like this.&quot; I laid it out fully.</p>
+<p id="t-004751"><span class="t-time">47:51</span> He was convinced for the first time.</p>
+<p id="t-004757"><span class="t-time">47:57</span> like Cargill, and some other company...</p>
+<p id="t-004800"><span class="t-time">48:00</span> Okay.</p>
+<p id="t-004803"><span class="t-time">48:03</span> offers, he gave us exclusivity. So that</p>
+<p id="t-004808"><span class="t-time">48:08</span> the global arena.</p>
+<p id="t-004810"><span class="t-time">48:10</span> Seafood</p>
+<p id="t-004812"><span class="t-time">48:12</span> In Miami, this is a large company. It&#x27;s like</p>
+<p id="t-004816"><span class="t-time">48:16</span> Okay.</p>
+<p id="t-004817"><span class="t-time">48:17</span> Like Jaguar Land Rover. In the seafood</p>
+<p id="t-004821"><span class="t-time">48:21</span> &quot;What is this Captain Fresh?</p>
+<p id="t-004826"><span class="t-time">48:26</span> they have taken exclusivity.&quot; That</p>
+<p id="t-004830"><span class="t-time">48:30</span> global press.</p>
+<p id="t-004831"><span class="t-time">48:31</span> Right? My intent was just that. My intent</p>
+<p id="t-004838"><span class="t-time">48:38</span> I&#x27;ll be striking lifelong.</p>
+<p id="t-004842"><span class="t-time">48:42</span> If it happens, it happens.</p>
+<p id="t-004847"><span class="t-time">48:47</span> After that, we couldn&#x27;t close it.</p>
+<p id="t-004850"><span class="t-time">48:50</span> The representation numbers he gave didn&#x27;t</p>
+<p id="t-004855"><span class="t-time">48:55</span> Okay.</p>
+<p id="t-004859"><span class="t-time">48:59</span> business I brought, it was 2000 crores.</p>
+<p id="t-004903"><span class="t-time">49:03</span> our investors were very happy.</p>
+<p id="t-004909"><span class="t-time">49:09</span> This is a very good size, we can</p>
+<p id="t-004917"><span class="t-time">49:17</span> So the shock and awe effect worked.</p>
+<p id="t-004925"><span class="t-time">49:25</span> got our US distribution.</p>
+<p id="t-004927"><span class="t-time">49:27</span> I did start that.</p>
+<p id="t-004932"><span class="t-time">49:32</span> acquisitions.</p>
+<p id="t-004937"><span class="t-time">49:37</span> quarter we keep doing it.</p>
+<p id="t-004939"><span class="t-time">49:39</span> So we&#x27;ve done three in the US,</p>
+<p id="t-004945"><span class="t-time">49:45</span> Here in Europe now, France, Poland,</p>
+<p id="t-004951"><span class="t-time">49:51</span> Spain.</p>
+<p id="t-004952"><span class="t-time">49:52</span> We&#x27;ve done these four.</p>
+<p id="t-004956"><span class="t-time">49:56</span> So another two are ongoing.</p>
+<p id="t-005003"><span class="t-time">50:03</span> structure. Like this, we&#x27;ve done 10 brands.</p>
+<p id="t-005006"><span class="t-time">50:06</span> Now, while doing the first and second</p>
+<p id="t-005011"><span class="t-time">50:11</span> Now I have 50 people in the queue.</p>
+<p id="t-005016"><span class="t-time">50:16</span> Will this not fit? How is it?&quot;</p>
+<p id="t-005020"><span class="t-time">50:20</span> a job has become easy.</p>
+<p id="t-005025"><span class="t-time">50:25</span> There are front-end brands.</p>
+<p id="t-005027"><span class="t-time">50:27</span> We have the backend operations</p>
+<p id="t-005032"><span class="t-time">50:32</span> Right.</p>
+<p id="t-005036"><span class="t-time">50:36</span> comes from India.</p>
+<p id="t-005040"><span class="t-time">50:40</span> Okay.</p>
+<p id="t-005043"><span class="t-time">50:43</span> almost 80% of our supply is from</p>
+<p id="t-005047"><span class="t-time">50:47</span> Vietnam if you take the Indian Ocean.</p>
+<p id="t-005050"><span class="t-time">50:50</span> If you take the Atlantic, we take goods from Norway and Poland.</p>
+<p id="t-005055"><span class="t-time">50:55</span> from Ecuador and Mexico.</p>
+<p id="t-005100"><span class="t-time">51:00</span> almost...</p>
+<p id="t-005103"><span class="t-time">51:03</span> we purchase anywhere between 800 to 1300-1400 crores</p>
+<p id="t-005110"><span class="t-time">51:10</span> in each market, we should be amongst the</p>
+<p id="t-005115"><span class="t-time">51:15</span> In the whole world, we should be amongst the</p>
+<p id="t-005120"><span class="t-time">51:20</span> Okay.</p>
+<p id="t-005123"><span class="t-time">51:23</span> India, Indonesia, Vietnam...</p>
+<p id="t-005126"><span class="t-time">51:26</span> Consumer countries?</p>
+<p id="t-005128"><span class="t-time">51:28</span> Yes.</p>
+<p id="t-005131"><span class="t-time">51:31</span> we do there. 4000 crores we do</p>
+<p id="t-005134"><span class="t-time">51:34</span> Okay, the majors.</p>
+<p id="t-005136"><span class="t-time">51:36</span> Okay.</p>
+<p id="t-005139"><span class="t-time">51:39</span> Because in Europe, while it is for</p>
+<p id="t-005142"><span class="t-time">51:42</span> right now we have a thousand employees,</p>
+<p id="t-005146"><span class="t-time">51:46</span> Okay.</p>
+<p id="t-005150"><span class="t-time">51:50</span> Indonesia, the Middle East... this is our</p>
+<p id="t-005153"><span class="t-time">51:53</span> Okay.</p>
+<p id="t-005157"><span class="t-time">51:57</span> is how we have come from zero to 10000</p>
+<p id="t-005201"><span class="t-time">52:01</span> Let&#x27;s come back to the business journey. I still have</p>
+<p id="t-005207"><span class="t-time">52:07</span> eater, one question.</p>
+<p id="t-005209"><span class="t-time">52:09</span> Usually, India&#x27;s poultry and</p>
+<p id="t-005213"><span class="t-time">52:13</span> when we compare, there is a quality difference. There,</p>
+<p id="t-005218"><span class="t-time">52:18</span> are very strict, they say.</p>
+<p id="t-005222"><span class="t-time">52:22</span> there&#x27;s more poultry with antibiotics.</p>
+<p id="t-005226"><span class="t-time">52:26</span> What are your thoughts on this? What</p>
+<p id="t-005229"><span class="t-time">52:29</span> Globally, one difference is that</p>
+<p id="t-005236"><span class="t-time">52:36</span> actually do their work.</p>
+<p id="t-005238"><span class="t-time">52:38</span> Whether it is the US FDA or the European Food</p>
+<p id="t-005245"><span class="t-time">52:45</span> act like gatekeepers. Wherever you</p>
+<p id="t-005249"><span class="t-time">52:49</span> you have to go through that gate first.</p>
+<p id="t-005255"><span class="t-time">52:55</span> antibiotics, heavy metals,</p>
+<p id="t-005300"><span class="t-time">53:00</span> typical problems in the seafood supply chain...</p>
+<p id="t-005305"><span class="t-time">53:05</span> problems are very usual.</p>
+<p id="t-005311"><span class="t-time">53:11</span> Only if it passes the test and moves forward, do you get</p>
+<p id="t-005315"><span class="t-time">53:15</span> Now, if you repeatedly offend,</p>
+<p id="t-005320"><span class="t-time">53:20</span> Simple.</p>
+<p id="t-005321"><span class="t-time">53:21</span> In India, the problem is that this</p>
+<p id="t-005326"><span class="t-time">53:26</span> Here, they add formalin</p>
+<p id="t-005334"><span class="t-time">53:34</span> it goes to Assam. Just on the way, it takes</p>
+<p id="t-005341"><span class="t-time">53:41</span> and then sell it.</p>
+<p id="t-005347"><span class="t-time">53:47</span> They add formalin.</p>
+<p id="t-005351"><span class="t-time">53:51</span> in India, you don&#x27;t need a license to sell fish.</p>
+<p id="t-005359"><span class="t-time">53:59</span> aspect, right, it&#x27;s a fundamental</p>
+<p id="t-005404"><span class="t-time">54:04</span> even if you go to Dubai, a meat operator needs a</p>
+<p id="t-005409"><span class="t-time">54:09</span> To get that license, you must have some</p>
+<p id="t-005412"><span class="t-time">54:12</span> And because they have a license, they are</p>
+<p id="t-005417"><span class="t-time">54:17</span> them, food quality tests happening... they are</p>
+<p id="t-005420"><span class="t-time">54:20</span> In India, that licensing doesn&#x27;t exist.</p>
+<p id="t-005425"><span class="t-time">54:25</span> There is no accountability.</p>
+<p id="t-005430"><span class="t-time">54:30</span> So that is the biggest difference.</p>
+<p id="t-005434"><span class="t-time">54:34</span> See, these are all slow killers.</p>
+<p id="t-005440"><span class="t-time">54:40</span> Whether cancer was caused to you by this formalin,</p>
+<p id="t-005447"><span class="t-time">54:47</span> toxicity... now since there are so many varieties of</p>
+<p id="t-005452"><span class="t-time">54:52</span> we don&#x27;t know where it came from.</p>
+<p id="t-005454"><span class="t-time">54:54</span> RCA cannot be done.</p>
+<p id="t-005459"><span class="t-time">54:59</span> So the Indian market is like that.</p>
+<p id="t-005505"><span class="t-time">55:05</span> at least people are talking about it.</p>
+<p id="t-005510"><span class="t-time">55:10</span> behind. It&#x27;s behind, and there&#x27;s a lot of work.</p>
+<p id="t-005517"><span class="t-time">55:17</span> right, that product&#x27;s price will shoot way</p>
+<p id="t-005520"><span class="t-time">55:20</span> Hmm.</p>
+<p id="t-005523"><span class="t-time">55:23</span> price.</p>
+<p id="t-005528"><span class="t-time">55:28</span> Now, 1000 rupees for fish or shrimp, who will give that?</p>
+<p id="t-005533"><span class="t-time">55:33</span> a month? How many people have that capacity?</p>
+<p id="t-005541"><span class="t-time">55:41</span> there are problems. But having said that, I</p>
+<p id="t-005547"><span class="t-time">55:47</span> habits, since we have a habit of cooking freshly and</p>
+<p id="t-005552"><span class="t-time">55:52</span> because of that, maybe we escape a lot</p>
+<p id="t-005555"><span class="t-time">55:55</span> Compared to the West.</p>
+<p id="t-005559"><span class="t-time">55:59</span> processed food is more.</p>
+<p id="t-005603"><span class="t-time">56:03</span> level and the food supply chain level, there are</p>
+<p id="t-005605"><span class="t-time">56:05</span> So I think your business is now in different</p>
+<p id="t-005611"><span class="t-time">56:11</span> managing all these global</p>
+<p id="t-005615"><span class="t-time">56:15</span> it was challenging?</p>
+<p id="t-005619"><span class="t-time">56:19</span> Actually, that&#x27;s the reason I am staying in</p>
+<p id="t-005620"><span class="t-time">56:20</span> Okay.</p>
+<p id="t-005625"><span class="t-time">56:25</span> our team pulled out the statistics. I</p>
+<p id="t-005632"><span class="t-time">56:32</span> in airlines over three years. So to give</p>
+<p id="t-005640"><span class="t-time">56:40</span> there are 8000 hours, almost 2000 hours</p>
+<p id="t-005644"><span class="t-time">56:44</span> flights.</p>
+<p id="t-005647"><span class="t-time">56:47</span> So it&#x27;s almost 40% of your up-</p>
+<p id="t-005648"><span class="t-time">56:48</span> Hmm.</p>
+<p id="t-005650"><span class="t-time">56:50</span> Hmm.</p>
+<p id="t-005654"><span class="t-time">56:54</span> record, you know what it is for one year?</p>
+<p id="t-005657"><span class="t-time">56:57</span> 1.1 million kilometers.</p>
+<p id="t-005702"><span class="t-time">57:02</span> kilometers I had traveled.</p>
+<p id="t-005708"><span class="t-time">57:08</span> I was told, &quot;Boss, if it continues like this,</p>
+<p id="t-005713"><span class="t-time">57:13</span> So because of that, I had to fix it.</p>
+<p id="t-005720"><span class="t-time">57:20</span> Amsterdam, it has come down to almost 450-500k</p>
+<p id="t-005723"><span class="t-time">57:23</span> Because a lot of that travel is cut out.</p>
+<p id="t-005728"><span class="t-time">57:28</span> is much better to manage Asia, Europe</p>
+<p id="t-005734"><span class="t-time">57:34</span> otherwise, see what I have... in every idea of</p>
+<p id="t-005740"><span class="t-time">57:40</span> in that, two or three</p>
+<p id="t-005746"><span class="t-time">57:46</span> Empire, as they say.</p>
+<p id="t-005750"><span class="t-time">57:50</span> weapon of the Roman Empire is its</p>
+<p id="t-005756"><span class="t-time">57:56</span> So ours is a bit like that. We have bought so many</p>
+<p id="t-005800"><span class="t-time">58:00</span> did we give an exit to the management.</p>
+<p id="t-005804"><span class="t-time">58:04</span> In fact, the headline says I have</p>
+<p id="t-005807"><span class="t-time">58:07</span> But the reality is that I have sold my company.</p>
+<p id="t-005809"><span class="t-time">58:09</span> Hmm.</p>
+<p id="t-005816"><span class="t-time">58:16</span> shares.</p>
+<p id="t-005819"><span class="t-time">58:19</span> Okay.</p>
+<p id="t-005822"><span class="t-time">58:22</span> If you are in the management,</p>
+<p id="t-005823"><span class="t-time">58:23</span> I didn&#x27;t give money at all.</p>
+<p id="t-005826"><span class="t-time">58:26</span> If you are in the management, you have to</p>
+<p id="t-005830"><span class="t-time">58:30</span> And we will figure out when I make</p>
+<p id="t-005833"><span class="t-time">58:33</span> So it has been a sales job</p>
+<p id="t-005839"><span class="t-time">58:39</span> that operator, rather than the other way round.</p>
+<p id="t-005844"><span class="t-time">58:44</span> solid CEOs.</p>
+<p id="t-005849"><span class="t-time">58:49</span> transaction level.</p>
+<p id="t-005852"><span class="t-time">58:52</span> So I have one principle. Now there are two</p>
+<p id="t-005855"><span class="t-time">58:55</span> watchers,</p>
+<p id="t-005901"><span class="t-time">59:01</span> The CEOs in these companies, they are all</p>
+<p id="t-005906"><span class="t-time">59:06</span> Every moment they know</p>
+<p id="t-005910"><span class="t-time">59:10</span> And they have done it for 40 years and</p>
+<p id="t-005916"><span class="t-time">59:16</span> My job is to watch the field.</p>
+<p id="t-005923"><span class="t-time">59:23</span> How is anything else?</p>
+<p id="t-005929"><span class="t-time">59:29</span> I thought I could become Virat Kohli.</p>
+<p id="t-005933"><span class="t-time">59:33</span> I realized that I cannot become Virat Kohli</p>
+<p id="t-005937"><span class="t-time">59:37</span> But the thing is, I had an understanding of the game.</p>
+<p id="t-005944"><span class="t-time">59:44</span> Right? So in that way, scoreboard versus</p>
+<p id="t-005952"><span class="t-time">59:52</span> means it comes to your point around</p>
+<p id="t-005954"><span class="t-time">59:54</span> Hmm.</p>
+<p id="t-005959"><span class="t-time">59:59</span> the lion versus cow culture.</p>
+<p id="t-010004"><span class="t-time">01:00:04</span> If not, it has to starve and die. But a cow could be hunted by someone else,</p>
+<p id="t-010009"><span class="t-time">01:00:09</span> is that the kind of culture you have built at Captain Fresh?</p>
+<p id="t-010012"><span class="t-time">01:00:12</span> A bit of a lion culture?</p>
+<p id="t-010016"><span class="t-time">01:00:16</span> Both cultures are there. We need both. Now, these scoreboard</p>
+<p id="t-010018"><span class="t-time">01:00:18</span> Okay.</p>
+<p id="t-010024"><span class="t-time">01:00:24</span> They just put their heads down and keep doing that.</p>
+<p id="t-010027"><span class="t-time">01:00:27</span> And these field managers,</p>
+<p id="t-010029"><span class="t-time">01:00:29</span> this is a high-intensity job.</p>
+<p id="t-010031"><span class="t-time">01:00:31</span> Like that.</p>
+<p id="t-010037"><span class="t-time">01:00:37</span> you&#x27;ll be successful.</p>
+<p id="t-010042"><span class="t-time">01:00:42</span> you know?</p>
+<p id="t-010046"><span class="t-time">01:00:46</span> jungle.</p>
+<p id="t-010052"><span class="t-time">01:00:52</span> that time, right? At that time, we should... we</p>
+<p id="t-010054"><span class="t-time">01:00:54</span> Right.</p>
+<p id="t-010100"><span class="t-time">01:01:00</span> So that&#x27;s why I gave the scoreboard and</p>
+<p id="t-010106"><span class="t-time">01:01:06</span> Watching... it knows when and what to hunt.</p>
+<p id="t-010112"><span class="t-time">01:01:12</span> if I don&#x27;t have 40 hours of work a week...</p>
+<p id="t-010113"><span class="t-time">01:01:13</span> it happens.</p>
+<p id="t-010114"><span class="t-time">01:01:14</span> Hmm.</p>
+<p id="t-010117"><span class="t-time">01:01:17</span> who work directly with me, that&#x27;s what I tell them.</p>
+<p id="t-010119"><span class="t-time">01:01:19</span> You won&#x27;t get 40 hours of work here.</p>
+<p id="t-010122"><span class="t-time">01:01:22</span> But, but when you get it,</p>
+<p id="t-010126"><span class="t-time">01:01:26</span> it can be 100 hours, or it can be just four minutes.</p>
+<p id="t-010131"><span class="t-time">01:01:31</span> You can&#x27;t come without the hunt.</p>
+<p id="t-010136"><span class="t-time">01:01:36</span> And now with AI and all that coming,</p>
+<p id="t-010141"><span class="t-time">01:01:41</span> Because human civilization&#x27;s general</p>
+<p id="t-010145"><span class="t-time">01:01:45</span> has increased.</p>
+<p id="t-010148"><span class="t-time">01:01:48</span> When the average increases, who are the winners?</p>
+<p id="t-010151"><span class="t-time">01:01:51</span> Hmm.</p>
+<p id="t-010154"><span class="t-time">01:01:54</span> value</p>
+<p id="t-010159"><span class="t-time">01:01:59</span> Take any distribution in the industry.</p>
+<p id="t-010205"><span class="t-time">01:02:05</span> take a family... in every distribution,</p>
+<p id="t-010213"><span class="t-time">01:02:13</span> compared to &quot;I will just do it</p>
+<p id="t-010216"><span class="t-time">01:02:16</span> Lion culture.</p>
+<p id="t-010221"><span class="t-time">01:02:21</span> very important to become a success.</p>
+<p id="t-010228"><span class="t-time">01:02:28</span> family members will laugh... that holds one back</p>
+<p id="t-010232"><span class="t-time">01:02:32</span> See, entrepreneurship,</p>
+<p id="t-010237"><span class="t-time">01:02:37</span> game of taking risks.</p>
+<p id="t-010244"><span class="t-time">01:02:44</span> won&#x27;t take risks,&quot; then you should work for</p>
+<p id="t-010248"><span class="t-time">01:02:48</span> Right, which is you are an employee.</p>
+<p id="t-010252"><span class="t-time">01:02:52</span> So while taking a risk,</p>
+<p id="t-010257"><span class="t-time">01:02:57</span> fear.</p>
+<p id="t-010303"><span class="t-time">01:03:03</span> is like this:</p>
+<p id="t-010313"><span class="t-time">01:03:13</span> One, when your obsession with money becomes too much.</p>
+<p id="t-010319"><span class="t-time">01:03:19</span> the fear keeps increasing. Hmm.</p>
+<p id="t-010321"><span class="t-time">01:03:21</span> Fear...</p>
+<p id="t-010325"><span class="t-time">01:03:25</span> Secondly,</p>
+<p id="t-010332"><span class="t-time">01:03:32</span> when you are doing it for the reason that</p>
+<p id="t-010336"><span class="t-time">01:03:36</span> fear.</p>
+<p id="t-010341"><span class="t-time">01:03:41</span> What will your parents say? What will your wife</p>
+<p id="t-010346"><span class="t-time">01:03:46</span> doesn&#x27;t work out, what will happen?&quot; That brings a lot of</p>
+<p id="t-010352"><span class="t-time">01:03:52</span> Third is a bit philosophical.</p>
+<p id="t-010400"><span class="t-time">01:04:00</span> is permanent now. That&#x27;s one of the</p>
+<p id="t-010406"><span class="t-time">01:04:06</span> If you</p>
+<p id="t-010412"><span class="t-time">01:04:12</span> Money is actually not that useful.</p>
+<p id="t-010417"><span class="t-time">01:04:17</span> it doesn&#x27;t have much use.</p>
+<p id="t-010422"><span class="t-time">01:04:22</span> shit.</p>
+<p id="t-010426"><span class="t-time">01:04:26</span> That is the reality.</p>
+<p id="t-010431"><span class="t-time">01:04:31</span> Got it? And then, everything is impermanent.</p>
+<p id="t-010436"><span class="t-time">01:04:36</span> No matter how big a person you are, what is in your</p>
+<p id="t-010442"><span class="t-time">01:04:42</span> That&#x27;s all there is. So when that hits you, you become</p>
+<p id="t-010445"><span class="t-time">01:04:45</span> Whether it&#x27;s to employees or others, I tell them. Now,</p>
+<p id="t-010452"><span class="t-time">01:04:52</span> for a batsman, when that bat</p>
+<p id="t-010458"><span class="t-time">01:04:58</span> a heartbeat skips, doesn&#x27;t it?</p>
+<p id="t-010505"><span class="t-time">01:05:05</span> a different level altogether.</p>
+<p id="t-010508"><span class="t-time">01:05:08</span> I&#x27;ll get money, from that cricket I&#x27;ll get a</p>
+<p id="t-010515"><span class="t-time">01:05:15</span> I&#x27;ll get a lifestyle,&quot; and if you chase that,</p>
+<p id="t-010520"><span class="t-time">01:05:20</span> you get Prithvi Shaw, and on the other route</p>
+<p id="t-010524"><span class="t-time">01:05:24</span> So what you really like should be that right</p>
+<p id="t-010530"><span class="t-time">01:05:30</span> What is the right thing? What is the symptom?</p>
+<p id="t-010537"><span class="t-time">01:05:37</span> not what you can chase. So once that happens,</p>
+<p id="t-010543"><span class="t-time">01:05:43</span> Rather than saying &quot;conquer,&quot; it&#x27;s not the right</p>
+<p id="t-010547"><span class="t-time">01:05:47</span> There is nothing that stoked it.</p>
+<p id="t-010552"><span class="t-time">01:05:52</span> feel like you are made to be in that</p>
+<p id="t-010558"><span class="t-time">01:05:58</span> So that is the mindset. So that&#x27;s why I said</p>
+<p id="t-010604"><span class="t-time">01:06:04</span> little.</p>
+<p id="t-010609"><span class="t-time">01:06:09</span> you have a mental model</p>
+<p id="t-010613"><span class="t-time">01:06:13</span> That&#x27;s it.</p>
+<p id="t-010617"><span class="t-time">01:06:17</span> plans, sir?</p>
+<p id="t-010622"><span class="t-time">01:06:22</span> Hmm.</p>
+<p id="t-010624"><span class="t-time">01:06:24</span> Okay? It&#x27;s not like, you know, we have to do one.</p>
+<p id="t-010633"><span class="t-time">01:06:33</span> so many people were like, &quot;Oh, you are doing one crore?</p>
+<p id="t-010639"><span class="t-time">01:06:39</span> that kind of mindset at all.</p>
+<p id="t-010643"><span class="t-time">01:06:43</span> when doing a thousand... a thousand, then 10,000. Now while doing 10,000,</p>
+<p id="t-010647"><span class="t-time">01:06:47</span> Because that trajectory, you know?</p>
+<p id="t-010652"><span class="t-time">01:06:52</span> Hmm.</p>
+<p id="t-010655"><span class="t-time">01:06:55</span> That&#x27;s why, Mysore... going back to the</p>
+<p id="t-010659"><span class="t-time">01:06:59</span> I feel privileged.</p>
+<p id="t-010702"><span class="t-time">01:07:02</span> Because I started from a zero base.</p>
+<p id="t-010708"><span class="t-time">01:07:08</span> point around what next?</p>
+<p id="t-010712"><span class="t-time">01:07:12</span> this.</p>
+<p id="t-010718"><span class="t-time">01:07:18</span> 600 billion dollar industry.</p>
+<p id="t-010721"><span class="t-time">01:07:21</span> Largest player is 6 billion.</p>
+<p id="t-010725"><span class="t-time">01:07:25</span> Which is 55,000 crores.</p>
+<p id="t-010730"><span class="t-time">01:07:30</span> So our next logical step</p>
+<p id="t-010737"><span class="t-time">01:07:37</span> Must go further.</p>
+<p id="t-010739"><span class="t-time">01:07:39</span> Why? Because it&#x27;s possible, that&#x27;s all.</p>
+<p id="t-010748"><span class="t-time">01:07:48</span> You should just go all in.</p>
+<p id="t-010752"><span class="t-time">01:07:52</span> principle of what can hold you</p>
+<p id="t-010756"><span class="t-time">01:07:56</span> Only fear.</p>
+<p id="t-010801"><span class="t-time">01:08:01</span> in time I feel, &quot;Hmm, no man, I have done</p>
+<p id="t-010806"><span class="t-time">01:08:06</span> How to protect this?&quot;</p>
+<p id="t-010811"><span class="t-time">01:08:11</span> to become 1 lakh crore.</p>
+<p id="t-010817"><span class="t-time">01:08:17</span> where I think this 1 lakh crore becomes a question</p>
+<p id="t-010821"><span class="t-time">01:08:21</span> And that point will come when</p>
+<p id="t-010828"><span class="t-time">01:08:28</span> Only then will that point come.</p>
+<p id="t-010833"><span class="t-time">01:08:33</span> I do a mental exercise sometimes for time pass.</p>
+<p id="t-010836"><span class="t-time">01:08:36</span> In that solitude, you&#x27;ll be doing something.</p>
+<p id="t-010840"><span class="t-time">01:08:40</span> is... &quot;No man, if I become a pauper now, how would it be?&quot;</p>
+<p id="t-010844"><span class="t-time">01:08:44</span> How does my life look? Hmm.</p>
+<p id="t-010851"><span class="t-time">01:08:51</span> Actually, nothing happens.</p>
+<p id="t-010854"><span class="t-time">01:08:54</span> When you get that comfort, right?</p>
+<p id="t-010858"><span class="t-time">01:08:58</span> If you get that comfort at this stage,</p>
+<p id="t-010904"><span class="t-time">01:09:04</span> years, this has happened.</p>
+<p id="t-010909"><span class="t-time">01:09:09</span> You get the confidence that you can bounce back.</p>
+<p id="t-010914"><span class="t-time">01:09:14</span> to close out on the other point.</p>
+<p id="t-010920"><span class="t-time">01:09:20</span> to work for a white guy, an American.</p>
+<p id="t-010927"><span class="t-time">01:09:27</span> don&#x27;t work for an American,</p>
+<p id="t-010933"><span class="t-time">01:09:33</span> You&#x27;ve not arrived in life. You&#x27;re not earning</p>
+<p id="t-010940"><span class="t-time">01:09:40</span> Now I can tell, if this country has to go from 5 trillion</p>
+<p id="t-010947"><span class="t-time">01:09:47</span> there should be entrepreneurs who believe that &quot;I</p>
+<p id="t-010953"><span class="t-time">01:09:53</span> I will make a European work for me, I</p>
+<p id="t-010957"><span class="t-time">01:09:57</span> share with them, and they&#x27;ll find it fruitful</p>
+<p id="t-011007"><span class="t-time">01:10:07</span> I want to be the role model for that.</p>
+<p id="t-011012"><span class="t-time">01:10:12</span> models. Of course, Infosys founders</p>
+<p id="t-011017"><span class="t-time">01:10:17</span> are there.</p>
+<p id="t-011021"><span class="t-time">01:10:21</span> doing.</p>
+<p id="t-011024"><span class="t-time">01:10:24</span> They have done it.</p>
+<p id="t-011027"><span class="t-time">01:10:27</span> value.</p>
+<p id="t-011031"><span class="t-time">01:10:31</span> Hmm.</p>
+<p id="t-011036"><span class="t-time">01:10:36</span> you watch a mother</p>
+<p id="t-011040"><span class="t-time">01:10:40</span> to feed her two-year-old kid</p>
+<p id="t-011046"><span class="t-time">01:10:46</span> Not many Indian</p>
+<p id="t-011050"><span class="t-time">01:10:50</span> categories</p>
+<p id="t-011058"><span class="t-time">01:10:58</span> A country&#x27;s entrepreneur needs to believe,</p>
+<p id="t-011105"><span class="t-time">01:11:05</span> quality, I have the determination, every</p>
+<p id="t-011111"><span class="t-time">01:11:11</span> create a product, to create value for</p>
+<p id="t-011117"><span class="t-time">01:11:17</span> world.&quot; I want</p>
+<p id="t-011122"><span class="t-time">01:11:22</span> to be that role model and a template. One</p>
+<p id="t-011129"><span class="t-time">01:11:29</span> me,</p>
+<p id="t-011133"><span class="t-time">01:11:33</span> You started off with something... actually I</p>
+<p id="t-011137"><span class="t-time">01:11:37</span> series.</p>
+<p id="t-011139"><span class="t-time">01:11:39</span> Someone asks him, &quot;You&#x27;ve occupied so much.</p>
+<p id="t-011146"><span class="t-time">01:11:46</span> He says, &quot;I want everything under the</p>
+<p id="t-011150"><span class="t-time">01:11:50</span> Ours is like that.</p>
+<p id="t-011154"><span class="t-time">01:11:54</span> So that keeps going. But what does this</p>
+<p id="t-011159"><span class="t-time">01:11:59</span> Is this... can I become that one</p>
+<p id="t-011202"><span class="t-time">01:12:02</span> Can those boardrooms use my</p>
+<p id="t-011207"><span class="t-time">01:12:07</span> You guys try it&quot;?</p>
+<p id="t-011209"><span class="t-time">01:12:09</span> That is what my...</p>
+<p id="t-011214"><span class="t-time">01:12:14</span> hearing that.</p>
+<p id="t-011217"><span class="t-time">01:12:17</span> Yes, a legend, correct.</p>
+<p id="t-011224"><span class="t-time">01:12:24</span> I was speaking to your friend Vikas last week.</p>
+<p id="t-011229"><span class="t-time">01:12:29</span> &quot;Since childhood, he and I have watched</p>
+<p id="t-011233"><span class="t-time">01:12:33</span> &quot;Whenever we got a chance, we watched Kannada</p>
+<p id="t-011237"><span class="t-time">01:12:37</span> entrepreneurs, we ask a lot of people,</p>
+<p id="t-011240"><span class="t-time">01:12:40</span> Which ones do you watch?&quot; They say they do watch.</p>
+<p id="t-011244"><span class="t-time">01:12:44</span> But we heard you are a movie buff, and that too</p>
+<p id="t-011249"><span class="t-time">01:12:49</span> about that. How did you get this craze for</p>
+<p id="t-011254"><span class="t-time">01:12:54</span> did you watch?</p>
+<p id="t-011255"><span class="t-time">01:12:55</span> We support all actors, all the actors.</p>
+<p id="t-011259"><span class="t-time">01:12:59</span> Okay.</p>
+<p id="t-011300"><span class="t-time">01:13:00</span> No fan wars?</p>
+<p id="t-011304"><span class="t-time">01:13:04</span> We do.</p>
+<p id="t-011307"><span class="t-time">01:13:07</span> or Darshan&#x27;s movies,</p>
+<p id="t-011311"><span class="t-time">01:13:11</span> we watch everyone&#x27;s movies.</p>
+<p id="t-011316"><span class="t-time">01:13:16</span> latest? Obviously Shetty (Rakshit/Rishab Shetty).</p>
+<p id="t-011319"><span class="t-time">01:13:19</span> Then,</p>
+<p id="t-011322"><span class="t-time">01:13:22</span> At that scale, in that vision... like</p>
+<p id="t-011325"><span class="t-time">01:13:25</span> they were saying, Karnataka&#x27;s industry</p>
+<p id="t-011330"><span class="t-time">01:13:30</span> That...</p>
+<p id="t-011335"><span class="t-time">01:13:35</span> Something like KGF can be made.</p>
+<p id="t-011339"><span class="t-time">01:13:39</span> Rishab Shetty.</p>
+<p id="t-011343"><span class="t-time">01:13:43</span> His... and Neel&#x27;s thought process.</p>
+<p id="t-011351"><span class="t-time">01:13:51</span> a brand of movies, right?</p>
+<p id="t-011353"><span class="t-time">01:13:53</span> That is very pleasing.</p>
+<p id="t-011357"><span class="t-time">01:13:57</span> you are saying everything in the ocean is yours.</p>
+<p id="t-011403"><span class="t-time">01:14:03</span> business, in every businessman,</p>
+<p id="t-011408"><span class="t-time">01:14:08</span> Okay? From Agastya, you need a dynamo, volcano</p>
+<p id="t-011414"><span class="t-time">01:14:14</span> Rocky&#x27;s self-determination...</p>
+<p id="t-011420"><span class="t-time">01:14:20</span> All that is needed. Along with that, just for a</p>
+<p id="t-011424"><span class="t-time">01:14:24</span> you also need to be like our Ravi Varma</p>
+<p id="t-011429"><span class="t-time">01:14:29</span> That generosity, that kindness</p>
+<p id="t-011432"><span class="t-time">01:14:32</span> Otherwise, this whole village won&#x27;t come</p>
+<p id="t-011437"><span class="t-time">01:14:37</span> This shared belief, right?</p>
+<p id="t-011442"><span class="t-time">01:14:42</span> If that shared belief is not there, there is no</p>
+<p id="t-011446"><span class="t-time">01:14:46</span> &quot;I&#x27;ll just buy the company and that&#x27;s it&quot; won&#x27;t</p>
+<p id="t-011449"><span class="t-time">01:14:49</span> And shared belief, finally, is very</p>
+<p id="t-011454"><span class="t-time">01:14:54</span> It is not Hindu, it is not Indian,</p>
+<p id="t-011458"><span class="t-time">01:14:58</span> human.</p>
+<p id="t-011502"><span class="t-time">01:15:02</span> It is that generousness, kindness, and it</p>
+<p id="t-011508"><span class="t-time">01:15:08</span> belief will be there. So coming back to</p>
+<p id="t-011513"><span class="t-time">01:15:13</span> are needed for them. One or two traits.</p>
+<p id="t-011518"><span class="t-time">01:15:18</span> movie where you felt, &quot;Okay, this is exactly</p>
+<p id="t-011522"><span class="t-time">01:15:22</span> Is there any movie like that?</p>
+<p id="t-011525"><span class="t-time">01:15:25</span> Very difficult to say, but if I have to force-fit,</p>
+<p id="t-011529"><span class="t-time">01:15:29</span> empire, empire,&quot; that kind of thing is in my</p>
+<p id="t-011532"><span class="t-time">01:15:32</span> &quot;If I have to build it,</p>
+<p id="t-011536"><span class="t-time">01:15:36</span> Otherwise, just anything is okay. Because anyway,</p>
+<p id="t-011542"><span class="t-time">01:15:42</span> Right? If you build it, build it big.</p>
+<p id="t-011549"><span class="t-time">01:15:49</span> Super.</p>
+<p id="t-011553"><span class="t-time">01:15:53</span> Hmm.</p>
+<p id="t-011556"><span class="t-time">01:15:56</span> so many boys come to Bangalore holding onto dreams,</p>
+<p id="t-011602"><span class="t-time">01:16:02</span> boys, if you were to tell them, &quot;Don&#x27;t keep this</p>
+<p id="t-011607"><span class="t-time">01:16:07</span> you say?</p>
+<p id="t-011611"><span class="t-time">01:16:11</span> is all I would say. Now, there are so many examples</p>
+<p id="t-011619"><span class="t-time">01:16:19</span> respect that guy.</p>
+<p id="t-011623"><span class="t-time">01:16:23</span> see, taking the game to the last ball,</p>
+<p id="t-011629"><span class="t-time">01:16:29</span> He knows exactly where the bowler is going to</p>
+<p id="t-011633"><span class="t-time">01:16:33</span> All that... nobody teaches all of this.</p>
+<p id="t-011639"><span class="t-time">01:16:39</span> testing and all of that. So the only</p>
+<p id="t-011644"><span class="t-time">01:16:44</span> in today&#x27;s world, everything is</p>
+<p id="t-011649"><span class="t-time">01:16:49</span> Do you want to learn something? Do you want to do something?</p>
+<p id="t-011654"><span class="t-time">01:16:54</span> There is gig working.</p>
+<p id="t-011700"><span class="t-time">01:17:00</span> vision, I need to do this&quot;... today,</p>
+<p id="t-011706"><span class="t-time">01:17:06</span> civilization versus today, today there are</p>
+<p id="t-011713"><span class="t-time">01:17:13</span> The only limitation is your mind, that&#x27;s all.</p>
+<p id="t-011719"><span class="t-time">01:17:19</span> Yes.</p>
+<p id="t-011723"><span class="t-time">01:17:23</span> 300 years ago, Napoleon&#x27;s quality of life</p>
+<p id="t-011728"><span class="t-time">01:17:28</span> our maid&#x27;s quality of life...</p>
+<p id="t-011732"><span class="t-time">01:17:32</span> Far better.</p>
+<p id="t-011735"><span class="t-time">01:17:35</span> human civilization. The percentage of</p>
+<p id="t-011742"><span class="t-time">01:17:42</span> degrees Celsius band,</p>
+<p id="t-011747"><span class="t-time">01:17:47</span> Otherwise, humans had to fight with</p>
+<p id="t-011753"><span class="t-time">01:17:53</span> So, comfort.</p>
+<p id="t-011758"><span class="t-time">01:17:58</span> 1000 years</p>
+<p id="t-011801"><span class="t-time">01:18:01</span> you will tell them, &quot;Boss, what are you talking</p>
+<p id="t-011806"><span class="t-time">01:18:06</span> you talking about?&quot;</p>
+<p id="t-011810"><span class="t-time">01:18:10</span> &quot;No temperature, you&#x27;re wearing</p>
+<p id="t-011815"><span class="t-time">01:18:15</span> animals hunting you. What are you talking about?&quot;</p>
+<p id="t-011823"><span class="t-time">01:18:23</span> It is always looking for problems.</p>
+<p id="t-011829"><span class="t-time">01:18:29</span> average, no human is under-privileged.</p>
+<p id="t-011836"><span class="t-time">01:18:36</span> it.</p>
+<p id="t-011842"><span class="t-time">01:18:42</span> just being in this time, you are</p>
+<p id="t-011848"><span class="t-time">01:18:48</span> avenues. Just that your mind is</p>
+<p id="t-011853"><span class="t-time">01:18:53</span> That guy, Alexander the Great, imagine</p>
+<p id="t-011859"><span class="t-time">01:18:59</span> and access and all of those things.</p>
+<p id="t-011905"><span class="t-time">01:19:05</span> Think about that inconvenience.</p>
+<p id="t-011910"><span class="t-time">01:19:10</span> In today&#x27;s times, who has that?</p>
+<p id="t-011916"><span class="t-time">01:19:16</span> Because your comforts are creeping in, and</p>
+<p id="t-011920"><span class="t-time">01:19:20</span> not real. There is no problem, actually.</p>
+<p id="t-011925"><span class="t-time">01:19:25</span> manufactured in our minds. So finally to</p>
+<p id="t-011930"><span class="t-time">01:19:30</span> everything is in your mind.</p>
+<p id="t-011934"><span class="t-time">01:19:34</span> because you are 20 years old today and you</p>
+<p id="t-011939"><span class="t-time">01:19:39</span> 60 years ahead and you have the, you know, energy.</p>
+<p id="t-011944"><span class="t-time">01:19:44</span> Right.</p>
+<p id="t-011948"><span class="t-time">01:19:48</span> We heard that.</p>
+<p id="t-011950"><span class="t-time">01:19:50</span> Okay, let it happen. And one last personal</p>
+<p id="t-011957"><span class="t-time">01:19:57</span> what do you like a lot?</p>
+<p id="t-012002"><span class="t-time">01:20:02</span> Pomfret . I like it.</p>
+<p id="t-012004"><span class="t-time">01:20:04</span> Seer fish, I like it very, very much.</p>
+<p id="t-012006"><span class="t-time">01:20:06</span> Hmm.</p>
+<p id="t-012009"><span class="t-time">01:20:09</span> meat item, if you had to say?</p>
+<p id="t-012012"><span class="t-time">01:20:12</span> Okay.</p>
+<p id="t-012016"><span class="t-time">01:20:16</span> that one meal has to be there.</p>
+<p id="t-012019"><span class="t-time">01:20:19</span> So if there&#x27;s any one seafood specialty from Karnataka</p>
+<p id="t-012023"><span class="t-time">01:20:23</span> all over the world, what would it be?</p>
+<p id="t-012028"><span class="t-time">01:20:28</span> When I was in Surathkal...</p>
+<p id="t-012031"><span class="t-time">01:20:31</span> Yes, I used to binge eat.</p>
+<p id="t-012034"><span class="t-time">01:20:34</span> Actually, there&#x27;s so much in Mangalorean cuisine.</p>
+<p id="t-012038"><span class="t-time">01:20:38</span> you take, it is...</p>
+<p id="t-012041"><span class="t-time">01:20:41</span> Awesome.</p>
+<p id="t-012044"><span class="t-time">01:20:44</span> It was very lively. And you know,</p>
+<p id="t-012050"><span class="t-time">01:20:50</span> it&#x27;s exactly the lack of such ambition that</p>
+<p id="t-012055"><span class="t-time">01:20:55</span> mentioned wanting to be a role model, right?</p>
+<p id="t-012100"><span class="t-time">01:21:00</span> spark to a lot of people.</p>
+<p id="t-012104"><span class="t-time">01:21:04</span> may all your plans for this year and the future</p>
+<p id="t-012110"><span class="t-time">01:21:10</span> Kannadigas&#x27; name, you are taking it to the entire</p>
+<p id="t-012113"><span class="t-time">01:21:13</span> Thank you so much, Vasanth. Thank you, Kiran.</p>
+<p id="t-012118"><span class="t-time">01:21:18</span> like Vasanth said, Kannadigas don&#x27;t dream big.</p>
+<p id="t-012123"><span class="t-time">01:21:23</span> They feel, &quot;If I say this, they&#x27;ll make a joke</p>
+<p id="t-012128"><span class="t-time">01:21:28</span> Validation.</p>
+<p id="t-012130"><span class="t-time">01:21:30</span> Talking to you over the last hour and a half,</p>
+<p id="t-012135"><span class="t-time">01:21:35</span> requires courage.</p>
+<p id="t-012139"><span class="t-time">01:21:39</span> You already have that courage.</p>
+<p id="t-012144"><span class="t-time">01:21:44</span> University speech by Denzel</p>
+<p id="t-012149"><span class="t-time">01:21:49</span> &quot;Never fall back, always fall forward.&quot;</p>
+<p id="t-012149"><span class="t-time">01:21:49</span> Hmm.</p>
+<p id="t-012153"><span class="t-time">01:21:53</span> looking back for something to catch you.</p>
+<p id="t-012156"><span class="t-time">01:21:56</span> That fear will be there, &quot;What if I fall?&quot;</p>
+<p id="t-012200"><span class="t-time">01:22:00</span> your forehead touches further, right? In your words,</p>
+<p id="t-012204"><span class="t-time">01:22:04</span> If you fall, you will fall forward.</p>
+<p id="t-012208"><span class="t-time">01:22:08</span> No falling back, only falling forward. It</p>
+<p id="t-012212"><span class="t-time">01:22:12</span> It&#x27;s a very inspiring story.</p>
+<p id="t-012216"><span class="t-time">01:22:16</span> you guys have created an amazing platform.</p>
+<p id="t-012217"><span class="t-time">01:22:17</span> Definitely.</p>
+<p id="t-012221"><span class="t-time">01:22:21</span> Kannadiga, I am very proud of what you</p>
+<p id="t-012223"><span class="t-time">01:22:23</span> Thank you so much.</p>
+
+      </div>
+    </details>
+
+    <footer class="footer">
+      <span><a href="https://www.youtube.com/watch?v=T2IKux3hQFs" rel="noopener">youtube.com/watch?v=T2IKux3hQFs</a></span>
+      <span>ರಚಿಸಲಾಗಿದೆ ಏಪ್ರಿಲ್ 20, 2026 · ಸ್ಕ್ರೀನ್‌ಶಾಟ್‌ಗಳು ವೀಡಿಯೋದಿಂದ · ಉಲ್ಲೇಖಗಳು ಮುಂದೆ ಬನ್ನಿ ಸಬ್‌ಟೈಟಲ್‌ನಿಂದ · ಮೂಲಗಳು ಪರಿಶೀಲಿತ</span>
+    </footer>
+  </main>
+  <script>
+    (function() {
+      function openAncestorDetails() {
+        var h = location.hash;
+        if (!h || h.length < 2) return;
+        var el = document.querySelector(h);
+        if (!el) return;
+        var d = el.closest('details');
+        if (d && !d.open) { d.open = true; }
+        setTimeout(function(){ el.scrollIntoView({block: 'center', behavior: 'smooth'}); }, 30);
+      }
+      window.addEventListener('hashchange', openAncestorDetails);
+      document.addEventListener('DOMContentLoaded', openAncestorDetails);
+    })();
+  </script>
+</body>
+</html>

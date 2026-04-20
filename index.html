@@ -1,0 +1,55 @@
+---
+layout: null
+permalink: /
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site.title | escape }}</title>
+<meta name="description" content="{{ site.description | escape }}">
+{% include chintane-styles.html %}
+</head>
+<body>
+  {% include chintane-nav.html %}
+  <main class="page">
+    <p class="eyebrow">Bharat · Bangalore</p>
+    <h1 class="hero">Bharat<span class="kn">ಭರತ್</span></h1>
+    <p class="lede">
+      Notes on CS, ML systems, and the things I'm thinking about as the technologies around us move fast. A mix of long-form posts, paper notes, and Kannada writing — see the <a href="/about.html">about page</a> for the longer story.
+    </p>
+
+    <div class="cta">
+      <span class="label">New</span>
+      <div class="body">
+        <strong>Chintane</strong> — two-column research notes on videos and blog posts, with inline highlights and real-source annotations. <a href="/chintane/">Browse the section →</a>
+      </div>
+    </div>
+
+    <h2 class="section">Recent posts</h2>
+    <ul class="posts">
+      {% for post in site.posts limit:12 %}
+      <li>
+        <span class="date">{{ post.date | date: "%d %b %Y" }}</span>
+        <div class="main">
+          <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+          <div class="badges">
+            {% if post.tags contains "kannada" %}
+              <span class="badge kn">ಕನ್ನಡ</span>
+            {% else %}
+              <span class="badge en">English</span>
+            {% endif %}
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <footer class="site-foot">
+      <span>Built with Jekyll · <a href="https://github.com/bsbarkur/bsbarkur.github.io">source on GitHub</a></span>
+      <span><a href="/feed.xml">RSS</a></span>
+    </footer>
+  </main>
+</body>
+</html>

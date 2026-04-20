@@ -34,3 +34,18 @@ titles_from_headings:
   collections: true
 
 baseurl: ""
+
+# Pin the nav order (and exclude Kannada Posts; Kannada content lives under Chintane).
+header_pages:
+  - about.html
+  - archive.html
+  - chintane/index.html
+
+# Make sure every post in _posts/ uses our self-contained layout, even if the
+# Markdown file has no explicit front-matter.
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"

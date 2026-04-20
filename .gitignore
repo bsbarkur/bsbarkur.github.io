@@ -1,0 +1,13 @@
+# Local bundler install
+vendor/
+.bundle/
+
+# Jekyll build output (GitHub Pages rebuilds this from source on push)
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Editor / OS
+.DS_Store
+*.swp

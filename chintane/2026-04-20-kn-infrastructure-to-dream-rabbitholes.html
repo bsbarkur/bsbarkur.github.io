@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ಕನಸು ಕಾಣಲು ಬೇಕಾದ ಮೂಲಸೌಕರ್ಯ — ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #5b5b55;
+    --rule: #e6e3d9;
+    --link: #0969da;
+    --mark: #fff3a0;
+    --callout-bg: #eef4fa;
+    --callout-bar: #5684d6;
+    --tldr-bg: #fbf6e4;
+    --tldr-bar: #c8a93a;
+    --ann-bg: #f4f1e8;
+    --note-bg: #fef6e7;
+    --note-bar: #a37a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font: 16px/1.75 "Tiro Kannada", "Noto Sans Kannada", "Nirmala UI", "Kannada Sangam MN", "Kedage", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 56px 48px 72px; }
+  .eyebrow {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  h1 {
+    font: 600 36px/1.35 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    letter-spacing: -0.005em;
+    margin: 0 0 14px;
+  }
+  .meta { font-size: 13px; color: var(--muted); margin: 0 0 22px; line-height: 1.6; }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .meta .dot { margin: 0 8px; color: var(--rule); }
+  .source-banner {
+    background: var(--note-bg);
+    border-left: 3px solid var(--note-bar);
+    padding: 12px 18px;
+    border-radius: 2px;
+    margin: 0 0 30px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4d3d0e;
+  }
+  .source-banner a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .source-banner a:hover { text-decoration: underline; }
+  .tldr {
+    background: var(--tldr-bg);
+    border-left: 3px solid var(--tldr-bar);
+    padding: 18px 22px 14px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  .tldr h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a6a1a;
+    margin: 0 0 12px;
+  }
+  .tldr ul { margin: 0; padding: 0 0 0 18px; }
+  .tldr li { margin: 6px 0; font-size: 15px; line-height: 1.75; }
+  .columns {
+    columns: 2;
+    column-gap: 2.25rem;
+    column-fill: balance;
+    column-rule: 1px solid var(--rule);
+  }
+  .columns > section { break-inside: avoid-column; margin: 0 0 18px; }
+  .columns h2 {
+    font: 600 20px/1.4 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    margin: 0 0 10px;
+  }
+  .columns p { margin: 0 0 12px; text-align: justify; }
+  .columns mark { background: var(--mark); padding: 0 2px; border-radius: 1px; }
+  .columns sup { font-size: 10px; vertical-align: super; line-height: 0; margin-left: 1px; }
+  .columns sup a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .columns blockquote.pull {
+    break-inside: avoid;
+    background: #fff;
+    border-left: 3px solid #1a1a1a;
+    padding: 12px 16px;
+    margin: 10px 0 14px;
+    font: italic 15px/1.55 Charter, Georgia, serif;
+    color: #2a2a24;
+    border-radius: 2px;
+  }
+  .columns blockquote.pull .gloss {
+    display: block;
+    margin-top: 8px;
+    font: 400 14px/1.7 "Tiro Kannada", "Noto Sans Kannada", "Kannada Sangam MN", sans-serif;
+    color: #4a4a42;
+    font-style: normal;
+  }
+  .annotations { margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid var(--rule); }
+  .annotations h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .annotations ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.25rem; }
+  .annotations li {
+    break-inside: avoid;
+    background: var(--ann-bg);
+    padding: 10px 12px;
+    margin: 0 0 10px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.75;
+    display: flex;
+    gap: 10px;
+  }
+  .annotations .ann-num {
+    font: 600 12px/1.4 Charter, Georgia, serif;
+    color: #7a6a1a;
+    min-width: 18px;
+  }
+  .annotations a { color: var(--link); text-decoration: none; }
+  .annotations a:hover { text-decoration: underline; }
+  .footer {
+    margin: 48px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer a { color: var(--link); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  @media (max-width: 860px) {
+    .page { padding: 32px 22px 48px; }
+    h1 { font-size: 28px; }
+    .columns, .annotations ol { columns: 1; column-rule: none; }
+  }
+  @media print { body { background: #fff; } .page { padding: 24px; max-width: none; } a { color: inherit; text-decoration: none; } }
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">ಬ್ಲಾಗ್ ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು · ಏಪ್ರಿಲ್ 20, 2026</p>
+    <h1>ಕನಸು ಕಾಣಲು ಬೇಕಾದ ಮೂಲಸೌಕರ್ಯ</h1>
+    <p class="meta">
+      <strong>rabbitholes.garden</strong>
+      <span class="dot">·</span>ಮೂಲ ಪ್ರಕಟಣೆ: ಏಪ್ರಿಲ್ 10, 2026
+      <span class="dot">·</span>ಸುಮಾರು 1,050 ಪದಗಳು · 7 ನಿಮಿಷ ಓದು
+      <span class="dot">·</span><a href="https://rabbitholes.garden/posts/2026-04-10-the-infrastructure-to-dream/" rel="noopener">ಮೂಲ ಪೋಸ್ಟ್ ಪೂರ್ಣವಾಗಿ ಓದಿ →</a>
+    </p>
+
+    <div class="source-banner">
+      ಇದು ಒಂದು <strong>ಸಂಶೋಧನಾ ಸಾರಾಂಶ</strong> — ಮೂಲ ಲೇಖನದ ಪೂರ್ಣ ಅನುವಾದ ಅಲ್ಲ. ಲೇಖಕರ ನಿಜವಾದ ಆಂಗ್ಲ ವಾಕ್ಯಗಳನ್ನು ಕೆಲವೇ ಕೆಲವು ಕಡೆ ಯಥಾವತ್ತಾಗಿ ಉಲ್ಲೇಖಿಸಲಾಗಿದೆ (ಕನ್ನಡ ಅರ್ಥದ ಜೊತೆಗೆ). ಉಳಿದುದೆಲ್ಲ ಮರು-ಹೇಳಿಕೆ ಮತ್ತು ಸಂಶೋಧನಾ ಸೇರ್ಪಡೆಯ ರೂಪ. ಲೇಖಕರ ಪೂರ್ಣ ಧ್ವನಿಗಾಗಿ ಮೇಲೆ <a href="https://rabbitholes.garden/posts/2026-04-10-the-infrastructure-to-dream/" rel="noopener">ಮೂಲ ಪೋಸ್ಟ್ ಓದಿ</a>.
+    </div>
+
+    <div class="tldr">
+      <h2>ಸಂಕ್ಷಿಪ್ತ ಸಾರಾಂಶ</h2>
+      <ul>
+        <li>ಲೇಖಕರು ಕರ್ನಾಟಕದ ಮುಂದೆ ಬನ್ನಿ ತಂಡದ ವಸಂತ್, ಅಶೋಕ್ ಮತ್ತು ಶಿಶಿರ್ ಅವರನ್ನು ಭೇಟಿಯಾದ ನಂತರ ಬರೆದ ಚಿಂತನೆ.<sup><a href="#ann-1">1</a></sup></li>
+        <li>ಸಣ್ಣ ಊರು ಮತ್ತು ಹಳ್ಳಿಗಳ ಜನರಿಗೆ ಕನಸು ಕಾಣಲು ಬೇಕಾದ "ಪರಿಸರ" (role models, mentors, funding, social permission) ಬಹುತೇಕ ಇಲ್ಲ — ಲೇಖಕರದ್ದೇ ಪದಗಳಲ್ಲಿ, "the infrastructure to dream is terribly underdeveloped."</li>
+        <li>ನಾವೆಲ್ಲರೂ ಆಕಸ್ಮಿಕ, ಅದೃಷ್ಟ, ಪರಿಸ್ಥಿತಿಯ ಬಂಧಿಗಳು — Brian Klaas ಅವರ <em>Fluke</em> ಪುಸ್ತಕದ ಚೌಕಟ್ಟನ್ನು ಲೇಖಕರು ಬಳಸುತ್ತಾರೆ.<sup><a href="#ann-3">3</a></sup></li>
+        <li>Elon Musk ಅಥವಾ Larry Page ಕೋಲಾರದ ಹುಡುಗನಿಗೆ ಸಂಬಂಧಿಸಲ್ಲ; ತನ್ನದೇ ಜಿಲ್ಲೆಯ ಯಾರೋ ಒಬ್ಬರ ಕಥೆ ಮಾತ್ರ ಕ್ರಿಯೆಗೆ ಪ್ರೇರೇಪಿಸುತ್ತದೆ.</li>
+        <li>ಭಾರತ "ಒಂದು ದೇಶವಲ್ಲ — ಹಲವು ದೇಶಗಳ ಒಳಗಿನ ದೇಶ": ಕರ್ನಾಟಕವೊಂದರ ಜನಸಂಖ್ಯೆಯೇ ಯುಕೆ ಯಷ್ಟಿದೆ.<sup><a href="#ann-5">5</a></sup> ಹಾಗಾಗಿ ಒಂದು ಟೆಂಪ್ಲೇಟ್‌ನಲ್ಲಿ ಎಲ್ಲ ಸಮಸ್ಯೆಗಳಿಗೆ ಪರಿಹಾರ ಸಿಗುವುದಿಲ್ಲ.</li>
+      </ul>
+    </div>
+
+    <div class="columns">
+
+      <section>
+        <h2>ಮುಂದೆ ಬನ್ನಿ ಮತ್ತು ಊರುಗಳ ಕನಸು</h2>
+        <p>ಲೇಖಕರು ಇತ್ತೀಚೆಗೆ ಮುಂದೆ ಬನ್ನಿಯ ಸಂಸ್ಥಾಪಕ ತಂಡವನ್ನು ಭೇಟಿಯಾದರು.<sup><a href="#ann-1">1</a></sup> "ಮುಂದೆ ಬನ್ನಿ" ಎಂಬ ಹೆಸರೇ ಅವರ ಉದ್ದೇಶವನ್ನು ಹೇಳುತ್ತದೆ — ಕರ್ನಾಟಕದ ಸಣ್ಣ ಊರು ಮತ್ತು ಹಳ್ಳಿಗಳಿಂದ ಬಂದವರಿಗೆ ಉದ್ಯಮ ಕಟ್ಟಲು ಬೇಕಾದ ಬೆಂಬಲ ವ್ಯವಸ್ಥೆಯನ್ನು ಒದಗಿಸುವುದು. ತಂಡ ತಮ್ಮ ಉದ್ಯೋಗಗಳನ್ನು ಬಿಟ್ಟು ಲಾಭರಹಿತ ಸಂಸ್ಥೆಯಾಗಿ ಇದನ್ನು ಪೂರ್ಣಾವಧಿಯಲ್ಲಿ ನಡೆಸುತ್ತಿದೆ.<sup><a href="#ann-2">2</a></sup></p>
+        <p>ಲೇಖಕರು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಬೆಳೆದರಾದರೂ ಅವರ ಕುಟುಂಬವೆಲ್ಲಾ ಹಳ್ಳಿಗಳಿಂದ. "ನನ್ನಷ್ಟೇ ಪ್ರತಿಭೆ ಇರುವ ಅವರಿಗೆ ನನ್ನಷ್ಟೇ ಅವಕಾಶ ಸಿಕ್ಕಿದ್ದರೆ, ಅವರು ನಾನು ಮಾಡುತ್ತಿರುವುದಕ್ಕಿಂತ ಹತ್ತು-ನೂರು ಪಟ್ಟು ಮಾಡುತ್ತಿದ್ದರು," ಎಂಬ ಅರಿವು ಅವರಿಗೆ ನಿತ್ಯ.</p>
+        <blockquote class="pull">
+          "The infrastructure to dream is terribly underdeveloped in many of these places."
+          <span class="gloss">— ಈ ಊರುಗಳಲ್ಲಿ <mark>ಕನಸು ಕಾಣಲು ಬೇಕಾದ ಮೂಲಸೌಕರ್ಯ ಬಹಳವೇ ಕಡಿಮೆ</mark>. ಸಣ್ಣ ಊರಿನ ಪ್ರತಿಭಾವಂತ ಹುಡುಗ-ಹುಡುಗಿಯರಿಗೆ ಕನಸು ಮೊಳಕೆಯೊಡೆಯುವ ಮುನ್ನವೇ ಪರಿಸ್ಥಿತಿ ಅದನ್ನು ಹೊಸಕಿಹಾಕುತ್ತದೆ.</span>
+        </blockquote>
+      </section>
+
+      <section>
+        <h2>ಪರಿಸ್ಥಿತಿಯ ಬಂಧಿಗಳು</h2>
+        <p>Brian Klaas ಅವರ <em>Fluke</em> ಪುಸ್ತಕ ಲೇಖಕರ ಚಿಂತನೆಯನ್ನು ಆಕಾರಿಸಿದೆ.<sup><a href="#ann-3">3</a></sup> ಅದರ ಪ್ರಕಾರ ಸಣ್ಣ ಆಕಸ್ಮಿಕ ಘಟನೆಗಳು ಜೀವನದ ದಿಕ್ಕನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಬದಲಿಸಬಲ್ಲವು — ನಾವೆಲ್ಲರೂ "<mark>prisoners of chance, fate, luck, randomness, contingency</mark>." ಅಂದರೆ ಯಾರ ಬಳಿ ಯಾವ ಪರಿಸರ, ಯಾವ ಆದಾಯ, ಯಾವ ಊರು ಎಂಬುದು ಹೆಚ್ಚಿನ ಮಟ್ಟಿಗೆ ಯಾದೃಚ್ಛಿಕ.</p>
+        <p>ಈ ದೃಷ್ಟಿಕೋನದಿಂದ ನೋಡಿದರೆ: ಮೇಲಿನ ಮೂರು-ನಾಲ್ಕು ನಗರಗಳನ್ನು ಹೊರತುಪಡಿಸಿದರೆ ಭಾರತದ ಬಹುಪಾಲು ಪ್ರದೇಶಗಳಲ್ಲಿ ಉದ್ಯಮಶೀಲತೆ ಇನ್ನೂ ಸರಿಯಾಗಿ ಬೆಳೆದಿಲ್ಲ.<sup><a href="#ann-10">10</a></sup> 2024ರಲ್ಲಿ ಭಾರತದ ಒಟ್ಟು ಸ್ಟಾರ್ಟ್‌ಅಪ್ ನಿಧಿಸಂಗ್ರಹದ ಸುಮಾರು 47%ರಷ್ಟು ಬೆಂಗಳೂರೊಂದರಿಂದಲೇ ಹೋಗಿತ್ತು.<sup><a href="#ann-9">9</a></sup> ಹಾಗಾಗಿ ಲೇಖಕರ ಕಳವಳ ದತ್ತಾಂಶಕ್ಕೆ ಅನುಗುಣವಾಗಿದೆ.</p>
+      </section>
+
+      <section>
+        <h2>ಸ್ಥಳೀಯ ಕಥೆಗಳ ಶಕ್ತಿ</h2>
+        <p>ಮುಂದೆ ಬನ್ನಿ ತಂಡ "storytelling" ಪದದ ಸಾಮಾನ್ಯ ಅರ್ಥದಿಂದ ದೂರ. ಅವರು ಅಸ್ಪಷ್ಟ ಪ್ರೇರಣೆಗಾಗಿ ಕಥೆ ಹೇಳುವುದಿಲ್ಲ — ಕರ್ನಾಟಕದ ಸಣ್ಣ ಊರಿನಲ್ಲಿ ಕುಳಿತವನಿಗೆ, "ಇವನಿಗೆ ಸಾಧ್ಯವಾದರೆ ನನಗೂ ಆಗಬಹುದೇನೋ" ಎಂಬ ಯೋಚನೆ ಬರುವ ಕಥೆಗಳನ್ನು ಹೇಳುತ್ತಾರೆ.</p>
+        <blockquote class="pull">
+          "If he could do it, maybe I can too. That's the only kind of storytelling that actually moves people."
+          <span class="gloss">— ಕ್ರಿಯೆಗೆ ಪ್ರೇರೇಪಿಸುವ ಕಥೆ ಒಂದೇ ಇದೆ: <mark>ತನ್ನ ಜಿಲ್ಲೆಯವನೊಬ್ಬ ಏನಾದರೂ ಕಟ್ಟಿದರೆ ಅದೇ ಪ್ರೇರಣೆ</mark>. Elon Musk ಅಥವಾ Larry Page ಅಲ್ಲ.</span>
+        </blockquote>
+        <p>ಒಬ್ಬ ಕೋಲಾರದ ಹುಡುಗನಿಗೆ ಸಿಲಿಕಾನ್ ವ್ಯಾಲಿಯ ಸ್ಥಾಪಕರ ಕಥೆ ಬಹಳ ದೂರ — ತನ್ನ ಜಿಲ್ಲೆಯ ಯಾರೋ ಒಬ್ಬರು ಕಂಪನಿ ಕಟ್ಟಿ ದೊಡ್ಡದು ಮಾಡಿದ್ದರೆ ಅದಷ್ಟೇ ಅವನ ಮನಸ್ಸು ಬದಲಿಸಬಲ್ಲದು.<sup><a href="#ann-8">8</a></sup></p>
+      </section>
+
+      <section>
+        <h2>ಹಲವು ದೇಶಗಳ ಒಳಗಿನ ದೇಶ</h2>
+        <p>Visual Capitalist ಒಂದು ಚಿತ್ರಕ್ಕೆ ಲೇಖಕರು ಕೈ ತೋರಿಸುತ್ತಾರೆ: ಭಾರತದ ರಾಜ್ಯಗಳನ್ನು ವಿಶ್ವದ ದೇಶಗಳಿಗೆ ಹೋಲಿಸುವ ಚಿತ್ರ.<sup><a href="#ann-4">4</a></sup> ಕರ್ನಾಟಕದ ಜನಸಂಖ್ಯೆ ಇಡೀ ಯುಕೆ ಯಷ್ಟಿದೆ.<sup><a href="#ann-5">5</a></sup> ಉತ್ತರಪ್ರದೇಶದ್ದು ಬ್ರೆಜಿಲ್‌ಗೆ ಸಮ.</p>
+        <blockquote class="pull">
+          "India isn't really one country — it's many countries in one. You can't approach desi problems with an English-speaking mindset."
+          <span class="gloss">— ಭಾಷಿಕ ಮತ್ತು ಸಾಂಸ್ಕೃತಿಕ ವೈವಿಧ್ಯದ ಕಾರಣ ಏಕರೂಪದ ಪರಿಹಾರ ಸಾಧ್ಯವಿಲ್ಲ. <mark>ಭಾರತದಲ್ಲಿ ಇಂಗ್ಲಿಷ್ ಮಾತೃಭಾಷೆಯಾಗಿರುವವರು ಕೇವಲ 0.02% ಜನ</mark><sup><a href="#ann-7">7</a></sup> — ಭಾರತದ ಸಂವಿಧಾನ 22 ಭಾಷೆಗಳನ್ನು ಅನುಸೂಚಿತ ಎಂದು ಗುರುತಿಸುತ್ತದೆ ಆದರೆ ಇಂಗ್ಲಿಷ್ ಅವುಗಳಲ್ಲಿಲ್ಲ<sup><a href="#ann-6">6</a></sup>; ಆದರೆ ಸ್ಟಾರ್ಟ್‌ಅಪ್ ಜಗತ್ತಿನ ಭಾಷೆ ಇಂಗ್ಲಿಷೇ. ಸ್ಥಳೀಯ ಸಮಸ್ಯೆಗಳಿಗೆ ಸ್ಥಳೀಯ ಭಾಷೆ ಮತ್ತು ಸ್ಥಳೀಯ ಮನೋಭಾವ ಬೇಕು.</span>
+        </blockquote>
+        <p>ಲೇಖಕರು ಮುಗಿಸುವಾಗ ಒಂದು ಸರಳ ಆಶಯವನ್ನು ಇಡುತ್ತಾರೆ: ಇದು ಒಬ್ಬ-ಎರಡು ಸಂಸ್ಥೆಗಳ ಕೆಲಸವಲ್ಲ, ಇಡೀ ಹಳ್ಳಿ ಬೇಕು — "<mark>it takes a village to solve a problem this big</mark>." ಮುಂದೆ ಬನ್ನಿ ಒಂದು ತುಣುಕು ಮಾತ್ರ; ಸಾವಿರಾರು ಕನ್ನಡಿಗರು ತಮ್ಮ ಜೀವನದಲ್ಲಿ ದೊಡ್ಡ ಹೆಜ್ಜೆಗಳನ್ನು ಇಡಲು ಇಂತಹ ಹಲವು ಪ್ರಯತ್ನಗಳು ಸಮಾನಾಂತರವಾಗಿ ಬೆಳೆಯಬೇಕು.</p>
+      </section>
+
+    </div>
+
+    <section class="annotations">
+      <h2>ಟಿಪ್ಪಣಿಗಳು ಮತ್ತು ಮೂಲಗಳು</h2>
+      <ol>
+        <li id="ann-1">
+          <span class="ann-num">1</span>
+          <span class="ann-body">
+            ಮುಂದೆ ಬನ್ನಿ (ಮುಂದೆ ಬನ್ನಿ) — ವಸಂತ್ ಶೆಟ್ಟಿ ಮತ್ತು ಕಿರಣ್ ಕೊಡ್ಲಡಿ ನಡೆಸುವ ಕನ್ನಡ ಉದ್ಯಮಶೀಲತೆಯ ಪಾಡ್‌ಕಾಸ್ಟ್ ಮತ್ತು ಸಮುದಾಯ ಚಳವಳಿ; ಕರ್ನಾಟಕದಿಂದ 1,00,000 ಉದ್ಯಮಿಗಳನ್ನು ಸೃಷ್ಟಿಸುವುದು ಇವರ ಗುರಿ.
+            <a href="https://mundhebanni.org/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-2">
+          <span class="ann-num">2</span>
+          <span class="ann-body">
+            Deccan Herald ಪ್ರಕಾರ, ಈ ಪಾಡ್‌ಕಾಸ್ಟ್ ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕದ ಸಣ್ಣ ಊರುಗಳಿಂದ ಬಂದ ಕನ್ನಡ ಮಾತನಾಡುವ ಉದ್ಯಮಿಗಳನ್ನು ಕೇಂದ್ರೀಕರಿಸುತ್ತದೆ — ಇಂಗ್ಲಿಷ್ ಮಾಧ್ಯಮಗಳು ಸಾಮಾನ್ಯವಾಗಿ ನಿರ್ಲಕ್ಷಿಸುವ ಸಮುದಾಯ.
+            <a href="https://www.deccanherald.com/india/karnataka/podcast-on-karnataka-entrepreneurs-3624997" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-3">
+          <span class="ann-num">3</span>
+          <span class="ann-body">
+            Brian Klaas ಅವರ <em>Fluke: Chance, Chaos, and Why Everything We Do Matters</em> (Simon &amp; Schuster, 2024) — ಸಣ್ಣ ಆಕಸ್ಮಿಕ ಘಟನೆಗಳು ವ್ಯಕ್ತಿ ಮತ್ತು ಸಮಾಜಗಳ ದಿಕ್ಕನ್ನು ಪರಮಾತ್ಮ ಬದಲಿಸಬಲ್ಲವು ಎಂಬ ಚೌಕಟ್ಟು.
+            <a href="https://brianpklaas.com/fluke" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-4">
+          <span class="ann-num">4</span>
+          <span class="ann-body">
+            Visual Capitalist ಚಿತ್ರ — ಪ್ರತಿ ಭಾರತೀಯ ರಾಜ್ಯವನ್ನು ಸಮಾನ ಜನಸಂಖ್ಯೆಯ ದೇಶಕ್ಕೆ ಹೋಲಿಸಿದೆ: ಉದಾ. ಉತ್ತರ ಪ್ರದೇಶ (23 ಕೋಟಿ) ≈ ಬ್ರೆಜಿಲ್, ಮಹಾರಾಷ್ಟ್ರ ≈ ಜಪಾನ್.
+            <a href="https://www.visualcapitalist.com/mapped-the-population-of-indias-states-compared-with-countries/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-5">
+          <span class="ann-num">5</span>
+          <span class="ann-body">
+            ಕರ್ನಾಟಕದ 2026ರ ಅಂದಾಜು ಜನಸಂಖ್ಯೆ ಸುಮಾರು 6.9 ಕೋಟಿ — ಯುಕೆಯ (~6.8–6.9 ಕೋಟಿ) ಹೆಚ್ಚು-ಕಡಿಮೆ ಸಮ; ಯುಕೆ ವಿಶ್ವದಲ್ಲಿ 22ನೇ ಅತಿ ಹೆಚ್ಚು ಜನಸಂಖ್ಯೆಯ ದೇಶ.
+            <a href="https://worldpopulationreview.com/regions/karnataka" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-6">
+          <span class="ann-num">6</span>
+          <span class="ann-body">
+            ಭಾರತೀಯ ಸಂವಿಧಾನದ ಎಂಟನೇ ಪರಿಚ್ಛೇದ 22 ಅನುಸೂಚಿತ ಭಾಷೆಗಳನ್ನು ಗುರುತಿಸುತ್ತದೆ (ಮೂಲ 14ರಿಂದ 21ನೇ, 71ನೇ ಮತ್ತು 92ನೇ ಸಂವಿಧಾನ ತಿದ್ದುಪಡಿಗಳ ಮೂಲಕ ವಿಸ್ತರಿಸಲ್ಪಟ್ಟಿದೆ); ಇಂಗ್ಲಿಷ್ ಈ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲ.
+            <a href="https://en.wikipedia.org/wiki/Eighth_Schedule_to_the_Constitution_of_India" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-7">
+          <span class="ann-num">7</span>
+          <span class="ann-body">
+            2011ರ ಜನಗಣತಿಯಲ್ಲಿ ಕೇವಲ 0.02% ಭಾರತೀಯರು ಇಂಗ್ಲಿಷ್ ಅನ್ನು ತಮ್ಮ ಮಾತೃಭಾಷೆ ಎಂದು ತಿಳಿಸಿದ್ದಾರೆ; 11%ಗಿಂತ ಕಡಿಮೆ ಜನ ಯಾವುದೇ ಮಟ್ಟದ ಪ್ರಾವೀಣ್ಯತೆಯನ್ನು ತಿಳಿಸಿದ್ದಾರೆ.
+            <a href="https://en.wikipedia.org/wiki/Languages_of_India" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-8">
+          <span class="ann-num">8</span>
+          <span class="ann-body">
+            ಕೋಲಾರ ಜಿಲ್ಲೆ — ಬೆಂಗಳೂರಿನ ಪೂರ್ವಕ್ಕಿದ್ದು, ಒಮ್ಮೆ "ಕೋಲಾರ ಗೋಲ್ಡ್ ಫೀಲ್ಡ್ಸ್" ಇಂದ ಪ್ರಸಿದ್ಧ; ಆ ಗಣಿಗಳು 2001ರಲ್ಲಿ ಮುಚ್ಚಿದ ನಂತರ ಹಾಲು (ಡೆನ್ಮಾರ್ಕ್‌ಗಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದನೆ), ರೇಷ್ಮೆ ಮತ್ತು ತೋಟಗಾರಿಕೆಯೇ ಆರ್ಥಿಕತೆಯ ಆಧಾರ.
+            <a href="https://kolar.nic.in/en/economy/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-9">
+          <span class="ann-num">9</span>
+          <span class="ann-body">
+            Inc42 ದತ್ತಾಂಶದ ಪ್ರಕಾರ 2024ರಲ್ಲಿ ಭಾರತದ $12+ ಶತಕೋಟಿ ಸ್ಟಾರ್ಟ್‌ಅಪ್ ಫಂಡಿಂಗ್‌ನ ಸುಮಾರು 47% ಬೆಂಗಳೂರಿಗೆ ಹರಿಯಿತು; 2025ರಲ್ಲಿಯೂ $4.5 ಶತಕೋಟಿಗಿಂತ ಹೆಚ್ಚು ಸಂಗ್ರಹಿಸಿ ಮುಂದುವರಿದಿದೆ.
+            <a href="https://inc42.com/reports/annual-indian-startup-trends-report-2025/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+        <li id="ann-10">
+          <span class="ann-num">10</span>
+          <span class="ann-body">
+            DPIIT ಮತ್ತು NASSCOM ದತ್ತಾಂಶ: ಭಾರತದ 1,15,000+ DPIIT-ಅಂಗೀಕೃತ ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ಗಳಲ್ಲಿ ಸುಮಾರು ಅರ್ಧ ಈಗ ಟಿಯರ್-2 ಮತ್ತು ಟಿಯರ್-3 ನಗರಗಳಿಂದ; ಆದರೂ ಬಹುಪಾಲು ಬಂಡವಾಳ ಇಂದಿಗೂ ಬೆಂಗಳೂರು-ದಿಲ್ಲಿ-ಮುಂಬೈ ಗೆ ಹರಿಯುತ್ತಿದೆ.
+            <a href="https://inc42.com/buzz/tier-ii-iii-cities-to-drive-next-wave-of-startup-growth-meity-startup-hub-ceo/" rel="noopener">ಮೂಲ →</a>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span><a href="https://rabbitholes.garden/posts/2026-04-10-the-infrastructure-to-dream/" rel="noopener">rabbitholes.garden/posts/2026-04-10-the-infrastructure-to-dream</a></span>
+      <span>ರಚಿಸಲಾಗಿದೆ ಏಪ್ರಿಲ್ 20, 2026 · ಸಂಶೋಧನಾ ಸಾರಾಂಶ · ಮೂಲಗಳು ಪರಿಶೀಲಿಸಲ್ಪಟ್ಟಿವೆ</span>
+    </footer>
+  </main>
+</body>
+</html>

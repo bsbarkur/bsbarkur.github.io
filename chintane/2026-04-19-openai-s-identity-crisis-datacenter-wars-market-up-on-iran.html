@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All-In: OpenAI's Identity Crisis, Datacenter Wars, Mamdani, Swalwell — Research Notes</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #5b5b55;
+    --rule: #e6e3d9;
+    --link: #0969da;
+    --mark: #fff3a0;
+    --callout-bg: #eef4fa;
+    --callout-bar: #5684d6;
+    --tldr-bg: #fbf6e4;
+    --tldr-bar: #c8a93a;
+    --ann-bg: #f4f1e8;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+
+  body {
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 48px 72px;
+  }
+
+  .eyebrow {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font: 600 38px/1.15 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+
+  .meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .meta .dot { margin: 0 8px; color: var(--rule); }
+
+  .tldr {
+    background: var(--tldr-bg);
+    border-left: 3px solid var(--tldr-bar);
+    padding: 18px 22px 14px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  .tldr h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a6a1a;
+    margin: 0 0 10px;
+  }
+  .tldr ul { margin: 0; padding: 0 0 0 18px; }
+  .tldr li { margin: 4px 0; font-size: 15px; }
+
+  .columns {
+    columns: 2;
+    column-gap: 2.25rem;
+    column-fill: balance;
+    column-rule: 1px solid var(--rule);
+  }
+
+  .columns > section {
+    break-inside: avoid-column;
+    margin: 0 0 18px;
+  }
+
+  .columns h2 {
+    font: 600 19px/1.25 Charter, "Iowan Old Style", Georgia, serif;
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .columns h2 .ts {
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: rgba(0,0,0,0.04);
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+
+  .columns p {
+    margin: 0 0 10px;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .columns mark {
+    background: var(--mark);
+    padding: 0 2px;
+    border-radius: 1px;
+  }
+
+  .columns sup {
+    font-size: 10px;
+    vertical-align: super;
+    line-height: 0;
+    margin-left: 1px;
+  }
+  .columns sup a {
+    color: var(--link);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .columns aside.callout {
+    break-inside: avoid;
+    background: var(--callout-bg);
+    border-left: 3px solid var(--callout-bar);
+    padding: 12px 14px;
+    margin: 10px 0 14px;
+    font-size: 14px;
+    color: #1a2742;
+    border-radius: 2px;
+  }
+
+  .annotations {
+    margin: 48px 0 0;
+    padding: 28px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .annotations h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .annotations ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.25rem; }
+  .annotations li {
+    break-inside: avoid;
+    background: var(--ann-bg);
+    padding: 10px 12px;
+    margin: 0 0 10px;
+    border-radius: 2px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+  }
+  .annotations .ann-num {
+    font: 600 12px/1.4 Charter, Georgia, serif;
+    color: #7a6a1a;
+    min-width: 18px;
+  }
+  .annotations a { color: var(--link); text-decoration: none; }
+  .annotations a:hover { text-decoration: underline; }
+
+  .footer {
+    margin: 48px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer a { color: var(--link); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 860px) {
+    .page { padding: 32px 22px 48px; }
+    h1 { font-size: 30px; }
+    .columns, .annotations ol { columns: 1; column-rule: none; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { padding: 24px; max-width: none; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">YouTube Research · April 19, 2026</p>
+    <h1>All-In: OpenAI's Identity Crisis, Datacenter Wars, Mamdani's Pied-à-Terre Tax, Swalwell Out</h1>
+    <p class="meta">
+      <strong>All-In Podcast</strong> · with Travis Kalanick
+      <span class="dot">·</span>April 17, 2026
+      <span class="dot">·</span>1:30:57
+      <span class="dot">·</span><a href="https://www.youtube.com/watch?v=SFdqX7IY7RY" rel="noopener">Watch on YouTube →</a>
+    </p>
+
+    <div class="tldr">
+      <h2>TL;DR</h2>
+      <ul>
+        <li>Mamdani's new NYC pied-à-terre tax on $5M+ second homes is the besties' opening punching bag — Chamath sketches it as a slow London-style hollowing-out rather than an acute crash.</li>
+        <li>OpenAI's leaked Dresser memo and Anthropic's secondary-market valuation flipping above OpenAI frame the episode's core argument: growth rate, not revenue, decides the frontier-lab race.</li>
+        <li>Everyone is suddenly compute-constrained — Allbirds' 450% AI-pivot pop is treated as the silliest possible canary in a very real coal mine of data-center scarcity and political backlash.</li>
+        <li>Sacks lays out a three-part theory of why data centers are unpopular: ratepayer fears, EA/doomer astroturfing, and Anthropic's own political alliances now boomeranging on its strategy.</li>
+        <li>Eric Swalwell's abrupt exit mirrors Biden 2024 in Sacks's read — a coordinated elite nudge to clear the CA jungle-primary field for a preferred Democratic candidate.</li>
+        <li>The market is at all-time highs on Shiller and Buffett indicators despite an Iran conflict; Travis's theory: Trump treats the S&amp;P as his weather vane and dials policy to keep it up.</li>
+      </ul>
+    </div>
+
+    <div class="columns">
+
+      <section>
+        <h2>Mamdani's pied-à-terre tax<span class="ts">[00:42]</span></h2>
+        <p>NYC Mayor Mamdani's first big fiscal move: an annual tax on non-primary homes over $5M within 15 miles of Midtown — the besties cite an unconfirmed 3.9% figure.<sup><a href="#ann-1">1</a></sup> Jason calls out that the announcement was staged on the sidewalk outside Ken Griffin's $238M penthouse<sup><a href="#ann-4">4</a></sup>, which Chamath defends as fair game since the unit had been publicly marketed for years.</p>
+        <p>Chamath's frame is that the most elastic slice of the market is precisely the segment being taxed, and <mark>pied-à-terre buyers who can park capital anywhere will just go elsewhere</mark> — exactly what happened in London after non-dom status was gutted.<sup><a href="#ann-2">2</a></sup> Sacks counters that a price-insensitive whale paying $3–4M/year in property tax while consuming zero city services is pure upside for the city, and that removing that demand "dries up" the developer math for new towers.</p>
+        <aside class="callout">
+          Chamath's counter-example is <strong>Austin, where rents have fallen for 19 straight months</strong> as a permitting boom delivered ~957 units per 100k residents from 2021–2023 — a clean demonstration that supply, not tax policy, is what moves affordability.<sup><a href="#ann-3">3</a></sup>
+        </aside>
+      </section>
+
+      <section>
+        <h2>OpenAI's identity crisis<span class="ts">[11:23]</span></h2>
+        <p>OpenAI's chief revenue officer Denise Dresser sent a four-page Sunday memo — promptly leaked — that touted Amazon's $50B commitment and accused Microsoft of having "limited our ability" to serve customers.<sup><a href="#ann-5">5</a></sup> The same memo went after Anthropic, arguing its headline ~$30B run-rate is inflated by roughly $8B of channel-partner revenue.</p>
+        <p>The FT's simultaneous scoop was the more structural problem: secondary-market Anthropic stock is now trading <em>above</em> OpenAI for the first time, and investors argue OpenAI would need to IPO at $1.2T to make its last primary round pencil.<sup><a href="#ann-6">6</a></sup> <mark>At the Q2 benchmark both were near $30B ARR, but Anthropic is compounding at ~10× a year versus OpenAI at 3–4×</mark> — and in Sacks's framing that gap is already basically decisive.</p>
+        <p>Sacks's strongest point is that the critics have it backwards: OpenAI should do <em>more</em> enterprise, not less, because <mark>consumer is a structurally worse business — maybe 3–4% convert to premium and they want a $20/month all-you-can-eat bundle</mark>, while enterprise coding tokens meter like electricity. Chamath adds that Codex is genuinely better than Claude for long-horizon, tricky tasks — a view grudgingly shared by Friedberg despite his org now being "90% Anthropic."</p>
+      </section>
+
+      <section>
+        <h2>Compute wars and the data-center backlash<span class="ts">[27:28]</span></h2>
+        <p>Chamath's central claim: hyperscalers control roughly 60% of all compute, which turns capacity allocation into a weapon. When AWS Bedrock loosened Anthropic's throttles, all the "Claude is thinking less" complaints evaporated — suggesting the model's scarcity narrative and its compute budget are uncomfortably correlated.</p>
+        <p>The comedic data point is Allbirds. The sneaker company rebranded to "NewBird AI" on an alleged eight-H100 purchase and <mark>the stock ripped 450% in a week off a ~$21M base</mark>.<sup><a href="#ann-7">7</a></sup> Chamath's serious reading: <mark>public-market froth for anything GPU-adjacent is a canary — the real signal is that power, permits, and shell space are now the binding constraint</mark>, not model architecture.</p>
+        <p>Sacks traces three reasons data centers keep getting voted down: residential rate-payer fear (addressed in part by the Trump administration's March 2026 Ratepayer Protection Pledge<sup><a href="#ann-8">8</a></sup>), EA/doomer groups astroturfing "data centers use all our water" campaigns, and — most ironic — Anthropic's own longtime political alliance with those same groups now threatening the build-outs Anthropic itself will need. Maine's new statewide moratorium on 20MW+ sites is the early bellwether.<sup><a href="#ann-9">9</a></sup></p>
+        <aside class="callout">
+          Sacks brings up the GCC data-center push he worked on a year ago: the projects accused of "serving China" by critics were <strong>physically bombed on Iranian IRGC target lists</strong> during the current conflict — which, he argues, falsifies the original framing.
+        </aside>
+        <p>Friedberg's wildcard thesis is cultural, not technical: <mark>the data center is the most attackable physical manifestation of the wealth the AI boom is creating</mark>. Most Americans don't feel value from AI yet — "some medical advice on ChatGPT" is the median experience — while the data center is visible, concrete, and rich-coded.</p>
+        <p>Jason's closing riff: the industry's two most visible spokespeople are Dario Amodei (preaching doom) and Sam Altman (the subject of Ronan Farrow's recent 70,000-word <em>New Yorker</em> investigation<sup><a href="#ann-15">15</a></sup>). Until a Jensen, a Dell or an Elon takes the mic on healthcare, housing and education, <mark>"AI is less popular than ICE, the Democrats, and the government of Iran."</mark></p>
+      </section>
+
+      <section>
+        <h2>Swalwell out, and the Democratic machine<span class="ts">[59:23]</span></h2>
+        <p>Eric Swalwell dropped his California governor bid and resigned from Congress after a wave of sexual-misconduct allegations; he denies them, but lost all 21 Democratic House endorsements inside 24 hours.<sup><a href="#ann-10">10</a></sup> Friedberg's contribution is the anecdote: when he made discreet calls in December about a rumored run, multiple unconnected people already knew the allegations — and sat on them.</p>
+        <p>Sacks's reading is structural rather than moral: California's top-two jungle primary<sup><a href="#ann-13">13</a></sup> had produced a scenario where two Republicans (Hilton and Bianco) were polling into the general, so the Democratic establishment needed to winnow the field fast. <mark>"Powers that be made the decision to lance the boil"</mark> — and the parallel is explicitly Biden 2024, where Pelosi reportedly told the sitting president "we can do this the hard way or the easy way" days before his exit.<sup><a href="#ann-11">11</a></sup></p>
+        <p>Added colour: Pelosi was Swalwell's original 20-years-ago political patron, and protected him during the 2020 Christine "Fang Fang" Fang Chinese-spy scandal.<sup><a href="#ann-14">14</a></sup> The bit then drifts, as All-In bits do, into a riff on congressional trading returns — Ro Khanna apparently beating Pelosi's legendary run this year — and a jab that <mark>Buffett's returns are "bimodally distributed pre- and post-Reg FD"</mark>, while Reg FD famously doesn't apply to Congress.</p>
+      </section>
+
+      <section>
+        <h2>All-time highs, Iran, and the Trump weather vane<span class="ts">[1:10:31]</span></h2>
+        <p>The S&amp;P is hitting fresh all-time highs inside week seven of the Iran conflict, which feels wrong until you unpack it. Chamath flags both the Shiller CAPE and the Buffett Indicator at extremes<sup><a href="#ann-12">12</a></sup>, but also the weird <mark>dispersion signal — roughly eight names are at ATHs and the rest of the market is nowhere near it</mark>, which is why every macro narrative currently finds data to support itself.</p>
+        <p>Sacks reads the rally as a peace-dividend bet: the Islamabad meeting didn't produce a signed deal, but the price action says the market treats the conflict as "on its way to being resolved." Travis's blunter take: <mark>Trump's weather vane is the S&amp;P, and he dials policy pressure up or down to keep it trading in a tight band</mark> — the "TACO trade" reframed as a deliberate instrument rather than a bug.</p>
+        <p>The tell on the AI side is that Chamath keeps pressing for a single real example of a scaled, profitable enterprise deployment and doesn't get one. Sacks concedes he's closer to Jason here than he'd like to admit: change management at big companies is real, most transformation projects are failing per McKinsey, and the ROI is only unambiguously visible at the <em>model</em> layer — not yet at the application layer. Travis closes on the honest note: "the agents are just not that smart yet" — investing agents on Kalshi and Polymarket have been his own quiet disillusionment.</p>
+      </section>
+
+    </div>
+
+    <section class="annotations">
+      <h2>Annotations &amp; Sources</h2>
+      <ol>
+        <li id="ann-1">
+          <span class="ann-num">1</span>
+          <span class="ann-body">
+            Mayor Mamdani and Governor Hochul jointly announced New York State's first pied-à-terre tax, targeting one-to-three family homes, condos and co-ops over $5M whose owners keep a primary residence outside NYC. Exact rates and thresholds haven't been set; the administration has said it is working with OMB and state finance officials against a ~$500M annual revenue target.
+            <a href="https://www.cbsnews.com/newyork/news/pied-a-terre-tax-second-homes-kathy-hochul-nyc/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-2">
+          <span class="ann-num">2</span>
+          <span class="ann-body">
+            Chancellor Rachel Reeves confirmed abolition of the UK's non-domiciled tax regime on 30 Oct 2024, replaced from 6 Apr 2025 by a residence-based system. The OBR scored the package at £12.7B over five years, but many non-doms have reportedly relocated to Dubai and Singapore.
+            <a href="https://taxscape.deloitte.com/measures-spring-budget-2024/government-announces-major-reform-of-taxation-of-non-domiciled-taxpayers.aspx" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-3">
+          <span class="ann-num">3</span>
+          <span class="ann-body">
+            Texas Tribune reported Austin rents had fallen for 19 consecutive months on the back of an apartment-construction boom — 957 permitted units per 100,000 residents between 2021–2023 — forcing landlords into rent cuts and free-month incentives.
+            <a href="https://www.texastribune.org/2025/01/22/austin-texas-rents-falling" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-4">
+          <span class="ann-num">4</span>
+          <span class="ann-body">
+            Ken Griffin closed on the 24,000-sq-ft penthouse at 220 Central Park South for $238M in January 2019, then the most expensive US home sale on record. Griffin later relocated Citadel's HQ from Chicago to Miami in 2022.
+            <a href="https://www.cbsnews.com/news/ken-griffin-citadel-220-central-park-south-buys-most-expensive-home-america-238-million/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-5">
+          <span class="ann-num">5</span>
+          <span class="ann-body">
+            CNBC reported the leaked Sunday memo from OpenAI CRO Denise Dresser — written weeks after Amazon announced up to $50B of OpenAI investment — accusing Microsoft of having "limited our ability" to serve customers and alleging Anthropic's stated run rate is inflated by ~$8B via rev-share grossing.
+            <a href="https://www.cnbc.com/2026/04/13/openai-touts-amazon-alliance-in-memo-microsoft-limited-our-ability.html" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-6">
+          <span class="ann-num">6</span>
+          <span class="ann-body">
+            OpenAI's most recent round was anchored by Amazon ($50B), Nvidia ($30B) and SoftBank ($30B); reporting from Bloomberg and TechCrunch described VCs preemptively offering Anthropic a round at $800B+ just months after its February $30B raise at $380B, with tokenized Anthropic shares on Jupiter briefly implying an $851B valuation.
+            <a href="https://www.cnbc.com/2026/03/31/openai-funding-round-ipo.html" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-7">
+          <span class="ann-num">7</span>
+          <span class="ann-body">
+            Allbirds announced on 15 April 2026 that it was rebranding to "NewBird AI" and pivoting to GPU-as-a-Service, backed by $50M of convertible debt. The stock briefly spiked as much as 582% off a ~$21M market cap before giving back gains the next day.
+            <a href="https://www.cnbc.com/2026/04/15/allbirds-bird-stock-shoes-ai.html" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-8">
+          <span class="ann-num">8</span>
+          <span class="ann-body">
+            Amazon, Google, Meta, Microsoft, OpenAI, Oracle and xAI signed the Trump administration's Ratepayer Protection Pledge on 4 March 2026, agreeing to build, bring or buy generation and to fund transmission upgrades for their own data centers. The pledge has no binding enforcement mechanism.
+            <a href="https://www.whitehouse.gov/fact-sheets/2026/03/fact-sheet-president-donald-j-trump-advances-energy-affordability-with-the-ratepayer-protection-pledge/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-9">
+          <span class="ann-num">9</span>
+          <span class="ann-body">
+            Maine's LD 307 imposes a moratorium through November 2027 on new data centers drawing 20+ MW — the first such statewide ban in the US. At least a dozen other states across both parties are reportedly considering similar moratoria.
+            <a href="https://www.washingtonpost.com/nation/2026/04/14/maine-bans-data-centers/" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-10">
+          <span class="ann-num">10</span>
+          <span class="ann-body">
+            NBC News reported that after CNN and the San Francisco Chronicle published accounts from a former staffer and three other women, Swalwell — who denies the allegations — lost all 21 Democratic congressional endorsements within 24 hours and announced his congressional resignation the following Monday. Governor Newsom set an August 18 special election for CA-14.
+            <a href="https://www.nbcnews.com/politics/elections/eric-swalwell-drops-bid-california-governor-sexual-misconduct-allegati-rcna277009" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-11">
+          <span class="ann-num">11</span>
+          <span class="ann-body">
+            NBC News reported Nancy Pelosi worked behind the scenes in July 2024 — coordinating with rank-and-file lawmakers and donors rather than calling on Biden publicly — and warned him in a private call that he could cost Democrats the House and Senate. Biden withdrew on 21 July 2024 and endorsed Kamala Harris.
+            <a href="https://www.nbcnews.com/politics/2024-election/nancy-pelosi-helped-pressure-joe-biden-end-2024-campaign-rcna162943" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-12">
+          <span class="ann-num">12</span>
+          <span class="ann-body">
+            The Shiller CAPE hit ~40× in April 2026 vs. a long-term average near 17× — a level previously seen only near the dot-com peak (~44). Separate coverage has the Buffett Indicator (market cap / GDP) around 230%, roughly 77% above its long-term trend.
+            <a href="https://www.multpl.com/shiller-pe" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-13">
+          <span class="ann-num">13</span>
+          <span class="ann-body">
+            California's "Top-Two Primary" (Proposition 14, 2010; first used in 2012) sends the two highest vote-getters to the general election regardless of party. It applies to state constitutional, state legislative and US congressional offices — but not presidential or local races.
+            <a href="https://www.sos.ca.gov/elections/primary-elections-california" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-14">
+          <span class="ann-num">14</span>
+          <span class="ann-body">
+            Axios's original 8 Dec 2020 investigation reported that from 2011–2015 suspected MSS operative Christine "Fang Fang" Fang ran fundraising and networking operations against US politicians including helping place an intern in Swalwell's office. Swalwell was not accused of wrongdoing, cut ties after an FBI defensive briefing, and the House Ethics Committee later closed its probe without further action.
+            <a href="https://www.axios.com/2020/12/08/china-spy-california-politicians" rel="noopener">source →</a>
+          </span>
+        </li>
+        <li id="ann-15">
+          <span class="ann-num">15</span>
+          <span class="ann-body">
+            Ronan Farrow and Andrew Marantz spent roughly 18 months on the <em>New Yorker</em> investigation of Sam Altman — reviewing never-before-disclosed internal OpenAI memos plus 200+ pages of documents on a close Altman colleague, and interviewing more than 100 people. One former OpenAI board member is quoted calling Altman "unconstrained by truth."
+            <a href="https://www.wbur.org/hereandnow/2026/04/14/sam-altman-ronan-farrow" rel="noopener">source →</a>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span><a href="https://www.youtube.com/watch?v=SFdqX7IY7RY" rel="noopener">youtube.com/watch?v=SFdqX7IY7RY</a></span>
+      <span>Generated April 19, 2026 · annotations grounded in real sources · "Price is Wrong" game segments omitted</span>
+    </footer>
+  </main>
+</body>
+</html>
