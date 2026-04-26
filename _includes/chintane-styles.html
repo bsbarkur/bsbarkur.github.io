@@ -89,9 +89,23 @@
   .prose ul, .prose ol { padding-left: 22px; margin: 0 0 16px; }
   .prose li { margin: 4px 0; }
   .prose blockquote { margin: 16px 0; padding: 8px 16px; border-left: 3px solid var(--rule); color: #3a3a33; font-style: italic; }
-  .prose code { background: var(--code-bg); padding: 1px 5px; border-radius: 2px; font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
-  .prose pre { background: var(--code-bg); padding: 14px 16px; border-radius: 3px; overflow-x: auto; font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }
-  .prose pre code { background: none; padding: 0; }
+  .prose code { background: #fff1f4; padding: 2px 6px; border-radius: 3px; font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: #b3306e; border: 1px solid #f5d3dc; }
+  .prose pre, .prose div.highlighter-rouge { background: #1e2030; color: #c8d3f5; padding: 18px 20px; border-radius: 6px; overflow-x: auto; font: 13.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 24px 0; border-left: 4px solid #c792ea; box-shadow: 0 6px 20px rgba(40, 40, 80, 0.15), 0 1px 3px rgba(0,0,0,0.08); }
+  .prose div.highlighter-rouge { padding: 0; border-left: 4px solid #c792ea; }
+  .prose div.highlighter-rouge .highlight { background: transparent; }
+  .prose div.highlighter-rouge pre { margin: 0; border-left: 0; box-shadow: none; border-radius: 0 6px 6px 0; }
+  .prose pre code { background: none; padding: 0; color: inherit; border: 0; }
+
+  .prose pre .c, .prose pre .c1, .prose pre .cm, .prose pre .cp { color: #7a8290; font-style: italic; }
+  .prose pre .k, .prose pre .kn, .prose pre .kc, .prose pre .kd, .prose pre .kp, .prose pre .kr, .prose pre .kt { color: #c792ea; }
+  .prose pre .s, .prose pre .s1, .prose pre .s2, .prose pre .sb, .prose pre .sc, .prose pre .sd, .prose pre .se, .prose pre .sh, .prose pre .si, .prose pre .sx, .prose pre .sr, .prose pre .ss { color: #c3e88d; }
+  .prose pre .mi, .prose pre .mf, .prose pre .mh, .prose pre .mo, .prose pre .il { color: #f78c6c; }
+  .prose pre .bp, .prose pre .kc { color: #ff9cac; }
+  .prose pre .nb, .prose pre .nc, .prose pre .nf { color: #82aaff; }
+  .prose pre .nn { color: #ffcb6b; }
+  .prose pre .o, .prose pre .ow { color: #89ddff; }
+  .prose pre .p { color: #d6deeb; }
+  .prose pre .n { color: #e6e6e6; }
   .prose img { max-width: 100%; height: auto; border-radius: 3px; }
   .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
   .prose table { border-collapse: collapse; margin: 16px 0; font-size: 14.5px; }
@@ -116,4 +130,75 @@
     .posts li { grid-template-columns: 1fr; gap: 6px; }
     .posts .date { padding-top: 0; }
   }
+
+  .prose { position: relative; }
+  .hovernote {
+    border-bottom: 1px dashed #888;
+    cursor: help;
+  }
+  .hovernote .note {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    right: -19em;
+    width: 17em;
+    top: 0;
+    padding: 0.7em 0.9em;
+    background: var(--bg);
+    border: 1px solid var(--tldr-bar);
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 0.85em;
+    line-height: 1.45;
+    color: var(--ink);
+    font-style: normal;
+    z-index: 10;
+    transition: opacity 0.12s ease-in;
+  }
+  .hovernote .note::before {
+    content: "";
+    position: absolute;
+    left: -2em;
+    top: 0.9em;
+    width: 2em;
+    border-top: 1px dashed #888;
+  }
+  .hovernote:hover .note,
+  .hovernote:focus-within .note {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @media (max-width: 1180px) {
+    .hovernote .note {
+      right: auto;
+      left: 0;
+      top: 1.6em !important;
+      width: 100%;
+      max-width: 28em;
+    }
+    .hovernote .note::before { display: none; }
+  }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var notes = document.querySelectorAll('.hovernote');
+  notes.forEach(function (el) {
+    var note = el.querySelector('.note');
+    if (!note) return;
+    var prose = el.closest('.prose');
+    if (!prose) return;
+    function place() {
+      if (window.matchMedia('(max-width: 1180px)').matches) return;
+      var termRect = el.getBoundingClientRect();
+      var proseRect = prose.getBoundingClientRect();
+      note.style.top = (termRect.top - proseRect.top) + 'px';
+    }
+    el.addEventListener('mouseenter', place);
+    el.addEventListener('focusin', place);
+    window.addEventListener('resize', place);
+    place();
+  });
+});
+</script>
