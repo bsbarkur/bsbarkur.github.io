@@ -20,6 +20,16 @@ Dwarkesh points out that there is a hidden second condition hiding in plain sigh
 
 Some domains are both. That is where AI has made the most progress.
 
+| Domain | Verifiable? | Grindable? | Why |
+|---|---|---|---|
+| **Coding** | ✅ Tests pass/fail | ✅ Spin up 1000 identical containers, let agents fix the same bug in parallel | The environment is deterministic, sandboxed, infinitely replayable |
+| **Math** | ✅ Answer is right or wrong | ✅ Generate 1000 problems, run 1000 agents, check instantly | No environment needed, just problems and answers |
+| **Chess / Go** | ✅ Win or lose | ✅ Same board state replayed 1000 times against the same engine | Perfect deterministic simulator |
+| **Computer use** | ✅ Did you complete the checkout? | ❌ Amazon detects your bots, accounts get banned, flows change | "You can't have a thousand agents go try the same checkout flow on Amazon. Andy Jassy will find and shut your ass down." |
+| **Day trading** | ✅ Did you profit? | ❌ Same market conditions never repeat, your own trades change the market | The market only happened once |
+| **Court cases** | ✅ Did you win? | ❌ Can't retry the same case 1000 times with different arguments | Each case is unique, you only get one shot |
+| **Building a business** | ✅ Is it profitable? | ❌ Customer feedback takes months or years | "The outer loop verification may take months or years of real world actions to elicit, and cannot be re observed by perturbing the model's actions thousands of times in parallel" |
+
 Coding is the poster child. Tests tell you if the solution works. You can spin up a thousand identical Docker containers, each with a repo that has a missing feature, and let a thousand agents attack the same problem in parallel. The environment costs nothing to replicate. You can do this all day.
 
 Math works the same way. Generate a thousand problems, run a thousand agents, check the answers instantly. No environment needed at all.
