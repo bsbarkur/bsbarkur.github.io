@@ -83,3 +83,5 @@ The stronger reading of “always delegate” needs one further step. A prose in
 </p>
 
 The guide is based on the checked-out repository snapshot dated September 12, 2026. Codex changes quickly, so use the source links at the end of the page when you need exact details for the inspected snapshot.
+
+Related reading: [From the Codex Harness to Cloud Agents: Using the Agents API](/2026/09/12/agents-api-codex-harness.html) follows these boundaries into managed and self-hosted Agents API sessions.
