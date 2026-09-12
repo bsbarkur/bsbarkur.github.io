@@ -27,11 +27,11 @@ That creates a loop:
 <svg viewBox="0 0 760 230" role="img" aria-labelledby="post-loop-title post-loop-desc" style="display:block;width:100%;min-width:620px;height:auto;color:#20221f;">
 <title id="post-loop-title">The Codex model and tool loop</title>
 <desc id="post-loop-desc">Context passes to the model, through policy and a tool, then the result returns to context for another decision.</desc>
-<defs><marker id="post-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2456a6"/></marker></defs>
+<defs><marker id="post-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#2456a6"/></marker></defs>
 <g font-family="system-ui,sans-serif" fill="#20221f">
 <g fill="#fffdf8" stroke="#d7cfbf" stroke-width="1.5"><rect x="25" y="55" width="125" height="68" rx="9"/><rect x="218" y="55" width="125" height="68" rx="9"/><rect x="410" y="55" width="125" height="68" rx="9"/><rect x="610" y="55" width="125" height="68" rx="9"/></g>
 <g font-size="12" font-weight="700" text-anchor="middle"><text x="87" y="94">Context</text><text x="280" y="94">Model</text><text x="472" y="94">Policy + tool</text><text x="672" y="94">Result</text></g>
-<g stroke="#2456a6" stroke-width="2" fill="none" marker-end="url(#post-arrow)"><path d="M150 89H212"/><path d="M343 89H404"/><path d="M535 89H604"/><path d="M672 123C672 188 87 188 87 129"/></g>
+<g stroke="#2456a6" stroke-width="2" fill="none" marker-end="url(#post-arrow)"><path d="M150 89H218"/><path d="M343 89H410"/><path d="M535 89H610"/><path d="M672 123V154C672 206 87 206 87 154V123"/></g>
 <text x="379" y="182" text-anchor="middle" font-size="11" fill="#386853">evidence changes what the model knows next</text>
 </g></svg>
 <figcaption style="margin-top:10px;color:#65645d;font-size:14px;line-height:1.5;"><strong style="color:#20221f;">The core rhythm.</strong> A tool result becomes evidence for the next model request. The detailed explainer turns this into a seven-step interactive replay.</figcaption>
