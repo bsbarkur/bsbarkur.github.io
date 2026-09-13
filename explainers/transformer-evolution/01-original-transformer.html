@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 · The original Transformer (2017) · From the Transformer to DeepSeek V4.1 Flash</title>
+<meta name="description" content="Chapter 1 of a visual series tracing the Transformer from the 2017 encoder-decoder to DeepSeek V4.1 Flash. The components, one encoder layer, and encoder self-attention, drawn step by step.">
+<style>
+:root{--paper:#f4efe5;--sheet:#fffdf8;--ink:#20221f;--muted:#65645d;--line:#d7cfbf;--blue:#2456a6;--blue-soft:#e4ebf7;--copper:#a74723;--copper-soft:#f8e4d8;--green:#386853;--green-soft:#deeee6;--violet:#66539a;--violet-soft:#ebe7f6;--amber:#9c6a0b;--amber-soft:#faefcf;--rail:#252823;--code:#191d1a;--radius:10px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.74 Charter,'Bitstream Charter','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif}
+a{color:var(--blue);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offset:4px}button{font:inherit}
+h1,h2,h3,p{margin-top:0}h1,h2{font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:500;letter-spacing:-.03em;line-height:1.08}
+h1{font-size:clamp(2.5rem,5.6vw,5.2rem);max-width:980px;margin-bottom:22px}h2{font-size:clamp(1.9rem,3.2vw,2.9rem);max-width:850px;margin-bottom:18px}
+h3{font:650 1.05rem/1.35 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin-bottom:9px}p{margin-bottom:18px}
+.sans{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.layout{display:grid;grid-template-columns:272px minmax(0,1fr)}
+.rail{position:sticky;top:0;height:100vh;overflow:auto;background:var(--rail);color:#f2eee5;padding:30px 22px}
+.rail-mark{display:flex;align-items:center;gap:11px;padding-bottom:20px;border-bottom:1px solid #4a4d47}
+.rail-glyph{display:grid;place-items:center;width:38px;height:38px;border:1px solid #9ea396;border-radius:50%;font:700 .72rem ui-monospace,SFMono-Regular,Consolas,monospace}
+.rail-title{font:500 1.05rem/1.25 'Iowan Old Style',Georgia,serif}
+.rail-label,.eyebrow,.label,.tag{font:650 .73rem/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.095em;text-transform:uppercase}
+.rail-label{display:block;color:#b7bcaf;margin:25px 8px 10px}
+.rail nav a{display:block;color:#dedfd7;text-decoration:none;border-left:1px solid #5d6258;padding:7px 10px;font:500 .84rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.rail nav a:hover,.rail nav a.active{color:#fff;border-color:#f3a56f;background:#30342e}
+.rail nav a small{display:block;color:#aeb3a7;font:600 .66rem/1.2 ui-monospace,SFMono-Regular,monospace;letter-spacing:.05em}
+.rail nav a.soon{color:#8e938a;cursor:default}.rail nav a.soon:hover{background:none;border-color:#5d6258;color:#8e938a}
+.rail-foot{font:400 .76rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#b7bcaf;border-top:1px solid #4a4d47;padding-top:16px;margin-top:28px}.rail-foot a{color:#f1bc95}
+.content{width:100%;max-width:1320px;padding:50px clamp(24px,5vw,78px) 80px}
+.hero{padding:clamp(12px,3vh,40px) 0 40px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--copper);margin-bottom:17px}
+.hero .lede{font-size:clamp(1.12rem,1.7vw,1.36rem);line-height:1.55;max-width:850px;color:#42443f}
+.meta{display:flex;gap:8px 24px;flex-wrap:wrap;font:500 .82rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted);margin:25px 0}
+.section{margin-top:68px;scroll-margin-top:20px}.intro{max-width:820px;font-size:1.06rem;color:#4f504a}
+.chapter{display:flex;align-items:center;gap:12px;margin-bottom:13px}.chapter::after{content:"";height:1px;flex:1;background:var(--line)}.chapter .label{color:var(--copper)}
+.panel,figure,.card,.stepper{background:var(--sheet);border:1px solid var(--line);border-radius:var(--radius)}.panel{padding:25px}
+.note{background:var(--amber-soft);border-left:4px solid var(--amber);border-radius:0 7px 7px 0;padding:15px 19px;margin:23px 0;font-size:.95rem}.note p:last-child{margin-bottom:0}
+.grid2,.grid3{display:grid;gap:15px;margin:23px 0}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:21px}.card p{font-size:.95rem}.card p:last-child{margin-bottom:0}.card .label{display:block;color:var(--blue);margin-bottom:9px}
+.fact-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:25px 0}
+.fact{background:var(--sheet);padding:18px}.fact b{display:block;font:500 1.4rem/1.2 'Iowan Old Style',Georgia,serif;margin-bottom:6px}.fact span{display:block;color:var(--muted);font:500 .79rem/1.45 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+figure{padding:22px 22px 14px;margin:27px 0}figure svg{width:100%;height:auto;display:block;color:var(--ink)}
+figcaption{color:var(--muted);font:400 .88rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin-top:13px;max-width:100ch}figcaption b{color:var(--ink)}
+.figure-title{font:650 .74rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--copper);margin-bottom:15px}
+.key{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0 0;font:500 .76rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted)}
+.key i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px;border:1.5px solid}
+.k-attn{background:var(--blue-soft);border-color:var(--blue)}.k-ffn{background:var(--copper-soft);border-color:var(--copper)}.k-norm{background:var(--green-soft);border-color:var(--green)}.k-emb{background:var(--violet-soft);border-color:var(--violet)}.k-head{background:var(--amber-soft);border-color:var(--amber)}
+.tag{display:inline-block;color:var(--green);background:var(--green-soft);padding:3px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;font-size:.61rem}
+.tag.warn{color:var(--copper);background:var(--copper-soft)}
+/* Figure 1: explorable block diagram */
+.explore{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.6fr);gap:22px;align-items:start}.explore .panel{position:sticky;top:20px}
+.blk{cursor:pointer;transition:opacity .2s}.blk rect{transition:stroke-width .2s}.diagram.focus .blk:not(.on){opacity:.22}.diagram.focus .flow{opacity:.35}.blk.on rect{stroke-width:3}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
+.chip{border:1.5px solid var(--line);background:var(--sheet);border-radius:999px;padding:5px 11px;cursor:pointer;font:600 .78rem/1.3 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink)}
+.chip[aria-pressed="true"]{color:#fff}
+.chip[data-c="emb"][aria-pressed="true"]{background:var(--violet);border-color:var(--violet)}.chip[data-c="pos"][aria-pressed="true"]{background:var(--violet);border-color:var(--violet)}
+.chip[data-c="attn"][aria-pressed="true"],.chip[data-c="mask"][aria-pressed="true"],.chip[data-c="cross"][aria-pressed="true"]{background:var(--blue);border-color:var(--blue)}
+.chip[data-c="norm"][aria-pressed="true"]{background:var(--green);border-color:var(--green)}.chip[data-c="ffn"][aria-pressed="true"]{background:var(--copper);border-color:var(--copper)}.chip[data-c="head"][aria-pressed="true"]{background:var(--amber);border-color:var(--amber)}
+.explain{min-height:190px}.explain h3{font-family:'Iowan Old Style',Georgia,serif;font-size:1.35rem;font-weight:500;margin-bottom:8px}.explain p{font-size:.93rem;color:#4f504a;margin-bottom:10px}.explain .later{font:600 .78rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--copper);margin:0}
+/* Stepper */
+.stepper{padding:23px;margin:28px 0}.step-head{display:flex;align-items:start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.step-count{font:650 .76rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--copper);letter-spacing:.07em;text-transform:uppercase}
+.step-copy{max-width:700px;min-height:110px}.step-copy h3{font-family:'Iowan Old Style',Georgia,serif;font-size:1.5rem;font-weight:500}.step-copy p{color:var(--muted);font-size:.95rem;margin-bottom:8px}
+.step-controls{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.step-controls button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--sheet);color:var(--ink);cursor:pointer;font:650 .76rem ui-monospace,SFMono-Regular,monospace}
+.step-controls button[aria-current="step"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.step-svg .stage{transition:opacity .22s}.step-svg .stage rect,.step-svg .stage circle{transition:stroke-width .22s}.step-svg .stage.dim{opacity:.22}.step-svg .stage.current rect,.step-svg .stage.current circle{stroke-width:3}
+.step-svg .flow{transition:opacity .2s}.step-svg .flow.dim{opacity:.15}
+@media(prefers-reduced-motion:no-preference){.step-svg .flow.current{stroke-dasharray:8 8;animation:flow 1.4s linear infinite}@keyframes flow{to{stroke-dashoffset:-32px}}}
+/* Attention playground */
+.play{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
+.tokens{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.tok{border:1.5px solid var(--line);background:var(--sheet);border-radius:7px;padding:7px 13px;cursor:pointer;font:600 .9rem/1.3 ui-monospace,SFMono-Regular,Consolas,monospace}
+.tok[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.readout{font:500 .88rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#4f504a}.readout b{color:var(--ink)}
+.readout table{width:100%;border-collapse:collapse;margin-top:10px;font:500 .84rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}.readout td{padding:5px 6px;border-bottom:1px solid var(--line)}.readout td:last-child{text-align:right}
+.bar{height:8px;background:var(--blue);border-radius:4px;display:inline-block;vertical-align:middle;margin-right:8px}
+/* Compare + tables */
+.comparison{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--sheet);margin:22px 0}
+.comparison>div{padding:23px}.comparison>div+div{border-left:1px solid var(--line);background:#f8f5ee}.comparison .label{display:block;color:var(--copper);margin-bottom:10px}.comparison p{font-size:.93rem}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--sheet);margin:23px 0}
+table{width:100%;border-collapse:collapse;font:500 .88rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font:650 .7rem/1.4 ui-monospace,SFMono-Regular,monospace;text-transform:uppercase;letter-spacing:.06em;background:#f6f1e8}tr:last-child td{border-bottom:0}
+td .ch{display:inline-block;font:650 .68rem/1.3 ui-monospace,SFMono-Regular,monospace;color:var(--copper);background:var(--copper-soft);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.math{font-family:'Iowan Old Style',Georgia,serif;font-style:italic}
+.formula{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:20px 0;font:500 1.1rem/1.6 'Iowan Old Style',Georgia,serif;text-align:center}
+.formula small{display:block;font:500 .8rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted);margin-top:6px}
+.source-list{list-style:none;padding:0}.source-list li{padding:14px 0;border-bottom:1px solid var(--line)}.source-list p{margin:4px 0 0;color:var(--muted);font-size:.9rem}.source-list a{font-weight:650}
+.fine{font:500 .78rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted)}
+.next{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:60px;padding-top:24px;border-top:1px solid var(--line)}
+.next a{text-decoration:none;border:1px solid var(--line);background:var(--sheet);border-radius:8px;padding:14px 18px;color:var(--ink);font:500 .9rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:240px}
+.next a small{display:block;color:var(--copper);font:650 .68rem/1.4 ui-monospace,SFMono-Regular,monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.next a.soon{opacity:.6;pointer-events:none}
+figure.wide{overflow-x:auto}figure.wide svg{min-width:640px}.stepper{overflow-x:auto}.step-svg{min-width:720px}
+@media(max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}.rail{position:static;height:auto}.content{min-width:0}.explore,.play,.grid2,.grid3,.comparison{grid-template-columns:minmax(0,1fr)}.explore .panel{position:static}.comparison>div+div{border-left:0;border-top:1px solid var(--line)}.fact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:32px 20px 60px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="rail" aria-label="Series navigation">
+  <div class="rail-mark"><div class="rail-glyph">T→D</div><div class="rail-title">From the Transformer to DeepSeek V4.1 Flash</div></div>
+  <span class="rail-label">This chapter</span>
+  <nav>
+    <a href="#picture">The whole machine<small>01 · components</small></a>
+    <a href="#layer">One encoder layer<small>02 · step through</small></a>
+    <a href="#attention">Encoder self-attention<small>03 · Q, K, V</small></a>
+    <a href="#heads">Eight heads<small>04 · multi-head</small></a>
+    <a href="#position">Where is each token?<small>05 · sinusoids</small></a>
+    <a href="#mask">Encoder vs decoder<small>06 · masks</small></a>
+    <a href="#ledger">What changes later<small>07 · ledger</small></a>
+    <a href="#sources">Sources<small>08 · method</small></a>
+  </nav>
+  <span class="rail-label">Series</span>
+  <nav>
+    <a href="#" class="active">2017 · Original Transformer<small>chapter 1 · you are here</small></a>
+    <a class="soon">2019 · GPT-2<small>chapter 2 · decoder-only</small></a>
+    <a class="soon">2023 · LLaMA 1 / 2<small>chapter 3 · RoPE, SwiGLU, GQA</small></a>
+    <a class="soon">2023 · Mixtral 8x7B<small>chapter 4 · sparse MoE</small></a>
+    <a class="soon">2024 · DeepSeek-V2<small>chapter 5 · MLA</small></a>
+    <a class="soon">2024 · DeepSeek-V3<small>chapter 6 · MTP, balancing</small></a>
+    <a class="soon">2025 · DeepSeek-V3.2<small>chapter 7 · sparse attention</small></a>
+    <a class="soon">2026 · DeepSeek-V4<small>chapter 8 · compressed sparse attention, mHC</small></a>
+    <a class="soon">2026 · DeepSeek V4.1 Flash<small>chapter 9 · causal encoder–decoder</small></a>
+  </nav>
+  <div class="rail-foot">Draft. Figures are redrawn from the paper. Where numbers are made up for illustration, the figure says so.</div>
+</aside>
+
+<main class="content" id="main">
+<header class="hero">
+  <p class="eyebrow">Chapter 1 of 9 · 2017</p>
+  <h1>The original Transformer, one component at a time</h1>
+  <p class="lede">I wanted to understand how we got from the 2017 Transformer to DeepSeek V4.1 Flash. The short answer is that nobody threw the original away. Each new model swapped out a few parts and kept the rest. That makes the original worth knowing well, so this first chapter is only about the 2017 model. I go box by box through the diagram, follow one token through an encoder layer, and then spend most of the page on attention, because that is the part everything later keeps changing.</p>
+  <div class="meta"><span>Source: Vaswani et al., <em>Attention Is All You Need</em> (2017)</span><span>Reading time ≈ 14 min</span><span>3 interactive figures</span></div>
+  <figure class="wide" aria-label="Series timeline">
+    <div class="figure-title">The series at a glance</div>
+    <svg viewBox="0 0 1000 120" role="img" aria-labelledby="tl-title"><title id="tl-title">Timeline of the nine chapters, from the 2017 Transformer to DeepSeek V4.1 Flash in 2026</title>
+    <g font-family="system-ui,sans-serif">
+    <line x1="40" y1="52" x2="960" y2="52" stroke="#d7cfbf" stroke-width="2"/>
+    <g id="tl-nodes"></g>
+    </g></svg>
+    <figcaption><b>Where we are.</b> The filled dot is this chapter. Later chapters reuse the same diagram and the same colours, and only highlight the parts that changed.</figcaption>
+  </figure>
+</header>
+
+<section class="section" id="picture">
+  <div class="chapter"><span class="label">01 / Components</span></div>
+  <h2>The whole machine in one picture</h2>
+  <p class="intro">The 2017 paper was about translation, so the model has two halves. The <b>encoder</b> reads the whole source sentence and turns each word into a vector. The <b>decoder</b> writes the translation one word at a time, and at every step it can look back at what the encoder produced. Hover over or tap a block to see what it does and when it gets replaced later in the series.</p>
+  <figure>
+    <div class="figure-title">Figure 1 · Encoder–decoder Transformer, redrawn from the paper's Figure 1</div>
+    <div class="explore">
+      <svg class="diagram" id="fig1" viewBox="160 15 680 750" role="img" aria-labelledby="f1-title f1-desc"><title id="f1-title">The Transformer block diagram</title><desc id="f1-desc">An encoder stack of six layers on the left, each with multi-head self-attention, add and norm, feed-forward, add and norm. A decoder stack of six layers on the right adds masked self-attention and a cross-attention block that reads the encoder output. A linear layer and softmax produce output probabilities.</desc>
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker><marker id="ar-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#2456a6"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f" font-size="13">
+      <!-- stack frames -->
+      <rect x="180" y="315" width="240" height="250" rx="12" fill="none" stroke="#b9b1a2" stroke-dasharray="6 5"/><text x="410" y="335" text-anchor="end" font-size="12" font-weight="700" fill="#65645d">encoder · N = 6</text>
+      <rect x="540" y="185" width="240" height="380" rx="12" fill="none" stroke="#b9b1a2" stroke-dasharray="6 5"/><text x="770" y="205" text-anchor="end" font-size="12" font-weight="700" fill="#65645d">decoder · N = 6</text>
+      <!-- flows -->
+      <g class="flow" fill="none" stroke="#20221f" stroke-width="1.6" marker-end="url(#ar)">
+        <path d="M300 722V684"/><path d="M300 640V613"/><path d="M270 562V549"/><path d="M300 562V549"/><path d="M330 562V549"/>
+        <path d="M300 505V489"/><path d="M300 455V429"/><path d="M300 385V369"/>
+        <path d="M660 722V684"/><path d="M660 640V613"/><path d="M630 562V549"/><path d="M660 562V549"/><path d="M690 562V549"/>
+        <path d="M660 505V489"/><path d="M660 455V419"/><path d="M660 375V359"/><path d="M660 325V299"/><path d="M660 255V239"/><path d="M660 205V154"/><path d="M660 120V104"/><path d="M660 70V56"/>
+        <path d="M258 600H287"/><path d="M702 600H673"/>
+        <!-- residual skips -->
+        <path d="M300 575H192V472H210"/><path d="M300 442H192V352H210"/>
+        <path d="M660 575H552V472H570"/><path d="M660 442H552V342H570"/><path d="M660 312H552V222H570"/>
+      </g>
+      <g class="flow" fill="none" stroke="#20221f" stroke-width="1.6"><path d="M300 587V562"/><path d="M270 562H330"/><path d="M660 587V562"/><path d="M630 562H690"/></g>
+      <!-- encoder output to cross attention -->
+      <g class="flow" fill="none" stroke="#2456a6" stroke-width="2" marker-end="url(#ar-b)"><path d="M300 335V290H500V437H605V419"/><path d="M630 437V419"/></g>
+      <text x="400" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#2456a6">encoder output → K, V for every decoder layer</text>
+      <!-- positional encodings -->
+      <g class="blk" data-c="pos"><rect x="212" y="580" width="44" height="40" rx="20" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><path d="M218 600c4-10 8-10 12 0s8 10 12 0 8-10 12 0" fill="none" stroke="#66539a" stroke-width="1.6"/><text x="234" y="636" text-anchor="middle" font-size="10.5" fill="#65645d">positional</text><text x="234" y="648" text-anchor="middle" font-size="10.5" fill="#65645d">encoding</text>
+        <circle cx="300" cy="600" r="13" fill="#fffdf8" stroke="#66539a" stroke-width="1.5"/><path d="M300 593v14M293 600h14" stroke="#66539a" stroke-width="1.6"/></g>
+      <g class="blk" data-c="pos"><rect x="704" y="580" width="44" height="40" rx="20" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><path d="M710 600c4-10 8-10 12 0s8 10 12 0 8-10 12 0" fill="none" stroke="#66539a" stroke-width="1.6"/><text x="726" y="636" text-anchor="middle" font-size="10.5" fill="#65645d">positional</text><text x="726" y="648" text-anchor="middle" font-size="10.5" fill="#65645d">encoding</text>
+        <circle cx="660" cy="600" r="13" fill="#fffdf8" stroke="#66539a" stroke-width="1.5"/><path d="M660 593v14M653 600h14" stroke="#66539a" stroke-width="1.6"/></g>
+      <!-- embeddings -->
+      <g class="blk" data-c="emb"><rect x="210" y="640" width="180" height="44" rx="8" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><text x="300" y="667" text-anchor="middle" font-weight="700">Input embedding</text></g>
+      <g class="blk" data-c="emb"><rect x="570" y="640" width="180" height="44" rx="8" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><text x="660" y="667" text-anchor="middle" font-weight="700">Output embedding</text></g>
+      <!-- encoder blocks -->
+      <g class="blk" data-c="attn"><rect x="210" y="505" width="180" height="44" rx="8" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="300" y="524" text-anchor="middle" font-weight="700">Multi-head</text><text x="300" y="540" text-anchor="middle" font-weight="700">self-attention</text></g>
+      <g class="blk" data-c="norm"><rect x="210" y="455" width="180" height="34" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="300" y="477" text-anchor="middle" font-weight="700">Add &amp; Norm</text></g>
+      <g class="blk" data-c="ffn"><rect x="210" y="385" width="180" height="44" rx="8" fill="#f8e4d8" stroke="#a74723" stroke-width="1.5"/><text x="300" y="412" text-anchor="middle" font-weight="700">Feed forward</text></g>
+      <g class="blk" data-c="norm"><rect x="210" y="335" width="180" height="34" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="300" y="357" text-anchor="middle" font-weight="700">Add &amp; Norm</text></g>
+      <!-- decoder blocks -->
+      <g class="blk" data-c="mask"><rect x="570" y="505" width="180" height="44" rx="8" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="660" y="524" text-anchor="middle" font-weight="700">Masked multi-head</text><text x="660" y="540" text-anchor="middle" font-weight="700">self-attention</text></g>
+      <g class="blk" data-c="norm"><rect x="570" y="455" width="180" height="34" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="660" y="477" text-anchor="middle" font-weight="700">Add &amp; Norm</text></g>
+      <g class="blk" data-c="cross"><rect x="570" y="375" width="180" height="44" rx="8" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="660" y="394" text-anchor="middle" font-weight="700">Multi-head</text><text x="660" y="410" text-anchor="middle" font-weight="700">cross-attention</text></g>
+      <g class="blk" data-c="norm"><rect x="570" y="325" width="180" height="34" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="660" y="347" text-anchor="middle" font-weight="700">Add &amp; Norm</text></g>
+      <g class="blk" data-c="ffn"><rect x="570" y="255" width="180" height="44" rx="8" fill="#f8e4d8" stroke="#a74723" stroke-width="1.5"/><text x="660" y="282" text-anchor="middle" font-weight="700">Feed forward</text></g>
+      <g class="blk" data-c="norm"><rect x="570" y="205" width="180" height="34" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="660" y="227" text-anchor="middle" font-weight="700">Add &amp; Norm</text></g>
+      <!-- head -->
+      <g class="blk" data-c="head"><rect x="570" y="120" width="180" height="34" rx="8" fill="#faefcf" stroke="#9c6a0b" stroke-width="1.5"/><text x="660" y="142" text-anchor="middle" font-weight="700">Linear</text></g>
+      <g class="blk" data-c="head"><rect x="570" y="70" width="180" height="34" rx="8" fill="#faefcf" stroke="#9c6a0b" stroke-width="1.5"/><text x="660" y="92" text-anchor="middle" font-weight="700">Softmax</text></g>
+      <!-- labels -->
+      <text x="300" y="740" text-anchor="middle" font-size="12" font-weight="650">Inputs</text><text x="300" y="755" text-anchor="middle" font-size="10.5" fill="#65645d">source tokens</text>
+      <text x="660" y="740" text-anchor="middle" font-size="12" font-weight="650">Outputs (shifted right)</text><text x="660" y="755" text-anchor="middle" font-size="10.5" fill="#65645d">target tokens so far</text>
+      <text x="660" y="46" text-anchor="middle" font-size="12" font-weight="650">Output probabilities</text><text x="660" y="30" text-anchor="middle" font-size="10.5" fill="#65645d">one score per vocabulary entry</text>
+      <text x="262" y="558" text-anchor="end" font-size="9.5" fill="#65645d">Q  K  V</text>
+      <text x="622" y="558" text-anchor="end" font-size="9.5" fill="#65645d">Q  K  V</text>
+      <text x="585" y="433" font-size="9.5" fill="#2456a6" text-anchor="end">K V</text><text x="672" y="433" font-size="9.5" fill="#65645d">Q</text>
+      </g></svg>
+      <div class="panel explain" id="explain">
+        <div class="chips" role="group" aria-label="Highlight a component">
+          <button class="chip" data-c="emb" aria-pressed="false">Embeddings</button>
+          <button class="chip" data-c="pos" aria-pressed="false">Positions</button>
+          <button class="chip" data-c="attn" aria-pressed="false">Self-attention</button>
+          <button class="chip" data-c="mask" aria-pressed="false">Masked attention</button>
+          <button class="chip" data-c="cross" aria-pressed="false">Cross-attention</button>
+          <button class="chip" data-c="norm" aria-pressed="false">Add &amp; Norm</button>
+          <button class="chip" data-c="ffn" aria-pressed="false">Feed forward</button>
+          <button class="chip" data-c="head" aria-pressed="false">Output head</button>
+        </div>
+        <div aria-live="polite"><h3 id="ex-title">Pick a block</h3><p id="ex-body">Six identical layers on the left, six on the right, and data flows upward. The little loops around each block are residual connections: the block's output is added to its input rather than replacing it.</p><p class="later" id="ex-later">Pick a component to see what it does and when it gets replaced.</p></div>
+      </div>
+    </div>
+    <div class="key"><span><i class="k-emb"></i>Embeddings &amp; positions</span><span><i class="k-attn"></i>Attention</span><span><i class="k-norm"></i>Add &amp; LayerNorm</span><span><i class="k-ffn"></i>Feed-forward</span><span><i class="k-head"></i>Output head</span></div>
+    <figcaption><b>What I left out.</b> Dropout, the √d<sub>model</sub> scaling on the embeddings, and the fact that the two embedding tables and the final Linear layer share their weights. The blue path is worth a second look. It is the only connection between the two halves, and every one of the six decoder layers reads from it.</figcaption>
+  </figure>
+  <div class="fact-strip" aria-label="Base model configuration">
+    <div class="fact"><b>6 + 6</b><span>encoder layers + decoder layers</span></div>
+    <div class="fact"><b>512</b><span>d<sub>model</sub>, width of the residual stream</span></div>
+    <div class="fact"><b>8 × 64</b><span>attention heads × head width</span></div>
+    <div class="fact"><b>2048</b><span>hidden width of the feed-forward block</span></div>
+    <div class="fact"><b>65M</b><span>parameters, base model</span></div>
+    <div class="fact"><b>213M</b><span>parameters, big model (d<sub>model</sub> 1024, 16 heads)</span></div>
+    <div class="fact"><b>~37k</b><span>shared byte-pair vocabulary, WMT14 En–De</span></div>
+    <div class="fact"><b>12 h</b><span>base training, 8 P100 GPUs, 100k steps</span></div>
+  </div>
+</section>
+
+<section class="section" id="layer">
+  <div class="chapter"><span class="label">02 / One encoder layer</span></div>
+  <h2>Follow one token through one encoder layer</h2>
+  <p class="intro">Now zoom in on one encoder layer. A token comes in as a list of 512 numbers and leaves as a different list of 512 numbers. Two things happen to it on the way. First, attention lets it pull in information from the other tokens in the sentence. Then a small feed-forward network reworks it on its own, without looking at any other token. In both cases the result is <em>added</em> to what was already there rather than swapped in, and then normalised.</p>
+  <div class="stepper" data-stepper="layer">
+    <div class="step-head">
+      <div class="step-copy" aria-live="polite"><div class="step-count" data-step-count>Step 1 of 6</div><h3 data-step-title>A token arrives as a vector</h3><p data-step-body>Each of the n tokens in the sentence is a row of 512 numbers: its embedding plus its positional encoding. The whole sentence is an n × 512 matrix, and the layer processes all rows at once.</p></div>
+      <div class="step-controls" role="group" aria-label="Choose a step"><button data-prev aria-label="Previous step">‹</button><button data-step aria-current="step">1</button><button data-step>2</button><button data-step>3</button><button data-step>4</button><button data-step>5</button><button data-step>6</button><button data-next aria-label="Next step">›</button></div>
+    </div>
+    <svg class="step-svg" viewBox="0 0 1100 320" role="img" aria-labelledby="f2-title"><title id="f2-title">One encoder layer as a left-to-right pipeline with two residual additions</title>
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f">
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M70 160H118"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M320 160H359"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M95 160V60H375V144"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M391 160H418"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M540 160H598"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M800 160H839"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M570 160V60H855V144"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M871 160H898"/></g>
+      <g class="flow" data-flow="" fill="none" stroke="#20221f" stroke-width="1.8" marker-end="url(#ar2)"><path d="M1020 160H1058"/></g>
+      <g class="stage" data-stage=""><rect x="20" y="118" width="50" height="84" rx="6" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><g stroke="#66539a" stroke-width="1"><line x1="20" y1="139" x2="70" y2="139"/><line x1="20" y1="160" x2="70" y2="160"/><line x1="20" y1="181" x2="70" y2="181"/></g><text x="45" y="230" text-anchor="middle" font-size="12" font-weight="700">x</text><text x="45" y="246" text-anchor="middle" font-size="10.5" fill="#65645d">n × 512</text></g>
+      <g class="stage" data-stage=""><rect x="120" y="115" width="200" height="90" rx="10" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="220" y="150" text-anchor="middle" font-size="14" font-weight="700">Multi-head</text><text x="220" y="169" text-anchor="middle" font-size="14" font-weight="700">self-attention</text><text x="220" y="190" text-anchor="middle" font-size="10.5" fill="#65645d">mixes information across tokens</text></g>
+      <g class="stage" data-stage=""><circle cx="375" cy="160" r="16" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><path d="M375 151v18M366 160h18" stroke="#386853" stroke-width="1.8"/><text x="375" y="200" text-anchor="middle" font-size="10.5" fill="#65645d">add</text></g>
+      <g class="stage" data-stage=""><rect x="420" y="125" width="120" height="70" rx="10" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="480" y="156" text-anchor="middle" font-size="14" font-weight="700">LayerNorm</text><text x="480" y="176" text-anchor="middle" font-size="10.5" fill="#65645d">per token, 512 values</text></g>
+      <g class="stage" data-stage=""><rect x="600" y="115" width="200" height="90" rx="10" fill="#f8e4d8" stroke="#a74723" stroke-width="1.5"/><text x="700" y="148" text-anchor="middle" font-size="14" font-weight="700">Feed forward</text><text x="700" y="168" text-anchor="middle" font-size="11.5" font-weight="600">512 → 2048 → 512</text><text x="700" y="188" text-anchor="middle" font-size="10.5" fill="#65645d">ReLU between · same for every token</text></g>
+      <g class="stage" data-stage=""><circle cx="855" cy="160" r="16" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><path d="M855 151v18M846 160h18" stroke="#386853" stroke-width="1.8"/><text x="855" y="200" text-anchor="middle" font-size="10.5" fill="#65645d">add</text></g>
+      <g class="stage" data-stage=""><rect x="900" y="125" width="120" height="70" rx="10" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="960" y="156" text-anchor="middle" font-size="14" font-weight="700">LayerNorm</text><text x="960" y="176" text-anchor="middle" font-size="10.5" fill="#65645d">ready for layer i + 1</text></g>
+      <text x="1080" y="164" font-size="14" font-weight="700" font-style="italic">x′</text>
+      <text x="235" y="50" text-anchor="middle" font-size="10.5" fill="#65645d">residual: the original x skips ahead</text>
+      <text x="712" y="50" text-anchor="middle" font-size="10.5" fill="#65645d">residual again</text>
+      <text x="550" y="290" text-anchor="middle" font-size="11" fill="#65645d">repeat the whole layer 6 times · the last x′ becomes the encoder output that the decoder reads</text>
+      </g></svg>
+    <p class="fine" style="margin-top:12px">Post-LayerNorm order, as in the 2017 paper: <span class="math">LayerNorm(x + Sublayer(x))</span>. Chapter 2 moves the norm in front of each sub-layer, which is what almost every model since GPT-2 does.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><span class="label">Attention is the only cross-token step</span><p>Every other block in the layer treats each token independently. Attention is where the word <em>cat</em> can pull in information from <em>sat</em>. If you remove attention, the model becomes a per-token lookup table.</p></div>
+    <div class="card"><span class="label">The feed-forward block holds most of the parameters</span><p>Two matrices, 512 × 2048 and 2048 × 512, give about 2.1M parameters per layer. The four attention projections (Q, K, V, output) are 512 × 512 each, about 1.05M per layer. That two-to-one ratio is why later chapters replace the feed-forward block with a Mixture of Experts.</p></div>
+  </div>
+</section>
+
+<section class="section" id="attention">
+  <div class="chapter"><span class="label">03 / Encoder self-attention</span></div>
+  <h2>How self-attention actually works</h2>
+  <p class="intro">This is the mechanism the paper is named after. Each token produces three vectors from its own embedding. The <b>query</b> is roughly what the token is looking for, the <b>key</b> is what it has to offer, and the <b>value</b> is the information it hands over if picked. To update a token, you compare its query against every key, turn those scores into weights that add up to one, and take the weighted average of the values.</p>
+  <div class="formula">Attention(Q, K, V) = softmax( Q Kᵀ / √d<sub>k</sub> ) V<small>d<sub>k</sub> = 64 in the base model. Without the division, dot products grow with d<sub>k</sub>, the softmax turns into a hard pick of one token, and gradients vanish. Dividing by √64 = 8 keeps it soft.</small></div>
+  <figure class="wide">
+    <div class="figure-title">Figure 3 · Scaled dot-product attention, one head, drawn as matrix shapes</div>
+    <svg viewBox="0 0 1000 330" role="img" aria-labelledby="f3-title f3-desc"><title id="f3-title">Scaled dot-product attention as matrix shapes</title><desc id="f3-desc">An n by 512 input is projected by three 512 by 64 matrices into Q, K and V of shape n by 64. Q times K transposed gives an n by n score matrix, scaled and softmaxed into weights, which multiply V to give an n by 64 output.</desc>
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f" font-size="11.5">
+      <!-- X -->
+      <rect x="20" y="130" width="120" height="72" rx="4" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><g stroke="#66539a" stroke-width=".8"><line x1="20" y1="148" x2="140" y2="148"/><line x1="20" y1="166" x2="140" y2="166"/><line x1="20" y1="184" x2="140" y2="184"/></g>
+      <text x="80" y="118" text-anchor="middle" font-weight="700">X</text><text x="80" y="222" text-anchor="middle" fill="#65645d">n × 512</text>
+      <!-- projections -->
+      <g fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"><path d="M140 166H165V62H196"/><path d="M165 166H196"/><path d="M165 166V270H196"/></g>
+      <g fill="#fffdf8" stroke="#a74723" stroke-width="1.4"><rect x="198" y="30" width="16" height="64" rx="2"/><rect x="198" y="134" width="16" height="64" rx="2"/><rect x="198" y="238" width="16" height="64" rx="2"/></g>
+      <text x="206" y="22" text-anchor="middle" font-weight="700" font-style="italic">W<tspan baseline-shift="sub" font-size="8">Q</tspan></text><text x="206" y="126" text-anchor="middle" font-weight="700" font-style="italic">W<tspan baseline-shift="sub" font-size="8">K</tspan></text><text x="206" y="230" text-anchor="middle" font-weight="700" font-style="italic">W<tspan baseline-shift="sub" font-size="8">V</tspan></text>
+      <text x="206" y="106" text-anchor="middle" font-size="9" fill="#65645d">512 × 64</text><text x="206" y="210" text-anchor="middle" font-size="9" fill="#65645d">512 × 64</text><text x="206" y="314" text-anchor="middle" font-size="9" fill="#65645d">512 × 64</text>
+      <g fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"><path d="M214 62H286"/><path d="M214 166H286"/><path d="M214 270H286"/></g>
+      <!-- Q K V -->
+      <g fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"><rect x="288" y="26" width="44" height="72" rx="4"/><rect x="288" y="130" width="44" height="72" rx="4"/><rect x="288" y="234" width="44" height="72" rx="4"/></g>
+      <g font-weight="700" font-size="14" text-anchor="middle"><text x="310" y="67">Q</text><text x="310" y="171">K</text><text x="310" y="275">V</text></g>
+      <g font-size="9.5" fill="#65645d" text-anchor="middle"><text x="310" y="112">n × 64</text><text x="310" y="216">n × 64</text><text x="310" y="320">n × 64</text></g>
+      <!-- scores -->
+      <g fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"><path d="M332 62H380V110"/><path d="M332 166H380V126"/></g>
+      <rect x="380" y="110" width="0" height="0"/>
+      <rect x="400" y="80" width="110" height="110" rx="6" fill="#fffdf8" stroke="#20221f" stroke-width="1.4"/>
+      <g id="scoreGrid"></g>
+      <text x="455" y="70" text-anchor="middle" font-weight="700">Q Kᵀ ÷ √64</text><text x="455" y="208" text-anchor="middle" font-size="9.5" fill="#65645d">n × n scores</text>
+      <path d="M380 110V135H400" fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"/>
+      <!-- softmax -->
+      <path d="M510 135H548" fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"/>
+      <rect x="550" y="112" width="90" height="46" rx="8" fill="#deeee6" stroke="#386853" stroke-width="1.5"/><text x="595" y="132" text-anchor="middle" font-weight="700">softmax</text><text x="595" y="147" text-anchor="middle" font-size="9.5" fill="#65645d">row by row</text>
+      <path d="M640 135H678" fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"/>
+      <rect x="680" y="80" width="110" height="110" rx="6" fill="#fffdf8" stroke="#20221f" stroke-width="1.4"/>
+      <g id="weightGrid"></g>
+      <text x="735" y="70" text-anchor="middle" font-weight="700">weights A</text><text x="735" y="208" text-anchor="middle" font-size="9.5" fill="#65645d">each row sums to 1</text>
+      <!-- times V -->
+      <path d="M332 270H735V192" fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"/>
+      <text x="540" y="262" text-anchor="middle" font-size="10" fill="#65645d">V · weighted by A</text>
+      <path d="M790 135H838" fill="none" stroke="#20221f" stroke-width="1.4" marker-end="url(#ar3)"/>
+      <rect x="840" y="99" width="44" height="72" rx="4" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="862" y="140" text-anchor="middle" font-weight="700" font-size="14">A V</text><text x="862" y="186" text-anchor="middle" font-size="9.5" fill="#65645d">n × 64</text>
+      <text x="940" y="132" text-anchor="middle" font-size="10.5" fill="#65645d">one head's</text><text x="940" y="146" text-anchor="middle" font-size="10.5" fill="#65645d">output</text>
+      </g></svg>
+    <figcaption><b>Follow the shapes.</b> The score matrix is n by n, one row and one column per token, so doubling the sentence length quadruples the work. That is the cost later chapters keep trying to bring down. Notice too that nothing in this picture knows what order the words came in. That has to be added to the inputs beforehand, which is section 05.</figcaption>
+  </figure>
+  <figure>
+    <div class="figure-title">Figure 4 · Attention weights for one query, interactive <span class="tag warn">illustrative values</span></div>
+    <div class="play">
+      <div>
+        <div class="tokens" id="tokens" role="group" aria-label="Choose the query token"></div>
+        <svg id="playSvg" viewBox="0 0 720 330" role="img" aria-label="Attention arcs from the chosen query token to every key token, and the full weight matrix below"></svg>
+      </div>
+      <div class="panel readout" id="readout"></div>
+    </div>
+    <figcaption><b>Encoder attention looks both ways.</b> Pick a word and you can see it attending to words before it and after it. The arcs and the highlighted row of the matrix are the same six numbers drawn two ways. I made the numbers up to look plausible. They are not from a trained model.</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="heads">
+  <div class="chapter"><span class="label">04 / Multi-head</span></div>
+  <h2>Why eight heads instead of one</h2>
+  <p class="intro">With a single set of attention weights per layer, the model would have just one notion of which words matter to which. The paper runs eight of them side by side instead. Each head works on its own 64-dimensional slice of the 512-dimensional token, computes its own weights, and produces its own output. One head might end up tracking which adjective belongs to which noun while another tracks what a pronoun refers to. The eight outputs are stitched back together into 512 numbers and passed through one more matrix.</p>
+  <figure class="wide">
+    <div class="figure-title">Figure 5 · Multi-head attention: split, attend in parallel, concatenate, project</div>
+    <svg viewBox="0 0 1000 320" role="img" aria-labelledby="f5-title"><title id="f5-title">Eight parallel attention heads whose outputs are concatenated and projected</title>
+      <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f" font-size="11.5">
+      <rect x="20" y="120" width="90" height="80" rx="4" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><text x="65" y="108" text-anchor="middle" font-weight="700">X</text><text x="65" y="218" text-anchor="middle" font-size="9.5" fill="#65645d">n × 512</text>
+      <g id="headLanes"></g>
+      <rect x="660" y="36" width="80" height="248" rx="6" fill="#fffdf8" stroke="#20221f" stroke-width="1.4"/><text x="700" y="150" text-anchor="middle" font-weight="700" transform="rotate(-90 700 160)">concat → n × 512</text>
+      <path d="M740 160H778" fill="none" stroke="#20221f" stroke-width="1.6" marker-end="url(#ar5)"/>
+      <rect x="780" y="128" width="70" height="64" rx="6" fill="#fffdf8" stroke="#a74723" stroke-width="1.4"/><text x="815" y="156" text-anchor="middle" font-weight="700" font-style="italic">W<tspan baseline-shift="sub" font-size="8">O</tspan></text><text x="815" y="174" text-anchor="middle" font-size="9.5" fill="#65645d">512 × 512</text>
+      <path d="M850 160H888" fill="none" stroke="#20221f" stroke-width="1.6" marker-end="url(#ar5)"/>
+      <rect x="890" y="120" width="90" height="80" rx="4" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="935" y="108" text-anchor="middle" font-weight="700">Z</text><text x="935" y="218" text-anchor="middle" font-size="9.5" fill="#65645d">n × 512 → residual add</text>
+      <text x="400" y="310" text-anchor="middle" font-size="10.5" fill="#65645d">8 heads × 64 dims = 512 · the same total compute as one 512-wide head, but eight independent weightings</text>
+      </g></svg>
+    <figcaption><b>Why this matters later.</b> When a model is generating text, it keeps the keys and values of every previous token around so it does not have to recompute them. With eight heads per layer, that is eight sets of K and V per token per layer. This is the KV cache, and it gets very large for long inputs. Four of the later chapters are mostly about making it smaller: grouped-query attention (chapter 3), multi-head latent attention (chapter 5), compressed sparse attention (chapter 8), and the 890 bytes per token of V4.1 Flash (chapter 9).</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="position">
+  <div class="chapter"><span class="label">05 / Positions</span></div>
+  <h2>Telling the model where each word is</h2>
+  <p class="intro">If you shuffled the words in a sentence, attention would produce the same outputs, just shuffled the same way. It has no idea about order. The paper's fix is to add a position-dependent vector to every token before the first layer. The vector is built from sines and cosines at 256 different frequencies, so each position gets its own pattern.</p>
+  <div class="formula">PE(pos, 2i) = sin( pos / 10000<sup>2i/512</sup> ) &nbsp;&nbsp;&nbsp; PE(pos, 2i+1) = cos( pos / 10000<sup>2i/512</sup> )<small>The first dimensions change quickly from one position to the next, the last ones very slowly. A useful side effect: moving k positions forward always looks like the same rotation, whatever the starting position, so the model can learn relative distances.</small></div>
+  <figure class="wide">
+    <div class="figure-title">Figure 6 · The sinusoidal positional encoding, first 64 of 512 dimensions, positions 0 to 49 <span class="tag">computed live</span></div>
+    <svg id="peSvg" viewBox="0 0 1000 330" role="img" aria-label="Heat map of the sinusoidal positional encoding: rows are positions, columns are dimensions"></svg>
+    <figcaption><b>Each row is one position's vector.</b> Blue is +1, copper is −1. Read down a column and you see one sine or cosine wave, fast on the left and slower to the right. I am only showing 64 of the 512 columns. The rest are so slow they barely change across a normal sentence. Chapter 3 swaps this for rotary embeddings, which put the same idea inside the attention computation instead of adding it to the input.</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="mask">
+  <div class="chapter"><span class="label">06 / Encoder vs decoder</span></div>
+  <h2>Encoder attention versus decoder attention</h2>
+  <p class="intro">In the encoder, every word can look at every other word. The whole source sentence is there from the start, so there is nothing to hide. The decoder is different. It is being trained to predict the next word, so it must not be allowed to see it. The fix is a mask: before the softmax, every score for a word to the right of the current one is set to minus infinity, so its weight comes out as zero. That mask is the only difference between the two kinds of self-attention in Figure 1.</p>
+  <figure>
+    <div class="figure-title">Figure 7 · Which keys each query may attend to</div>
+    <svg id="maskSvg" viewBox="0 0 1000 300" role="img" aria-label="Two six by six grids: the encoder grid is fully filled, the decoder grid is filled only on and below the diagonal"></svg>
+    <figcaption><b>Chapter 2 keeps only the right-hand grid.</b> GPT-2 throws away the encoder and the cross-attention and uses the masked pattern everywhere. So does everything after it. Even V4.1 Flash, which brings back something it calls an encoder, masks it the same way. The grid on the left does not come back in this series.</figcaption>
+  </figure>
+  <div class="comparison">
+    <div><span class="label">Encoder self-attention</span><p>Every word sees every other word. It runs once over the whole input, and its output is what cross-attention reads.</p><p>This is the right tool when you have the whole input up front, as in translation, classification, or computing embeddings.</p></div>
+    <div><span class="label">Decoder self-attention</span><p>Each word sees only itself and the words before it. When generating, every new token attends to the ones already written, and their keys and values are kept in a cache instead of being recomputed.</p><p>That cache is why long contexts are expensive, and most of the attention changes from chapter 3 onward are attempts to shrink it.</p></div>
+  </div>
+</section>
+
+<section class="section" id="ledger">
+  <div class="chapter"><span class="label">07 / The ledger</span></div>
+  <h2>What the next eight chapters change</h2>
+  <p class="intro">Each row is one part of Figure 1, and the last column says which chapter changes it. This table is also how I picked the models for the series: a model gets a chapter if it changed something here.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Component</th><th>2017 Transformer</th><th>What replaces it</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td><b>Overall shape</b></td><td>Encoder + decoder, cross-attention between them</td><td>Decoder-only stack</td><td><span class="ch">Ch 2 · GPT-2</span></td></tr>
+      <tr><td><b>Normalisation</b></td><td>Post-LayerNorm</td><td>Pre-LayerNorm, then RMSNorm</td><td><span class="ch">Ch 2</span> <span class="ch">Ch 3 · LLaMA</span></td></tr>
+      <tr><td><b>Positions</b></td><td>Fixed sinusoids added to embeddings</td><td>Learned absolute positions, then rotary (RoPE) applied to Q and K</td><td><span class="ch">Ch 2</span> <span class="ch">Ch 3</span></td></tr>
+      <tr><td><b>Feed-forward</b></td><td>512 → 2048 → 512 with ReLU</td><td>Gated SwiGLU, then a Mixture of Experts with a router</td><td><span class="ch">Ch 3</span> <span class="ch">Ch 4 · Mixtral</span> <span class="ch">Ch 5 · DeepSeek-V2</span></td></tr>
+      <tr><td><b>Attention heads</b></td><td>8 heads, each with its own K and V</td><td>Grouped-query attention shares K, V across heads; multi-head latent attention compresses K, V into one small latent per token</td><td><span class="ch">Ch 3</span> <span class="ch">Ch 5</span></td></tr>
+      <tr><td><b>Which tokens attend</b></td><td>Every token to every token</td><td>An indexer selects a sparse top-k of keys; then keys and values are compressed 4:1 and 128:1 and mixed with a 128-token sliding window</td><td><span class="ch">Ch 7 · V3.2</span> <span class="ch">Ch 8 · V4</span></td></tr>
+      <tr><td><b>Routing &amp; balance</b></td><td>None, dense compute</td><td>Shared + fine-grained experts, auxiliary-loss-free balancing, node-limited routing</td><td><span class="ch">Ch 5</span> <span class="ch">Ch 6 · V3</span></td></tr>
+      <tr><td><b>Prediction head</b></td><td>One next-token softmax</td><td>A multi-token prediction module, later a separate speculative drafter</td><td><span class="ch">Ch 6</span> <span class="ch">Ch 9</span></td></tr>
+      <tr><td><b>Residual stream</b></td><td>One 512-wide stream, plain addition</td><td>Four parallel streams mixed by a learned doubly-stochastic matrix (manifold-constrained hyper-connections)</td><td><span class="ch">Ch 8 · V4</span></td></tr>
+      <tr><td><b>Encoder / decoder split</b></td><td>Bidirectional encoder, causal decoder, cross-attention</td><td>Gone from chapter 2, then back as a <em>causal</em> encoder whose output feeds the decoder's global KV</td><td><span class="ch">Ch 2</span> <span class="ch">Ch 9 · V4.1 Flash</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p><b>Two things never got replaced.</b> Blocks still add their output to a running residual stream rather than overwriting it, and one token still reads another through a softmax over query and key scores. V4.1 Flash widens the stream to four lanes and compresses most of its keys, but it keeps both ideas.</p></div>
+</section>
+
+<section class="section" id="sources">
+  <div class="chapter"><span class="label">08 / Sources and method</span></div>
+  <h2>Sources and method</h2>
+  <ul class="source-list">
+    <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al., "Attention Is All You Need", NeurIPS 2017 (arXiv:1706.03762)</a><p>All numbers in the fact strip: Sections 3.1 to 3.5 (architecture), Table 3 (base and big configurations, 65M and 213M parameters), Section 5 (training: 8 P100 GPUs, 100k steps in 12 hours, ~37k BPE vocabulary for En–De). Figure 1 here is redrawn from the paper's Figure 1.</p></li>
+    <li><a href="https://nlp.seas.harvard.edu/annotated-transformer/">Rush et al., "The Annotated Transformer"</a><p>Used to check the post-LayerNorm ordering and the parameter-count arithmetic for the attention and feed-forward blocks.</p></li>
+    <li><a href="https://transformer-architecture.petergostev.chatgpt.site/">Peter Gostev, "Original Transformer vs DeepSeek"</a><p>The comparison that made me want to write this series. It goes straight from 2017 to 2026, and I wanted to see the steps in between.</p></li>
+  </ul>
+  <p class="fine">I drew the figures as SVG by hand from the paper's equations and its Figure 1. Where a figure shows numbers a trained model would produce, like the attention weights in Figure 4, I made them up and say so. The positional encoding heat map and the score grids are computed in the page from the formulas shown.</p>
+</section>
+
+<nav class="next" aria-label="Chapter navigation">
+  <a href="#" class="soon"><small>Series hub</small>Timeline and component ledger (coming)</a>
+  <a href="#" class="soon"><small>Next · Chapter 2 · 2019</small>GPT-2: drop the encoder, keep the mask</a>
+</nav>
+</main>
+</div>
+
+<script>
+(function(){
+  const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const NS='http://www.w3.org/2000/svg';
+  const el=(n,a={},parent)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(parent)parent.appendChild(e);return e};
+  const txt=(x,y,s,a={},parent)=>{const t=el('text',Object.assign({x,y},a),parent);t.textContent=s;return t};
+  const C={ink:'#20221f',muted:'#65645d',line:'#d7cfbf',blue:'#2456a6',blueSoft:'#e4ebf7',copper:'#a74723',copperSoft:'#f8e4d8',green:'#386853',sheet:'#fffdf8'};
+
+  /* Timeline */
+  const chapters=[['2017','Transformer','Vaswani et al.'],['2019','GPT-2','decoder-only'],['2023','LLaMA 1/2','RoPE · GQA'],['2023','Mixtral','sparse MoE'],['2024','DeepSeek-V2','MLA'],['2024','DeepSeek-V3','MTP'],['2025','DeepSeek-V3.2','sparse attn'],['2026','DeepSeek-V4','CSA · mHC'],['2026','V4.1 Flash','causal enc-dec']];
+  const tl=$('#tl-nodes');
+  chapters.forEach((c,i)=>{const x=60+i*(880/8),on=i===0;el('circle',{cx:x,cy:52,r:on?9:7,fill:on?C.copper:C.sheet,stroke:on?C.copper:'#9b9384','stroke-width':2},tl);txt(x,30,c[0],{'text-anchor':'middle','font-size':11,'font-weight':700,fill:on?C.copper:C.muted},tl);txt(x,80,c[1],{'text-anchor':'middle','font-size':12,'font-weight':on?700:600,fill:on?C.ink:'#4f504a'},tl);txt(x,96,c[2],{'text-anchor':'middle','font-size':10,fill:C.muted},tl);});
+
+  /* Figure 1 explorer */
+  const info={
+    emb:['Embeddings','A lookup table turns each of the ~37,000 vocabulary entries into a 512-number vector. The paper ties the input table, the output table and the final Linear layer to the same weights, and multiplies embeddings by √512.','Every later model still has one. Vocabularies get bigger (DeepSeek-V3 has 129,280 entries) and most models stop sharing the weights with the output layer.'],
+    pos:['Positional encoding','Attention has no idea which token came first, so a fixed sine–cosine vector for each position is added to its embedding before the first layer.','Chapter 2: learned position vectors. Chapter 3: rotary embeddings (RoPE) applied inside attention instead of added to the input.'],
+    attn:['Multi-head self-attention (encoder)','Each token in the source sentence makes a query, a key and a value. Its new vector is a weighted sum of every token\'s value, and the weights come from how well its query matches each key. Eight heads do this at once on 64-wide slices. Sections 03 and 04 go through it properly.','Chapter 3: grouped-query attention. Chapter 5: multi-head latent attention. Chapters 7–8: sparse and compressed attention.'],
+    mask:['Masked multi-head self-attention (decoder)','Same mechanism, but a word can only look at itself and the words before it. That lets training run on the whole target sentence at once without the model peeking at the words it is supposed to predict.','From chapter 2 on, this is the only kind of self-attention there is, right through to V4.1 Flash.'],
+    cross:['Multi-head cross-attention','Queries come from the decoder stream; keys and values come from the encoder\'s final output. This is how the target sentence reads the source sentence.','Removed in chapter 2 along with the encoder. It returns in a new form in chapter 9: V4.1 Flash splits its 40 layers into a causal encoder and a decoder whose global keys and values are projected from the encoder\'s output.'],
+    norm:['Add & LayerNorm','The block\'s output is added to its input (the residual connection), then normalised so each token\'s 512 values have mean 0 and variance 1, with a learned scale and shift.','Chapter 2 moves the norm before the block (pre-norm). Chapter 3 swaps LayerNorm for RMSNorm, which drops the mean subtraction.'],
+    ffn:['Position-wise feed-forward','Two linear layers with a ReLU between, 512 → 2048 → 512, applied to each token separately with the same weights. Holds roughly two-thirds of a layer\'s parameters.','Chapter 3: SwiGLU gating. Chapter 4: replaced by a router plus several expert FFNs, of which only a few run per token.'],
+    head:['Output head','A Linear layer maps the decoder\'s 512-wide vector to one score per vocabulary entry; softmax turns the scores into probabilities. Its weights are shared with the embeddings.','Chapter 6 adds a multi-token prediction module beside it. Chapter 9 moves drafting into a separate speculative decoder that proposes several tokens per pass.']
+  };
+  const fig1=$('#fig1'),blks=$$('.blk',fig1),chips=$$('.chip'),exT=$('#ex-title'),exB=$('#ex-body'),exL=$('#ex-later');
+  let pinned=null;
+  function focus(c){fig1.classList.toggle('focus',!!c);blks.forEach(b=>b.classList.toggle('on',b.dataset.c===c));chips.forEach(ch=>ch.setAttribute('aria-pressed',String(ch.dataset.c===c)));
+    if(c){exT.textContent=info[c][0];exB.textContent=info[c][1];exL.textContent='Later: '+info[c][2]}else{exT.textContent='Pick a block';exB.textContent='Six identical layers on the left, six on the right, and data flows upward. The little loops around each block are residual connections: the block\'s output is added to its input rather than replacing it.';exL.textContent='Pick a component to see what it does and when it gets replaced.'}}
+  blks.forEach(b=>{b.addEventListener('mouseenter',()=>focus(b.dataset.c));b.addEventListener('mouseleave',()=>focus(pinned));b.addEventListener('click',()=>{pinned=pinned===b.dataset.c?null:b.dataset.c;focus(pinned)})});
+  chips.forEach(ch=>ch.addEventListener('click',()=>{pinned=pinned===ch.dataset.c?null:ch.dataset.c;focus(pinned)}));
+
+  /* Figure 2 stepper */
+  (function(){const root=$('[data-stepper="layer"]');const steps=[
+    ['A token arrives as a vector','Each of the n tokens in the sentence is a row of 512 numbers: its embedding plus its positional encoding. The whole sentence is an n × 512 matrix, and the layer processes all rows at once.'],
+    ['Self-attention mixes the tokens','Each token scores every other token for relevance and takes a weighted average of their values. This is the only step in the layer where information moves between tokens. Eight heads do it at once, each on a 64-wide slice.'],
+    ['Add the original back','The attention output is added to the original x rather than replacing it. Each block can only nudge the running vector, never overwrite it. That is what lets six layers stack without the signal washing out.'],
+    ['Normalise each token','LayerNorm rescales each row to mean 0 and variance 1, then applies a learned scale and shift. It keeps the numbers in a range the next block expects.'],
+    ['Feed-forward, one token at a time','Each row is expanded to 2048 numbers, passed through ReLU, and squeezed back to 512. The same two matrices are used for every token; no information moves between rows here.'],
+    ['Add, normalise, hand over','A second residual addition and LayerNorm produce x′. This is the input to layer i + 1. After the sixth layer, the encoder is finished and the decoder reads these vectors through cross-attention.']];
+    const stages=[[0],[1],[2],[3],[4],[5,6]],flows=[[0],[1],[2,3],[4],[5],[6,7,8]];
+    const btns=$$('[data-step]',root),st=$$('[data-stage]',root),fl=$$('[data-flow]',root),cnt=$('[data-step-count]',root),ti=$('[data-step-title]',root),bo=$('[data-step-body]',root);let a=0;
+    function show(i){a=i;btns.forEach((b,j)=>j===i?b.setAttribute('aria-current','step'):b.removeAttribute('aria-current'));st.forEach((s,j)=>{const on=stages[i].includes(j);s.classList.toggle('current',on);s.classList.toggle('dim',!on)});fl.forEach((f,j)=>{const on=flows[i].includes(j);f.classList.toggle('current',on);f.classList.toggle('dim',!on)});cnt.textContent='Step '+(i+1)+' of '+steps.length;ti.textContent=steps[i][0];bo.textContent=steps[i][1]}
+    btns.forEach((b,i)=>b.addEventListener('click',()=>show(i)));$('[data-prev]',root).addEventListener('click',()=>show((a+5)%6));$('[data-next]',root).addEventListener('click',()=>show((a+1)%6));show(0);})();
+
+  /* Figure 3 grids: illustrative scores and softmaxed weights */
+  (function(){const scores=[[2.1,1.2,-.3,-.8],[.4,1.9,.9,-.6],[-.5,.8,1.6,.3],[-.9,-.2,.7,1.4]];
+    const sg=$('#scoreGrid'),wg=$('#weightGrid');const cell=110/4;
+    scores.forEach((row,i)=>{const m=Math.max(...row.map(v=>Math.exp(v/1)));const ex=row.map(v=>Math.exp(v));const s=ex.reduce((p,q)=>p+q,0);
+      row.forEach((v,j)=>{const t=(v+1)/3.2;el('rect',{x:400+j*cell+1,y:80+i*cell+1,width:cell-2,height:cell-2,rx:2,fill:v>=0?`rgba(36,86,166,${.12+.75*Math.min(1,v/2.1)})`:`rgba(167,71,35,${.15+.6*Math.min(1,-v/1)})`},sg);
+        const w=ex[j]/s;el('rect',{x:680+j*cell+1,y:80+i*cell+1,width:cell-2,height:cell-2,rx:2,fill:`rgba(56,104,83,${.08+.9*w})`},wg);txt(680+j*cell+cell/2,80+i*cell+cell/2+4,w.toFixed(2),{'text-anchor':'middle','font-size':9,fill:w>.5?'#fff':C.ink},wg)})});})();
+
+  /* Figure 4 attention playground */
+  (function(){const toks=['The','cat','sat','on','the','mat'];
+    const W=[[.40,.30,.08,.05,.07,.10],[.22,.35,.20,.05,.05,.13],[.05,.30,.25,.15,.05,.20],[.03,.08,.30,.24,.10,.25],[.06,.05,.10,.15,.30,.34],[.05,.12,.20,.18,.15,.30]];
+    const tokWrap=$('#tokens'),svg=$('#playSvg'),ro=$('#readout');let q=1;
+    toks.forEach((t,i)=>{const b=document.createElement('button');b.className='tok';b.textContent=t;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{q=i;draw()});tokWrap.appendChild(b)});
+    const xs=toks.map((_,i)=>80+i*112);
+    function draw(){$$('.tok',tokWrap).forEach((b,i)=>b.setAttribute('aria-pressed',String(i===q)));svg.innerHTML='';
+      const defs=el('defs',{},svg);const mk=el('marker',{id:'arp',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto',overflow:'visible'},defs);el('path',{d:'M0 0L10 5L0 10z',fill:C.blue},mk);
+      const g=el('g',{'font-family':'system-ui,sans-serif'},svg);
+      txt(20,22,'query: '+toks[q]+'  →  keys',{ 'font-size':11,'font-weight':700,fill:C.blue},g);
+      /* arcs */
+      W[q].forEach((w,j)=>{const x1=xs[q],x2=xs[j];if(j===q){el('path',{d:`M${x1-14} 118 C${x1-34} 60 ${x1+34} 60 ${x1+14} 118`,fill:'none',stroke:C.blue,'stroke-width':1+w*14,'stroke-opacity':.25+w*1.6,'stroke-linecap':'round'},g);return}
+        const h=118-Math.min(80,30+Math.abs(x2-x1)*.18);el('path',{d:`M${x1} 118 Q${(x1+x2)/2} ${h} ${x2} 118`,fill:'none',stroke:C.blue,'stroke-width':1+w*14,'stroke-opacity':.25+w*1.6,'stroke-linecap':'round'},g)});
+      /* token boxes */
+      toks.forEach((t,i)=>{const on=i===q;el('rect',{x:xs[i]-40,y:120,width:80,height:34,rx:7,fill:on?C.blue:(C.sheet),stroke:on?C.blue:C.line,'stroke-width':1.5},g);txt(xs[i],142,t,{'text-anchor':'middle','font-size':13,'font-weight':700,fill:on?'#fff':C.ink},g);
+        txt(xs[i],172,W[q][i].toFixed(2),{'text-anchor':'middle','font-size':11,fill:C.blue,'font-weight':700},g)});
+      /* matrix */
+      const ox=250,oy=196,c=20;txt(ox-44,oy+c*3+4,'queries ↓',{'text-anchor':'middle','font-size':10,fill:C.muted,transform:`rotate(-90 ${ox-44} ${oy+c*3})`},g);txt(ox+c*3,oy-6,'keys →',{'text-anchor':'middle','font-size':10,fill:C.muted},g);
+      W.forEach((row,i)=>{row.forEach((w,j)=>{el('rect',{x:ox+j*c,y:oy+i*c,width:c-1,height:c-1,rx:2,fill:`rgba(36,86,166,${.06+w*2})`,stroke:i===q?C.copper:'none','stroke-width':i===q?1.5:0},g)});txt(ox-6,oy+i*c+14,toks[i],{'text-anchor':'end','font-size':10,fill:i===q?C.copper:C.muted,'font-weight':i===q?700:500},g)});
+      toks.forEach((t,j)=>txt(ox+j*c+c/2,oy+c*6+14,t,{'text-anchor':'middle','font-size':9,fill:C.muted},g));
+      txt(ox+c*6+16,oy+q*c+14,'← this row = the arcs above',{ 'font-size':10,fill:C.copper,'font-weight':600},g);
+      /* readout */
+      const sorted=W[q].map((w,j)=>[w,j]).sort((a,b)=>b[0]-a[0]);
+      ro.innerHTML=`<b>New vector for “${toks[q]}”</b> = Σ weight × value<br><span style="color:var(--muted)">Six weights, sum ${W[q].reduce((a,b)=>a+b,0).toFixed(2)}. Highest first:</span><table>${sorted.map(([w,j])=>`<tr><td><span class="bar" style="width:${Math.round(w*160)}px"></span>${toks[j]}${j===q?' (itself)':''}</td><td>${w.toFixed(2)}</td></tr>`).join('')}</table><p style="margin:12px 0 0;font-size:.82rem;color:var(--muted)">In the encoder, “${toks[q]}” at position ${q+1} can weight position ${q<5?q+2:q} as freely as position ${q>0?q:q+2}. A decoder would zero out every key to the right.</p>`;}
+    draw();})();
+
+  /* Figure 5 head lanes */
+  (function(){const g=$('#headLanes');const tints=['#2456a6','#386853','#a74723','#66539a','#9c6a0b','#1f7a8c','#8c3a6b','#4e6b2f'];
+    for(let i=0;i<8;i++){const cy=51+i*29,y=cy-11;const lane=el('g',{},g);
+      el('path',{d:`M110 160 C150 160 150 ${cy} 198 ${cy}`,fill:'none',stroke:tints[i],'stroke-width':1.2,'stroke-opacity':.7},lane);
+      el('rect',{x:200,y,width:400,height:22,rx:5,fill:tints[i],'fill-opacity':.1,stroke:tints[i],'stroke-width':1.2},lane);
+      txt(212,cy+4,'head '+(i+1),{'font-size':10.5,'font-weight':700,fill:tints[i]},lane);
+      txt(275,cy+4,'Wₖ slices 512 → 64 · Qᵢ Kᵢ Vᵢ · softmax(QᵢKᵢᵀ / 8) Vᵢ',{'font-size':9.5,fill:C.ink},lane);
+      txt(590,cy+4,'n × 64',{'font-size':9,fill:C.muted,'text-anchor':'end'},lane);
+      el('path',{d:`M600 ${cy} H652`,fill:'none',stroke:tints[i],'stroke-width':1.2,'marker-end':'url(#ar5)'},lane)}})();
+
+  /* Figure 6 positional encoding heat map */
+  (function(){const svg=$('#peSvg'),P=50,D=64,cw=14.5,ch=5.2,ox=56,oy=26;const g=el('g',{'font-family':'system-ui,sans-serif'},svg);
+    for(let p=0;p<P;p++)for(let d=0;d<D;d++){const i=Math.floor(d/2),ang=p/Math.pow(10000,(2*i)/512),v=d%2===0?Math.sin(ang):Math.cos(ang);const a=Math.abs(v);el('rect',{x:ox+d*cw,y:oy+p*ch,width:cw-.6,height:ch-.6,fill:v>=0?`rgba(36,86,166,${a})`:`rgba(167,71,35,${a})`},g)}
+    txt(ox-8,oy+8,'pos 0',{'text-anchor':'end','font-size':10,fill:C.muted},g);txt(ox-8,oy+P*ch,'pos 49',{'text-anchor':'end','font-size':10,fill:C.muted},g);txt(ox-8,oy+P*ch/2+4,'position',{'text-anchor':'end','font-size':10,fill:C.muted,'font-weight':700},g);
+    txt(ox,oy-10,'dim 0 (fastest: period ≈ 6 positions)',{'font-size':10,fill:C.muted},g);txt(ox+D*cw,oy-10,'dim 63 (period ≈ 19 positions)',{'text-anchor':'end','font-size':10,fill:C.muted},g);
+    txt(ox+D*cw/2,oy+P*ch+22,'dimension →  (columns 64 to 511 continue to the right with ever slower periods, up to ≈ 63,000 positions)',{'text-anchor':'middle','font-size':10.5,fill:C.muted},g);
+    txt(ox+D*cw/2,oy+P*ch+42,'each row is the vector added to the token at that position',{'text-anchor':'middle','font-size':10.5,fill:C.ink,'font-weight':600},g);})();
+
+  /* Figure 7 masks */
+  (function(){const svg=$('#maskSvg'),toks=['The','cat','sat','on','the','mat'],c=30;const g=el('g',{'font-family':'system-ui,sans-serif'},svg);
+    function grid(ox,oy,title,sub,allowed){txt(ox+c*3,oy-38,title,{'text-anchor':'middle','font-size':14,'font-weight':700},g);txt(ox+c*3,oy-22,sub,{'text-anchor':'middle','font-size':10.5,fill:C.muted},g);
+      for(let i=0;i<6;i++){for(let j=0;j<6;j++){const ok=allowed(i,j);el('rect',{x:ox+j*c,y:oy+i*c,width:c-2,height:c-2,rx:3,fill:ok?C.blueSoft:'#f1ece1',stroke:ok?C.blue:C.line,'stroke-width':1},g);if(!ok)txt(ox+j*c+c/2-1,oy+i*c+c/2+4,'−∞',{'text-anchor':'middle','font-size':9,fill:'#a39a88'},g)}
+        txt(ox-6,oy+i*c+c/2+3,toks[i],{'text-anchor':'end','font-size':10,fill:C.muted},g);txt(ox+i*c+c/2-1,oy+c*6+12,toks[i],{'text-anchor':'middle','font-size':9,fill:C.muted},g)}
+      txt(ox+c*3,oy+c*6+30,'rows: query · columns: keys it may read',{'text-anchor':'middle','font-size':10,fill:C.muted},g)}
+    grid(150,70,'Encoder self-attention','all 36 pairs allowed · bidirectional',()=>true);
+    grid(620,70,'Decoder self-attention','21 pairs allowed · masked with −∞ before softmax',(i,j)=>j<=i);
+    txt(500,160,'same Q, K, V math',{'text-anchor':'middle','font-size':11,fill:C.copper,'font-weight':700},g);txt(500,178,'one extra mask',{'text-anchor':'middle','font-size':11,fill:C.copper},g);})();
+
+  /* Rail highlight */
+  const links=$$('.rail nav a[href^="#"]').filter(a=>a.getAttribute('href').length>1),targets=links.map(a=>$(a.getAttribute('href'))).filter(Boolean);
+  if('IntersectionObserver' in window){const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-15% 0px -72%'});targets.forEach(t=>ob.observe(t))}
+})();
+</script>
+</body>
+</html>
