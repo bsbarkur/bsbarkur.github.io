@@ -1,21 +1,21 @@
 ---
 layout: post
-title: "Running a Local Coding Agent on a MacBook with Qwen3.8-27B and DFlash 2"
+title: "Running a local coding agent on a MacBook with Qwen3.8-27B and DFlash 2"
 date: 2026-09-14 11:30:00 +0530
 tags: [local LLM, Apple Silicon, llama.cpp, speculative decoding, DFlash, Qwen, AI agents]
 ---
 
-I spent this morning getting a 27-billion-parameter model to run as a coding agent on my laptop, with no API key and nothing leaving the machine. The interesting part was not the model. It was a 1.1 GB helper model called a drafter, released two weeks ago by Inco AI under the name [DFlash 2](https://inco.ai/blog/dflash2/), which made the big model generate faster. This post is the exact setup I ran on an M4 Max with 64 GB of memory, the numbers I measured, and a 126-line Python agent that fixed a bug on its own using the result.
+I spent this morning getting a 27-billion-parameter model to run as a coding agent on my laptop, with no API key and nothing leaving the machine. A 1.1 GB helper model called a drafter made the larger model generate faster. Inco AI released it as [DFlash 2](https://inco.ai/blog/dflash2/). This post covers the setup I ran on an M4 Max with 64 GB of memory, the numbers I measured, and a 126-line Python agent that used it to fix two bugs.
 
 Every command here was run on 14 September 2026. The numbers are from one machine, on battery, with a lot of other things open, so treat them as one data point.
 
-## What DFlash 2 is, in a paragraph
+## How DFlash 2 works
 
-A language model produces one token per forward pass, and on a Mac each pass means reading all of the model's weights out of memory. For a 19 GB model that is the whole cost. Speculative decoding adds a small second model that guesses the next several tokens cheaply, then has the big model check all of the guesses in one pass. Checking eight positions costs about the same memory traffic as generating one, so if most guesses are right you get several tokens for the price of one. DFlash is a drafter that guesses a whole block of tokens at once instead of one at a time, and DFlash 2 adds a selector that picks a coherent path through the top candidates at each position. The output is identical to what the big model would have produced on its own; only the speed changes. I wrote a longer [explainer on the first DFlash](https://latentsig.com/insights/dflash-muse-spark-1-2/) for the Latentsig site in August if you want the architecture.
+A language model produces one token per forward pass, and on a Mac each pass means reading the model's weights from memory. For a 19 GB model, that memory traffic is a major part of the cost. Speculative decoding adds a small second model that guesses the next several tokens cheaply, then has the larger model check all of the guesses in one pass. Checking eight positions can require about the same memory traffic as generating one. If most guesses are right, the model produces several tokens for the cost of one verification step. DFlash guesses a whole block of tokens at once instead of one at a time. DFlash 2 adds a selector that picks a coherent path through the top candidates at each position. Speculative decoding is designed to preserve the target model's output distribution while changing how quickly it generates. I wrote a longer [explainer on the first DFlash](https://latentsig.com/insights/dflash-muse-spark-1-2/) for the Latentsig site in August if you want more detail on the architecture.
 
-What changed since then is that [llama.cpp merged DFlash 2 support](https://github.com/ggml-org/llama.cpp/pull/27342) on 27 August, and the 0.4.0 release that Homebrew ships includes it. So the whole thing is now a `brew upgrade` away.
+Since then, [llama.cpp merged DFlash 2 support](https://github.com/ggml-org/llama.cpp/pull/27342) on 27 August, and the 0.4.0 release that Homebrew ships includes it. The required support is now available through `brew upgrade`.
 
-## What you need
+## Requirements
 
 - A Mac with Apple Silicon and at least 32 GB of unified memory. I used an M4 Max with 64 GB. The weights alone are 19 GB, so a 16 GB machine cannot run this configuration.
 - About 21 GB of free disk.
@@ -29,9 +29,9 @@ The memory budget, taken from the server's own load log, came to roughly 23 GB o
 | DFlash 2 drafter weights, Q4_K_M, 5 layers | 1,080 MiB |
 | Target KV cache at 32k context | 2,048 MiB |
 | Drafter KV cache | 50 MiB |
-| Compute buffers (target 257, drafter 1,468) | 1,725 MiB |
+| Compute buffers: target 257, drafter 1,468 | 1,725 MiB |
 
-The process sat at 24 GB resident once warm. The KV cache is small for a 27B model because Qwen3.8 is a hybrid: only every fourth layer is ordinary attention, and the other 48 are Gated DeltaNet layers, a linear-attention design whose state does not grow with context. That detail matters later.
+The process sat at 24 GB resident once warm. The KV cache is small for a 27B model because Qwen3.8 is a hybrid. Only every fourth layer is ordinary attention. The other 48 are Gated DeltaNet layers, a linear-attention design whose state does not grow with context.
 
 ## Install llama.cpp
 
@@ -69,6 +69,8 @@ curl -L -C - -o Qwen3.8-27B-DFlash2-Q4_K_M.gguf \
 
 ## Start the server
 
+Return to the directory that contains `models` before starting the server.
+
 ```sh
 llama-server \
   -m  models/Qwen3.8-27B-Q4_K_M.gguf \
@@ -90,17 +92,17 @@ What the flags do:
 - `-c 32768` is the context. Qwen3.8 allows 262k, but a single agent rarely needs it and the full-attention KV cache grows by about 2 GiB per 32k tokens.
 - `--jinja` applies the model's own chat template. Without it, Qwen's tool-calling format is not used and the agent loop never sees a tool call, just text that looks like one. This is the flag I would forget.
 - `--reasoning-format auto` puts the model's thinking into a separate `reasoning_content` field instead of the answer.
-- `-np 1` gives one request the whole GPU. Speculative decoding is a single-stream technique.
+- `-np 1` configures one parallel slot for these measurements.
 
-The server was listening under three seconds after launch because the weights are memory-mapped and paged in lazily; the first request pays that cost. Run it once with `-v` to see the load details. The lines to look for are `ggml_metal_init: found device: Apple M4 Max`, `load_tensors: offloaded 65/65 layers to GPU` for the target and `6/6` for the drafter, and finally `listening on http://127.0.0.1:8080`. One warning is normal and can be ignored: `dflash requires ctx_other to be set (this warning is normal during memory fitting)` appears while the server measures memory before wiring the drafter to the target.
+The server began listening in under three seconds. The weights are memory-mapped and paged in lazily, so the first request still pays the loading cost. Run it once with `-v` to see the load details. The lines to look for are `ggml_metal_init: found device: Apple M4 Max`, `load_tensors: offloaded 65/65 layers to GPU` for the target and `6/6` for the drafter, and finally `listening on http://127.0.0.1:8080`. One warning is normal and can be ignored: `dflash requires ctx_other to be set (this warning is normal during memory fitting)` appears while the server measures memory before wiring the drafter to the target.
 
-The drafter's metadata tells you what DFlash 2 actually is: a 5-layer, 1.9-billion-parameter non-causal transformer with a block size of 8, a selector that keeps the top 16 candidates per position, a 2-tap grouped convolution, and a list of five target layers (6, 20, 34, 48 and 62) whose hidden states it reads.
+The drafter's metadata describes DFlash 2 as a 5-layer, 1.9-billion-parameter non-causal transformer with a block size of 8, a selector that keeps the top 16 candidates per position, and a 2-tap grouped convolution. It reads hidden states from target layers 6, 20, 34, 48 and 62.
 
 I wrapped all of this in a small `serve.sh` so that `SPEC=0 ./serve.sh` runs without the drafter and `DRAFT_N=4 ./serve.sh` changes the block size. It is at the end of the post.
 
-## What the drafter bought me
+## Benchmark results
 
-Speculative decoding does not change the output, so the only question is speed. I sent three prompts (a Python parsing task, a two-heap median explanation, and a word problem) with 512-token answers, thinking off, using Qwen's recommended instruct sampling of temperature 0.7, top-p 0.8, top-k 20. Six runs per configuration. llama-server returns per-request timings that include how many drafted tokens the target accepted, so the acceptance numbers are the server's, not mine.
+I sent three prompts: a Python parsing task, a two-heap median explanation, and a word problem. I used 512-token answers, with thinking off and Qwen's recommended instruct sampling of temperature 0.7, top-p 0.8, and top-k 20. I ran each configuration six times. llama-server returns per-request timings that include how many drafted tokens the target accepted, so the acceptance numbers are the server's, not mine.
 
 | Configuration | Median decode | Range | Tokens per verification step | Speedup |
 | :--- | ---: | ---: | ---: | ---: |
@@ -108,19 +110,17 @@ Speculative decoding does not change the output, so the only question is speed. 
 | DFlash 2, block 7 | 12.7 tok/s | 3.5 to 16.9 | 4.82 | 1.5× |
 | DFlash 2, block 4 | 10.6 tok/s | 9.2 to 12.0 | 3.83 | 1.25× |
 
-Three things I took from this.
+With block 7 the target accepted 4.8 tokens per verification step on average, and the fastest run, the Python parsing task, held 16.9 tok/s, twice the baseline. Code and the maths problem accepted best. The prose explanation accepted worst. That is the same ordering the paper reports.
 
-The drafter works. With block 7 the target accepted 4.8 tokens per verification step on average, and the fastest run, the Python parsing task, held 16.9 tok/s, twice the baseline. Code and the maths problem accepted best. The prose explanation accepted worst. That is the same ordering the paper reports.
+The gain is much smaller than the acceptance suggests. If a verification step cost the same as one plain decode step, 4.8 tokens per step would suggest a similar speedup. I got 1.5×, which means one DFlash step costs about three plain steps on this machine. Qwen3.8's Gated DeltaNet layers do recurrent work per token, so checking 8 positions may cost more than it does for a plain attention stack. The drafter's own pass and selector also add work when the baseline is only 8.5 tok/s. I did not isolate these costs, so this explanation remains a hypothesis. The llama.cpp PR reports 1.81× on an M5 Pro for the same model and quantization, which is in the same range. Inco reports 2.7× to 3.4× on NVIDIA hardware, but my runs do not establish the reason for that difference.
 
-The gain is much smaller than the acceptance suggests. If a verification step cost the same as one plain decode step, 4.8 tokens per step would be close to 4× faster. I got 1.5×, which means one DFlash step costs about three plain steps on this machine. I think two things are going on. Qwen3.8's Gated DeltaNet layers do recurrent work per token, so checking 8 positions is not nearly free the way it is for a plain attention stack. And the drafter's own pass plus its selector is a real cost when the baseline is only 8.5 tok/s. Both look like properties of today's Metal kernels rather than of the method. The llama.cpp PR reports 1.81× on an M5 Pro for the same model and quantization, which is in the same range. Inco's 2.7× to 3.4× figures come from NVIDIA hardware, where a verification step really is about as cheap as a single decode.
+Block 7 stalled and block 4 did not. Two of the six block-7 runs dropped to 3.5 and 6.4 tok/s with acceptance unchanged, while all six no-drafter runs on the same machine a few minutes later stayed within 0.7 tok/s of each other. These runs point to the speculative path, but six runs are not enough to establish the cause. The drafter's graph has a small CPU-side component, visible in the load log as a CPU compute buffer. My guess is contention with the other things I had running at the CPU to GPU handoff each step, but I did not confirm that. Block 4 had no stalls and a higher acceptance rate, 72% against 55%, at the cost of fewer tokens per step. For an agent I would rather have a steady 10.6 than a 12.7 that sometimes freezes for two seconds, so block 4 is what I am running.
 
-Block 7 stalled and block 4 did not. Two of the six block-7 runs dropped to 3.5 and 6.4 tok/s with acceptance unchanged, while all six no-drafter runs, on the same machine a few minutes later, stayed within 0.7 tok/s of each other. So the stalls belong to the speculative path, not to the laptop. The drafter's graph has a small CPU-side piece (the load log shows a CPU compute buffer for it), so my guess is contention with the other things I had running at the CPU to GPU handoff each step. I did not confirm that. Block 4 had no stalls and a higher acceptance rate, 72% against 55%, at the cost of fewer tokens per step. For an agent I would rather have a steady 10.6 than a 12.7 that sometimes freezes for two seconds, so block 4 is what I am running.
+One more caveat on the absolute numbers. The machine was on battery for the whole session, dropping from 64% to 52% during the benchmark, and it had 12 GB of swap in use from other apps. Silicon Score lists 16.6 tok/s for the sibling Qwen3.6-27B at the same quantization on an M4 Max through Ollama, about double my baseline. I expect higher figures on mains power with a quieter machine. The relative speedups are more useful here than the absolute rates.
 
-One more caveat on the absolute numbers. The machine was on battery for the whole session, dropping from 64% to 52% during the benchmark, and it had 12 GB of swap in use from other apps. Silicon Score lists 16.6 tok/s for the sibling Qwen3.6-27B at the same quantization on an M4 Max through Ollama, about double my baseline. I expect higher figures on mains power with a quieter machine. The ratios are what the table is for.
+## A minimal agent loop
 
-## The agent
-
-An agent, in the sense I mean here, is a loop. Send the conversation plus a list of tools to the model. If the reply contains tool calls, run them, append the results, and go round again. If it contains plain text, stop. The model does the planning. The loop does the bookkeeping and keeps the model inside a sandbox.
+An agent, in the sense I mean here, is a loop. Send the conversation plus a list of tools to the model. If the reply contains tool calls, run them, append the results, and go round again. If it contains plain text, stop. The model does the planning. The loop does the bookkeeping and controls how the tools are exposed.
 
 I wrote it in standard-library Python, 126 lines, no framework, because the part worth understanding is about forty lines and a framework would hide it. The request is an ordinary OpenAI-style chat completion, which llama-server implements:
 
@@ -138,9 +138,9 @@ def chat(messages):
         return json.load(r)
 ```
 
-Two fields are specific to this setup. `chat_template_kwargs.enable_thinking` switches Qwen3.8's thinking mode per request; it is on by default, and for a short coding task I turn it off because the tool results are the reasoning. The sampling parameters follow the Qwen model card, which gives different settings for thinking (1.0 / 0.95) and instruct (0.7 / 0.80 with a presence penalty of 1.5) modes. Mixing them up produces either repetition or drift.
+Two fields are specific to this setup. `chat_template_kwargs.enable_thinking` switches Qwen3.8's thinking mode per request. It is on by default, and I turn it off for the short coding task below. The sampling parameters follow the Qwen model card. Thinking mode uses 1.0 / 0.95, while instruct mode uses 0.7 / 0.80 with a presence penalty of 1.5. Mixing them up produces either repetition or drift.
 
-The tools are four functions, each confined to one directory:
+The tools are four functions. The path check confines file operations to one directory, while `run` only starts in that directory:
 
 ```python
 def _safe(path: str) -> Path:
@@ -182,9 +182,9 @@ for step in range(1, MAX_STEPS + 1):
 
 Errors go back to the model as tool output instead of being raised, because a model that reads "error: FileNotFoundError" usually recovers and a crashed loop never does. Tool output is cut at 4,000 characters so one chatty command cannot flood the context. Twenty steps is the cap.
 
-## Running it
+## Fixing FizzBuzz
 
-The workspace holds a FizzBuzz implementation with two bugs I planted (an off-by-one range and a branch order that makes `FizzBuzz` unreachable) and a test that fails because of them.
+The workspace holds a FizzBuzz implementation with two bugs I planted: an off-by-one range and a branch order that makes `FizzBuzz` unreachable. Its test fails because of them.
 
 ```sh
 python3 agent.py "Fix the bug in fizzbuzz.py so test_fizzbuzz.py passes, then run the test to prove it."
@@ -221,26 +221,26 @@ Fixed. Two bugs in `fizzbuzz.py`:
 === 5 steps · 507 generated tokens · 11.5 tok/s avg · 54s wall · DFlash acceptance 67%
 ```
 
-Fifty-four seconds, five model calls, both bugs found and fixed with a minimal diff, and the test run as proof rather than asserted. It asked for both files in one step, which the loop handles without special casing. Step 3, where it wrote the file, was the largest generation and one of the best accepted: rewriting a file the model has just read is exactly the predictable output a drafter is good at, 226 of 301 drafted tokens. Step 5, the prose summary, accepted worst, which matches the benchmark.
+The run took fifty-four seconds and five model calls. The agent found both bugs, made a minimal diff, and ran the test successfully. It asked for both files in one step, which the loop handles without special casing. Step 3, where it wrote the file, was the largest generation and one of the best accepted. The target accepted 226 of 301 drafted tokens while the model rewrote a file it had just read. Step 5, the prose summary, had the lowest acceptance, which matches the benchmark.
 
-I ran it again with thinking on. It found the same two bugs and produced the same fix, but took 7 steps, 988 generated tokens and 76 seconds against 5 steps, 507 tokens and 54 seconds, and acceptance fell from 67% to 56% because reasoning text is less predictable than code. It also did something instructive at step 4: it tried to run the test with `cd /home/luca84/tbench/2025-06-05/227 && python test_fizzbuzz.py`, a path that exists nowhere on my machine and looks like a benchmark directory remembered from training data. The sandbox returned exit 1, the model read the error, dropped the `cd`, and carried on. That is the argument for feeding tool errors back as text, and for never pointing `run` at a directory you would mind losing.
+I ran it again with thinking on. It found the same two bugs and produced the same fix, but took 7 steps, 988 generated tokens and 76 seconds against 5 steps, 507 tokens and 54 seconds. Acceptance fell from 67% to 56%. At step 4, it tried to run the test with `cd /home/luca84/tbench/2025-06-05/227 && python test_fizzbuzz.py`. That path does not exist on my machine, and the run provides no evidence for where the model got it. The shell returned exit 1, the model read the error, dropped the `cd`, and carried on. This is why the loop feeds tool errors back as text. It is also why `run` should not have access to files you would mind losing.
 
-For a task where the first attempt is likely to fail, thinking is worth the cost. For a short, well-specified fix it is overhead.
+On this short, well-specified task, thinking added time and tokens without changing the fix. A harder task may behave differently.
 
-## Things to watch
+## Limits and tradeoffs
 
 - Context is memory. The KV cache for both models sits in the same unified memory as the weights. If the server fails to start or macOS starts swapping, lower `-c` first.
 - Thinking mode changes the sampling settings. Switch both together.
 - Acceptance falls on prose and at high temperature. Ask this server for a short story at temperature 1.2 and the drafter will be rejected often enough that you pay its cost for little gain. The server timings tell you when this is happening.
-- One slot. `-np 1` gives one request all the memory bandwidth. If you need concurrent users, the maths changes and continuous batching may serve you better than a drafter.
+- These measurements used one parallel slot, set with `-np 1`. Concurrent requests need separate measurement, and continuous batching may work better than a drafter.
 - The drafter is tied to this model. It reads hidden states from Qwen3.8-27B's layers and will not help a different size. Q4_K_M worked; I have not tried heavier quantisation of the target.
 - Vision is a separate path. Qwen3.8-27B can take images through its `mmproj` file, but the PR discussion reports drafter acceptance collapsing on image inputs with current GGUFs. Keep DFlash 2 for text.
 
-## Where this goes
+## Using the server with other tools
 
-The server above is a general local inference endpoint. Anything that speaks the OpenAI chat API can point at `http://127.0.0.1:8080/v1`: coding assistants, evaluation harnesses, batch jobs. The agent script is the smallest honest version of what those tools do internally.
+The server above is a general local inference endpoint. Coding assistants, evaluation harnesses, and batch jobs that support the OpenAI chat API can point at `http://127.0.0.1:8080/v1`.
 
-The number I carry away is not the tokens per second. It is that a laptop now serves a 27B model at agent-usable speed with zero marginal cost per token and no data leaving the machine, and that a 1 GB drafter moved that speed by 1.5× on the median and 2× on code, with room to grow as the Metal kernels improve.
+On this machine, the 27B model ran as a local coding agent with no per-token API charge and no prompts sent to an external service. The 1 GB drafter improved median generation speed by 1.5× and reached 2× on the Python task in these runs.
 
 ## Appendix: serve.sh
 
@@ -282,7 +282,7 @@ exec llama-server "${args[@]}" "$@"
 
 ## Sources
 
-- Inco AI, [DFlash 2](https://inco.ai/blog/dflash2/), September 2026. Drafter: [incoai/Qwen3.8-27B-DFlash2-GGUF](https://huggingface.co/incoai/Qwen3.8-27B-DFlash2-GGUF), updated 29 August 2026.
+- Inco AI, [DFlash 2](https://inco.ai/blog/dflash2/), August 2026. Drafter: [incoai/Qwen3.8-27B-DFlash2-GGUF](https://huggingface.co/incoai/Qwen3.8-27B-DFlash2-GGUF), updated 29 August 2026.
 - ggml-org, [llama.cpp PR #27342: spec: add DFlash2 support](https://github.com/ggml-org/llama.cpp/pull/27342), merged 27 August 2026. The M5 Pro figure is from the PR discussion.
 - ggml-org, [Qwen3.8-27B-GGUF](https://huggingface.co/ggml-org/Qwen3.8-27B-GGUF), converted 14 August 2026.
 - Qwen team, [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B), sampling parameters and context length.
