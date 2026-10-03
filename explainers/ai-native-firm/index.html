@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AI-Native Firm</title>
+<meta name="description" content="Sidu Ponnappa on Zerodha's Subtext: what an agent is, why the human in the loop is the one invariant, why Realfast is a manpower company, and what happens to the middle tier of talent. Distilled step by step, with the on-screen definitions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout borrowed from the analytics-agent whiteboard review: hand-lettered headings, Plex body, dotted-grid boards for diagrams, a sticky index on wide screens. */
+:root {
+  --bg: #f7f8fa;
+  --canvas: #ffffff;
+  --grid: #e3e6ec;
+  --ink: #1e1e24;
+  --muted: #5d6170;
+  --rule: #d9dce3;
+  --blue: #1971c2;  --blue-fill: #a5d8ff;
+  --violet: #6741d9; --violet-fill: #d0bfff;
+  --red: #c92a2a;   --red-fill: #ffc9c9;
+  --green: #2b8a3e; --green-fill: #b2f2bb;
+  --amber: #b35c00; --amber-fill: #ffe8a3;
+  --neutral-fill: #e9ecef;
+  --hand: "Patrick Hand", "Comic Sans MS", "Segoe Print", cursive;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121316; --canvas: #1a1b20; --grid: #2a2c33; --ink: #e8e8ec; --muted: #a2a6b3; --rule: #33363f;
+    --blue: #74b9ff; --blue-fill: #1d4a73; --violet: #b197fc; --violet-fill: #3f2f7a;
+    --red: #ff8787; --red-fill: #6b2424; --green: #69db7c; --green-fill: #1f5130;
+    --amber: #ffc078; --amber-fill: #5c4313; --neutral-fill: #2c2f37;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121316; --canvas: #1a1b20; --grid: #2a2c33; --ink: #e8e8ec; --muted: #a2a6b3; --rule: #33363f;
+  --blue: #74b9ff; --blue-fill: #1d4a73; --violet: #b197fc; --violet-fill: #3f2f7a;
+  --red: #ff8787; --red-fill: #6b2424; --green: #69db7c; --green-fill: #1f5130;
+  --amber: #ffc078; --amber-fill: #5c4313; --neutral-fill: #2c2f37;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 40px 80px; }
+@media (min-width: 700px) { .wrap { padding-inline: 24px; } }
+header.top { display: grid; gap: 14px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--hand); font-weight: 400; font-size: clamp(38px, 6vw, 62px); line-height: 1.02; margin: 0; text-wrap: balance; }
+h1 .scribble { color: var(--violet); }
+.lede { max-width: 70ch; font-size: 18px; margin: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 12px 30px; margin-top: 6px; }
+.fact { display: grid; gap: 0; }
+.fact b { font-family: var(--hand); font-weight: 400; font-size: 32px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.fact span { font-size: 13px; color: var(--muted); max-width: 24ch; }
+.cover { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 20px; align-items: center; }
+.cover img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--rule); display: block; }
+.cover p { margin: 0; font-size: 14.5px; color: var(--muted); max-width: 60ch; }
+@media (max-width: 700px) { .cover { grid-template-columns: minmax(0, 1fr); } }
+
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; display: grid; gap: 2px; font-size: 13.5px; max-height: calc(100vh - 40px); overflow-y: auto; }
+nav.toc a { color: var(--muted); text-decoration: none; padding: 3px 0 3px 10px; border-left: 2px solid transparent; line-height: 1.35; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); border-left-color: var(--violet); outline: none; }
+nav.toc .n { font-family: var(--mono); font-size: 11px; margin-right: 4px; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } nav.toc { display: none; } }
+
+main { display: grid; gap: 72px; min-width: 0; }
+section { display: grid; gap: 16px; min-width: 0; scroll-margin-top: 16px; }
+.step { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--violet); }
+h2 { font-family: var(--hand); font-weight: 400; font-size: 36px; line-height: 1.1; margin: -8px 0 0; text-wrap: balance; }
+h3 { font-size: 16px; font-weight: 600; margin: 8px 0 0; }
+p { margin: 0; max-width: 70ch; }
+.prose { display: grid; gap: 12px; }
+.prose ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 68ch; }
+a { color: var(--blue); }
+.ts { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted); white-space: nowrap; }
+.ts:hover { color: var(--blue); border-color: var(--blue); }
+
+/* host question card, echoing the blue-tab cards in the video */
+.ask { display: grid; grid-template-columns: 10px minmax(0, 1fr); max-width: 72ch; background: var(--canvas); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.ask::before { content: ""; background: var(--blue); }
+.ask div { padding: 10px 14px; font-weight: 500; }
+.ask small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+
+blockquote { margin: 0; max-width: 70ch; padding: 4px 0 4px 18px; border-left: 3px solid var(--violet); display: grid; gap: 6px; }
+blockquote p { font-size: 17px; }
+blockquote cite { font-style: normal; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+blockquote.big { border-left: 0; padding: 0; }
+blockquote.big p { font-family: var(--hand); font-size: clamp(26px, 3.4vw, 34px); line-height: 1.2; color: var(--ink); text-wrap: balance; }
+blockquote.big p::before { content: "“"; color: var(--violet); }
+blockquote.big p::after { content: "”"; color: var(--violet); }
+
+.takeaway { max-width: 72ch; border: 2px dashed var(--green); border-radius: 12px; padding: 12px 16px; background: var(--canvas); font-size: 15px; display: grid; gap: 4px; }
+.takeaway b { font-family: var(--hand); font-weight: 400; font-size: 20px; color: var(--green); }
+
+figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+.board {
+  background-color: var(--canvas);
+  background-image: radial-gradient(var(--grid) 1.1px, transparent 1.2px);
+  background-size: 20px 20px;
+  border: 1px solid var(--rule); border-radius: 10px;
+  overflow-x: auto; padding: 12px;
+}
+.board svg { display: block; width: 100%; min-width: 860px; height: auto; color: var(--ink); }
+figcaption { font-size: 14px; color: var(--muted); max-width: 80ch; }
+svg .t { font-family: var(--hand); fill: currentColor; }
+svg .t-title { font-size: 19px; }
+svg .t-sub { font-size: 14px; fill: var(--muted); }
+svg .t-edge { font-size: 14px; fill: var(--muted); }
+svg .t-tag { font-size: 13px; }
+svg .note { font-family: var(--hand); font-size: 16px; }
+
+/* on-screen definition screenshots */
+.defs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.shot { background: var(--canvas); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; display: grid; }
+.shot button { all: unset; cursor: zoom-in; display: block; }
+.shot button:focus-visible { outline: 2px solid var(--violet); outline-offset: -2px; }
+.shot img { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.shot figcaption { padding: 8px 12px 10px; font-size: 13.5px; color: var(--ink); display: grid; gap: 2px; }
+.shot figcaption b { font-family: var(--hand); font-weight: 400; font-size: 20px; line-height: 1.1; }
+.shot figcaption span { color: var(--muted); }
+.wide { max-width: 860px; }
+.wide img { aspect-ratio: auto; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--canvas); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 640px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.term { font-family: var(--hand); font-size: 19px; white-space: nowrap; line-height: 1.2; }
+td.num { white-space: nowrap; }
+
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.pair div { border: 1.5px solid var(--rule); background: var(--canvas); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; display: grid; gap: 4px; align-content: start; }
+.pair b { font-family: var(--hand); font-weight: 400; font-size: 20px; line-height: 1.2; }
+.pair .rock { border-color: var(--red); }
+.pair .rock b { color: var(--red); }
+.pair .water { border-color: var(--blue); }
+.pair .water b { color: var(--blue); }
+.pair .ok { border-color: var(--green); }
+.pair .ok b { color: var(--green); }
+
+ol.flip { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: ph; }
+ol.flip li { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 14px; counter-increment: ph; }
+ol.flip li::before { content: counter(ph, decimal); font-family: var(--hand); font-size: 34px; line-height: 1; color: var(--violet); text-align: center; border: 2px solid var(--violet); border-radius: 50% 46% 52% 44%; width: 48px; height: 48px; display: grid; place-items: center; }
+ol.flip .body { display: grid; gap: 6px; min-width: 0; max-width: 70ch; }
+ol.flip h3 { margin: 0; }
+
+.footnote { font-size: 13px; color: var(--muted); max-width: 80ch; }
+
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: min(1280px, 96vw); }
+dialog.lightbox::backdrop { background: rgba(10, 10, 14, .82); }
+dialog.lightbox img { width: 100%; height: auto; display: block; border-radius: 8px; }
+dialog.lightbox p { color: #e8e8ec; font-size: 14px; margin: 8px 2px 0; max-width: none; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Notes on Subtext by Zerodha · Sidu Ponnappa · 1 h 41 min · published 2 Oct 2026</div>
+    <h1>What is an AI-native firm? <span class="scribble">Sidu Ponnappa's argument, step by step</span></h1>
+    <p class="lede">Sidu Ponnappa sold his first company, C42 Engineering, to Gojek and then ran engineering there for years. His new company, Realfast, sells AI-accelerated IT services. In this conversation with Pranav Manie and Bhuvanesh R he argues that an agent is an extension of your own mind, that the human in the loop is the only thing a business can safely build on, and that the middle tier of talent has quietly disappeared. I've written his argument out in the order he builds it, with his own words where they say it better than I can.</p>
+    <div class="facts">
+      <div class="fact"><b>$100K → $3M+</b><span>Realfast revenue, 2025 to July 2026, from his essay shown in the episode</span></div>
+      <div class="fact"><b>10×</b><span>revenue in two months after pivoting on the Opus 4.5 step change</span></div>
+      <div class="fact"><b>~3 months</b><span>how long a strategy lasts before the next model jump</span></div>
+      <div class="fact"><b>~2 weeks</b><span>how long you can build with an agent before the system turns to slop</span></div>
+      <div class="fact"><b>$30/hr</b><span>the "good enough" outsourcing band he says no longer exists</span></div>
+    </div>
+    <div class="cover">
+      <a href="https://www.youtube.com/watch?v=CPISElKbFFg"><img src="img/cover.jpg" alt="Episode thumbnail: What is an AI-native firm? ft. Sidu Ponnappa, Subtext by Zerodha" width="1280" height="720"></a>
+      <p>Watch the full episode on <a href="https://www.youtube.com/watch?v=CPISElKbFFg">YouTube</a>. Every timestamp on this page links to that moment in the video. The screenshots are the definition cards Zerodha's editors put on screen; click one to see it full size.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Sections">
+      <a href="#agent"><span class="n">01</span>What an agent is</a>
+      <a href="#pillars"><span class="n">02</span>Agents can't hold the pillars</a>
+      <a href="#debt"><span class="n">03</span>Debt that compounds</a>
+      <a href="#invariants"><span class="n">04</span>Build on invariants</a>
+      <a href="#mirror"><span class="n">05</span>The agent is a mirror</a>
+      <a href="#cyborg"><span class="n">06</span>Superhuman cyborgs</a>
+      <a href="#pivot"><span class="n">07</span>Pivot on every step change</a>
+      <a href="#frontier"><span class="n">08</span>Best model for the human</a>
+      <a href="#manpower"><span class="n">09</span>A manpower company</a>
+      <a href="#talent"><span class="n">10</span>LeetCode-to-FAANG is over</a>
+      <a href="#ux"><span class="n">11</span>Agents are terrible UX</a>
+      <a href="#rollouts"><span class="n">12</span>Enterprise rollouts are stuck</a>
+      <a href="#productivity"><span class="n">13</span>Productivity is the wrong lens</a>
+      <a href="#acceleration"><span class="n">14</span>Acceleration for everyone</a>
+      <a href="#proof"><span class="n">15</span>Waiting for one example</a>
+      <a href="#outcomes"><span class="n">16</span>Selling outcomes</a>
+      <a href="#knowledge"><span class="n">17</span>IP and tacit knowledge</a>
+      <a href="#middle"><span class="n">18</span>The middle disappears</a>
+      <a href="#india"><span class="n">19</span>India should aim for #3</a>
+      <a href="#bangalore"><span class="n">20</span>IT services and Bangalore</a>
+      <a href="#flips"><span class="n">21</span>What he changed his mind on</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#notes">Notes on sources</a>
+    </nav>
+
+    <main>
+      <!-- 01 -->
+      <section id="agent">
+        <div class="step">Step 01 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=213s">03:33</a></div>
+        <h2>An agent is not a colleague. It's part of you.</h2>
+        <div class="ask"><div><small>Pranav asks</small>What is an AI agent, and how is it different from a workflow?</div></div>
+        <div class="prose">
+          <p>Sidu says there are two definitions. The popular one is short: an agent can pursue a goal on its own, using tools, over many steps. He doesn't think it's wrong, but he thinks it leads people astray, because it invites you to picture the agent as another person you hand work to.</p>
+          <p>The second definition is the one he actually works with. When a skilled person uses an agent well, they aren't delegating to someone else. They're using it the way you use your own fast, automatic mind. You decide what you want, and the agent carries it out, the way your hand reaches for a glass without you planning the movement.</p>
+        </div>
+        <blockquote><p>"You actually use it as an extension of your own subconscious. You have magnified your system one."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=450s">07:30</a></cite></blockquote>
+        <blockquote><p>"Everyone looks only at the first because agents are anthropomorphized … and I think that is dangerously flawed for the current crop of models."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=230s">03:50</a></cite></blockquote>
+        <figure>
+          <div class="board"><svg id="d-agent" viewBox="0 0 1120 360" role="img" aria-label="Two pictures of an agent. On the left, the popular picture: you delegate to an agent that runs on its own, and its output drifts from your pillars. On the right, Sidu's picture: your System 2 decides an objective and delegates it to the agent acting as your System 1; the output comes back through you, and you correct drift before it lands."></svg></div>
+          <figcaption>Left is how most people imagine using an agent. Right is how Sidu says it really works today. Your deliberate mind sets the objective, the agent executes like your fast mind would, and everything passes back through your judgment.</figcaption>
+        </figure>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-system-1-2.jpg"><img src="img/def-system-1-2.jpg" alt="On-screen card: System 1 and System 2. Kahneman's split: System 1 is fast, automatic thinking; System 2 is slow, deliberate reasoning. He is saying agents are System 1." loading="lazy" width="960" height="540"></button><figcaption><b>System 1 and System 2</b><span>Kahneman's fast and slow thinking. He puts agents in System 1. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=460s">07:40</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section id="pillars">
+        <div class="step">Step 02 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=270s">04:30</a></div>
+        <h2>Agents can't hold architectural pillars, so a human always has to</h2>
+        <div class="prose">
+          <p>His example is a website. Since GPT-4o, anyone can make one in minutes. But the moment you say "these are my three brand pillars, this is my design language, these are my talking points", you can no longer just let the AI build it. You spend your time pulling it back to the anchors you set.</p>
+          <p>He borrows a rule from a senior colleague at ThoughtWorks: when you design a system, you get to hammer down about three pegs, things that are hard to change, and you build everything else around them. The problem with today's agents is that they don't respect the pegs. That's true whether the system is software, sales, recruiting or communications.</p>
+        </div>
+        <blockquote><p>"You cannot hammer down architectural pillars and have an agent follow them unguided. There is a human in the loop always. And that human in the loop is the one who's protecting the architectural pillars, the integrity of the system."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=332s">05:32</a></cite></blockquote>
+      </section>
+
+      <!-- 03 -->
+      <section id="debt">
+        <div class="step">Step 03 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=356s">05:56</a></div>
+        <h2>Without that human, small misses compound into debt</h2>
+        <div class="prose">
+          <p>When you work with an agent you make dozens or hundreds of decisions a day around your pillars. Even if you're careful, a few will slip. The slip isn't noticed, the next day's work builds on it, and the day after builds on that. People think of slop as bad copywriting. Sidu thinks that's the trivial case. The serious case is a system whose structure slowly stops matching what it was designed to do.</p>
+          <p>He puts a number on it. Today the hard question isn't whether an agent can one-shot something. It's whether you can keep building a system with it, and his answer is that you can do that for about two weeks before it degrades at the architecture level.</p>
+        </div>
+        <blockquote><p>"It is not technical anymore, it's just debt. It is the compounding violation of the integrity of the system in a way that undermines the ability of that system to achieve its objectives."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=405s">06:45</a></cite></blockquote>
+        <blockquote><p>"The game is not even now can I sustainably build a system for 2 weeks. The threshold has reached 2 weeks. Beyond that, it turns to slop. And it turns to slop at an architectural level."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=428s">07:08</a></cite></blockquote>
+        <figure>
+          <div class="board"><svg id="d-debt" viewBox="0 0 1120 250" role="img" aria-label="How slop compounds. Day one: dozens of decisions, one slips. Day two: new work builds on the slip. Week one: several slips interact. Week two: the system has drifted at the architecture level, which is slop."></svg></div>
+          <figcaption>My sketch of his point. The individual misses are small. What matters is that each day's work is built on the previous day's misses, so the damage grows faster than the error rate.</figcaption>
+        </figure>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-slop.jpg"><img src="img/def-slop.jpg" alt="On-screen card: Slop. Low-quality output that slips in unnoticed. Here: each decision an agent gets subtly wrong, which then compounds across a system." loading="lazy" width="960" height="540"></button><figcaption><b>Slop</b><span>Not just bad copy. Small wrong decisions that compound. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=365s">06:05</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-technical-debt.jpg"><img src="img/def-technical-debt.jpg" alt="On-screen card: Technical debt. The cost of shortcuts taken today. Every quick fix makes tomorrow's changes slower and riskier until someone pays it down." loading="lazy" width="960" height="540"></button><figcaption><b>Technical debt</b><span>He drops the word "technical". It's now debt in any system. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=409s">06:49</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section id="invariants">
+        <div class="step">Step 04 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=480s">08:00</a></div>
+        <h2>Don't ask what will change. Ask what won't.</h2>
+        <div class="ask"><div><small>Bhuvanesh asks</small>Will the human in the loop become a liability as models improve?</div></div>
+        <div class="prose">
+          <p>Maybe one day, he says. When that happens the economics of everything change, and that's one of the points you could call the singularity. He doesn't see any use in planning past it unless you're a frontier lab. What he plans for is the stretch before it.</p>
+          <p>Since almost everything will change, the useful question is which things won't. He calls these invariants. Right now a strategy lasts about three months before a model jump changes the ground under it, so he looks for things that will stay true for longer than that. Realfast is built on two of them:</p>
+          <ul>
+            <li>A human will be required in the loop, until the day one isn't.</li>
+            <li>In any non-trivial system there are architectural pegs, and today's models don't respect them.</li>
+          </ul>
+        </div>
+        <blockquote><p>"Any business that is sitting on top of using AI has to operate on identifying invariants that they are playing into, not asking the question what will change, because the answer is most of it."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=595s">09:55</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-singularity.jpg"><img src="img/def-singularity.jpg" alt="On-screen card: Singularity. The point where machine intelligence improves itself faster than humans can follow, after which nothing can be predicted." loading="lazy" width="960" height="540"></button><figcaption><b>Singularity</b><span>The boundary he refuses to plan beyond. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=524s">08:44</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-invariant.jpg"><img src="img/def-invariant.jpg" alt="On-screen card: Invariant. Something that stays true while everything around it changes. Here: the few rules a business can build on for over three months." loading="lazy" width="960" height="540"></button><figcaption><b>Invariant</b><span>The one word to take from this episode. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=550s">09:10</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section id="mirror">
+        <div class="step">Step 05 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=620s">10:20</a></div>
+        <h2>The agent reflects your blind spots back at you</h2>
+        <div class="ask"><div><small>Pranav asks</small>From full AI psychosis to "it's a junior intern", where do you lie?</div></div>
+        <div class="prose">
+          <p>He rejects the scale. If the agent is an extension of your subconscious, then the question isn't how much you trust the tool. It's how much your own subconscious fools you. You can see your obvious biases. The agent, trying to please you, amplifies the ones you can't see.</p>
+          <p>At the mild end this means worse work. At the far end, for someone in a fragile state, he says it can mean a real psychological breakdown, and he isn't joking about that. His advice is to assume you already have some AI psychosis and to keep defending against it.</p>
+        </div>
+        <blockquote><p>"The more deluded you are by your own subconscious, the more you are going to be bamboozled by your agent because the agent is an extension of your subconscious."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=651s">10:51</a></cite></blockquote>
+        <blockquote><p>"You are extremely vulnerable when you use an agent. This is not a joke … you have to treat it as an infohazard of the highest order."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=736s">12:16</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-info-hazard.jpg"><img src="img/def-info-hazard.jpg" alt="On-screen card: Info hazard. Information that harms you just by being taken in. He means an agent's flattering reflection of your own biases." loading="lazy" width="960" height="540"></button><figcaption><b>Info hazard</b><span>An agent's flattering reflection of your own biases. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=741s">12:21</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section id="cyborg">
+        <div class="step">Step 06 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=765s">12:45</a></div>
+        <h2>You're already a superhuman cyborg. The question is what you do with it.</h2>
+        <div class="prose">
+          <p>Sidu points out that we've had cyborgs for decades. Millions of intraocular lenses are implanted every year, and knee replacements give people abilities that would have been superhuman for their age and condition. What agents add is intelligence. And because the agent is you, it isn't something separate that is superintelligent. When you work with it, you are.</p>
+          <p>He's been a self-described transhumanist since ninth standard, after reading Asimov's <i>The Bicentennial Man</i>, about a robot that wants to become human. He realised he wanted to walk the other way, and that humanity as a whole is already doing so through hygiene, medicine and computers.</p>
+        </div>
+        <blockquote class="big"><p>How do you use that super intelligence in pursuit of your craft is now the whole game.</p></blockquote>
+        <p class="footnote" style="margin-top:-6px"><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=820s">13:40</a></p>
+        <div class="prose">
+          <p>When Pranav brings up Westworld's tagline, "play God, pay the price", Sidu calls it a Western idea, and a brittle one. In his reading of Indian tradition you are born already paying the price of being alive. He thinks that makes the culture unusually well suited to what's coming.</p>
+        </div>
+        <div class="pair">
+          <div class="rock"><b>Rock thinking</b>"Play God, pay the price." Change is a transgression you'll be punished for. Rigid systems like this "will break because they don't know how to bend."</div>
+          <div class="water"><b>Water thinking</b>"You were born paying the price." Change is the normal condition. "We understand the tandava."</div>
+        </div>
+        <blockquote><p>"They will break because they don't know how to bend. They are not water. They are the rock. We are water. The singularity will shatter all rocks."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1037s">17:17</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-transhumanism.jpg"><img src="img/def-transhumanism.jpg" alt="On-screen card: Transhumanism. The belief that people should use technology to go beyond human limits: longer life, sharper minds, stronger bodies." loading="lazy" width="960" height="540"></button><figcaption><b>Transhumanism</b><span>Something he's pursued since school. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=781s">13:01</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section id="pivot">
+        <div class="step">Step 07 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1068s">17:48</a></div>
+        <h2>Treat every model step change as a reason to pivot</h2>
+        <div class="ask"><div><small>Bhuvanesh asks</small>How hard is it to build so your TAM grows with every model upgrade?</div></div>
+        <div class="prose">
+          <p>This refers to his essay "When the Models Get Better, Your TAM Should Go Up". His answer is that a startup should pick a problem that is hard for economic reasons, not just operational ones. From here on, a business's edge comes from how well it captures what each model improvement makes possible. Businesses have always done this with new regulations or a new special economic zone. What's new is doing it every three months.</p>
+          <p>That changes how he sees pivoting. Startups had to normalise pivots because pivots were seen as failure. Even in 2022 a company that pivoted every quarter looked sketchy. Realfast spent its first two years building to a fixed thesis, and he now thinks that was an obsolete habit carried over from the previous era.</p>
+        </div>
+        <figure class="shot wide"><button type="button" data-full="img/essay-tam.jpg"><img src="img/essay-tam.jpg" alt="Screenshot of Sidu's essay 'When the Models Get Better, Your TAM Should Go Up', dated 8 August 2026, which says Realfast went from $100K of revenue in 2025 to over $3M by July 2026, with $1M+ from the US." loading="lazy" width="1280" height="720"></button><figcaption><b>His essay, as shown in the episode</b><span>"From $100K of rev in 2025 to over $3M of rev by July 2026, with $1M+ of that from the US." <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1073s">17:53</a></span></figcaption></figure>
+        <blockquote><p>"We've tried to normalize it in the startup ecosystem for well over a decade now that it's okay to pivot, but we don't look to the question of why did we have to normalize it. We had to normalize it because it is a bad thing."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1170s">19:30</a></cite></blockquote>
+        <h3>How it played out at Realfast</h3>
+        <figure>
+          <div class="board"><svg id="d-pivot" viewBox="0 0 1180 300" role="img" aria-label="Realfast's model timeline. During the GPT-4 era they spent four months solving diffs. GPT-4o made that work obsolete and it took four to five months to retire the strategy. Sonnet 4 with Claude Code was the first true agent. With Opus 4.5 in October and November 2025 they began revisiting the thesis on purpose at every step change. By 20 January 2026 they had seven-figure revenue, ten times in two months."></svg></div>
+          <figcaption>Each box is a model step change and what it did to their strategy. The lesson he drew is in the violet box. Before Opus 4.5 they reacted to step changes months late. After it, they started re-checking the thesis deliberately each time.</figcaption>
+        </figure>
+        <div class="prose">
+          <p>The deals they'd been turning down as "off thesis" became the business. One was a 35-to-40-year-old system built in Delphi that handles regulated corporate-secretarial work like ESOPs, with a .NET rewrite that had been in progress for 15 years. Both stacks were live, and an integration with a stock exchange had to go live in about three months. He says it would have crashed and burned on GPT-4o, would have been risky on Sonnet 4, and only became really workable with Opus 4.5.</p>
+        </div>
+        <blockquote><p>"By January 20th, we had seven figure revenue … We 10xed in 2 months because we pivoted."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1380s">23:00</a></cite></blockquote>
+        <blockquote><p>"If you had made them earlier we would have failed … The step function is what turned them from unviable to viable deals."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1423s">23:43</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-step-change.jpg"><img src="img/def-step-change.jpg" alt="On-screen card: Step change. A sudden jump in what the models can do, not a gradual improvement. Each one can make a business strategy obsolete overnight." loading="lazy" width="960" height="540"></button><figcaption><b>Step change</b><span>A jump that can make a strategy obsolete overnight. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1229s">20:29</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-diffs.jpg"><img src="img/def-diffs.jpg" alt="On-screen card: Diffs. The exact lines changed between two versions of a file. Getting an AI to produce clean, correct diffs was a hard problem in 2024." loading="lazy" width="960" height="540"></button><figcaption><b>Diffs</b><span>Four months of work that one model release made unnecessary. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1277s">21:17</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-bourse.jpg"><img src="img/def-bourse.jpg" alt="On-screen card: Bourse. A stock exchange. The old system had to connect live to an exchange by a hard deadline." loading="lazy" width="960" height="540"></button><figcaption><b>Bourse</b><span>The hard deadline in the legacy-system deal. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1471s">24:31</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 08 -->
+      <section id="frontier">
+        <div class="step">Step 08 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1499s">24:59</a></div>
+        <h2>Use the best model for the human, cheaper ones for routine work</h2>
+        <div class="ask"><div><small>Bhuvanesh asks</small>How dependent is what you build on access to frontier LLMs?</div></div>
+        <div class="prose">
+          <p>He describes a large regulated fintech that keeps Claude Code or Codex for its engineers and has moved PR review and fixes to cheaper open-source models. He thinks that's correct, and it follows from his first point. If the model is an extension of you, then running a weaker one makes you weaker than the person next to you. For routine operations, "good enough" is the right test.</p>
+        </div>
+        <blockquote><p>"If you're augmenting yourself, you want the best. You want to be 20% dumber than the next guy? Doesn't make sense."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1557s">25:57</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-pr.jpg"><img src="img/def-pr.jpg" alt="On-screen card: PR. Pull request: a proposed code change submitted for review before it is merged. Reviewing them is routine, high-volume work." loading="lazy" width="960" height="540"></button><figcaption><b>PR</b><span>Routine, high-volume work that can go to cheaper models. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1552s">25:52</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 09 -->
+      <section id="manpower">
+        <div class="step">Step 09 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1579s">26:19</a></div>
+        <h2>Realfast is a manpower company, on purpose</h2>
+        <div class="ask"><div><small>Pranav asks</small>Are large firms inherently disadvantaged by organizational debt?</div></div>
+        <div class="prose">
+          <p>He splits companies into two kinds. Some make acceleration their core value, and he says that's what "tech company" means: Uber against a taxi company, Amazon against a retailer. Others treat speed as useful in some places but not central. Both kinds carry legacy and debt. The first kind will work through it on their own. The second kind needs partners, and that's where Realfast fits.</p>
+          <p>Then he states the thesis plainly. If the human in the loop is the one invariant, the durable business is the best organisation of humans in the loop. He knows that's the least fundable thing a startup can say.</p>
+        </div>
+        <blockquote class="big"><p>I'm not a software company. I'm a manpower company.</p></blockquote>
+        <blockquote><p>"I will be building the best damn organization of humans in the loop. As the definition of best damn humans in the loop evolves, that's my invariant."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1761s">29:21</a></cite></blockquote>
+        <blockquote><p>"Building a manpower company is the kiss of death in the venture funded ecosystem … But it turns out that the only Lindy thing over here is people."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1780s">29:40</a></cite></blockquote>
+        <div class="prose">
+          <p>He's careful to say this doesn't mean a body shop. It means a company that will last because of its people. He names one other invariant he can't use: frontier AI needs huge amounts of capital, and he doesn't have the ability to raise that. He also explains why India matters here. US frontier labs and big tech are absorbing the best American talent, and China won't serve the world, so India has the other large pool.</p>
+        </div>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-lindy.jpg"><img src="img/def-lindy.jpg" alt="On-screen card: Lindy. The Lindy effect: the longer something has already survived, the longer it will probably last. People outlast every technology." loading="lazy" width="960" height="540"></button><figcaption><b>Lindy</b><span>People have outlasted every technology so far. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1791s">29:51</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section id="talent">
+        <div class="step">Step 10 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1890s">31:30</a></div>
+        <h2>The LeetCode-to-FAANG pipeline is dead. The '90s consultant is back.</h2>
+        <div class="prose">
+          <p>One of Realfast's core strategies is to hire from the pipeline that trained people for LeetCode interviews and big-tech jobs, which he says is "dead in the water". Those engineers have the intellectual horsepower. What a decade of ZIRP-era culture didn't give them is the habit of engaging with messy business problems directly.</p>
+          <p>The type he wants is the 1990s and 2000s software consultant: a serious hacker who sits with a gnarly business problem and solves it. At ThoughtWorks he moved from retail to insurance to an early cloud company, and between Java, .NET and Rails, inside about 18 months. Clients expected a consultant to speak their domain and know their legacy stack within four weeks. Today that role has a new name, the forward-deployed engineer (FDE).</p>
+        </div>
+        <blockquote><p>"We call it stakeholder alignment. Hackers call it social engineering. If you can't social engineer, you have lost alpha. And that is the missing piece. The talent is there."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1983s">33:03</a></cite></blockquote>
+        <div class="ask"><div><small>Pranav asks</small>Has AI blurred the line between product and service companies?</div></div>
+        <div class="prose">
+          <p>No, he says, but the line was never where people think. Every product company has someone between it and the customer who understands the business better than the product team does.</p>
+        </div>
+        <blockquote><p>"All product companies are a business team with the services company bolted on. No one likes to admit this."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2082s">34:42</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-zirp.jpg"><img src="img/def-zirp.jpg" alt="On-screen card: ZIRP. Zero interest rate policy: the 2009 to 2021 era of near-free money that funded the startup boom and made big-tech jobs glamorous." loading="lazy" width="960" height="540"></button><figcaption><b>ZIRP</b><span>The era that made the FAANG track glamorous. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=1909s">31:49</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section id="ux">
+        <div class="step">Step 11 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2219s">36:59</a></div>
+        <h2>For most people, a powerful agent is terrible UX</h2>
+        <div class="ask"><div><small>Bhuvanesh asks</small>Do AI tools finally put the JP Morgans' ancient tech stacks in play?</div></div>
+        <div class="prose">
+          <p>Yes, he says, but nobody has worked out how to deliver it, and the reason is another invariant. Consumer companies know that every extra decision you ask a user to make lowers conversion. Adding AI to a workflow increases the number of decisions the human has to make.</p>
+          <p>A small group of people, spread across every function, find that energising. Everyone else feels the same anxiety they get from a bad enterprise app. People are fine with chat for summaries and light drafting. The moment the tool becomes something they have to learn to think with, engagement collapses. Board pressure can close the first sale, but retention will be poor.</p>
+        </div>
+        <blockquote><p>"You introduce AI into a workflow, you're increasing the rate of decisions that the human makes, which means that by definition, most kinds of AI being deployed have terrible UX."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2286s">38:06</a></cite></blockquote>
+        <blockquote><p>"These are the people who now say, 'Oh, I don't want to start using Codex at 11:00 p.m. because I'll be up until 3:00.'"</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2334s">38:54</a></cite></blockquote>
+        <blockquote><p>"The moment you cross it over into an augment for the mind … Boom. Engagement just collapses. Anxiety spikes."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2400s">40:00</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-jevons.jpg"><img src="img/def-jevons.jpg" alt="On-screen card: Jevons paradox. Making something cheaper to use often makes total use go up, not down. Cheaper software work could mean far more software work." loading="lazy" width="960" height="540"></button><figcaption><b>Jevons paradox</b><span>The opportunity is real, but it's gated on human anxiety. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2221s">37:01</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 12 -->
+      <section id="rollouts">
+        <div class="step">Step 12 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2460s">41:00</a></div>
+        <h2>Enterprise AI rollouts are stuck because nobody can prove impact</h2>
+        <div class="prose">
+          <p>Realfast deliberately sells to companies with $50M to $500M in revenue, where it can reach the board and only takes projects the board cares about. The reason is that the hard problem isn't the software. It's change management. "If I crack that I have a trillion dollar company, not a billion dollar company."</p>
+          <p>Pranav suggests AI budgets are moving to managers who each own a metric. Sidu says that's a myth. In consumer companies every manager owns a number. In B2B, outside support and parts of sales, almost nobody does, apart from blunt ones like deadlines or the month-end close.</p>
+          <p>So enterprises copy the consumer playbook without the consumer machinery. The CIO runs a small rollout, the CFO promises more budget once impact is proven, and then nobody can prove it.</p>
+        </div>
+        <figure>
+          <div class="board"><svg id="d-rollout" viewBox="0 0 1120 300" role="img" aria-label="Where enterprise AI is stuck. The board says do AI. Either the CIO runs a 1 to 5 percent rollout and the CFO asks for impact, or leadership does a 100 percent rollout and burns money. Either way there are no metrics to show impact, and the company is stuck."></svg></div>
+          <figcaption>The two paths he describes. In both, the company ends up at the red box, and that's "the current, this-quarter situation".</figcaption>
+        </figure>
+        <blockquote><p>"This stream is stuck in having done a 1% to 5% rollout and being unable to quantify the impact to the CFO's satisfaction."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2670s">44:30</a></cite></blockquote>
+        <blockquote><p>"They call it shelfware … unused or underutilized licenses. Do you know what an underutilized app is? It's a lost customer in consumer."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2765s">46:05</a></cite></blockquote>
+        <div class="prose">
+          <p>What changed is the benchmark. A senior non-technical leader goes out for drinks with five peers, one of them has actually built something with AI, and now the CFO doesn't want a two-year roadmap. The CFO wants to know what the 1% rollout changed. "This was never a reasonable expectation before."</p>
+        </div>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-one-percent-rollout.jpg"><img src="img/def-one-percent-rollout.jpg" alt="On-screen card: 1% rollout. A consumer-tech habit: ship a change to 1% of users first, measure, then widen. He says enterprises are stuck at that first step." loading="lazy" width="960" height="540"></button><figcaption><b>1% rollout</b><span>Where enterprises are stuck. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2645s">44:05</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-cro.jpg"><img src="img/def-cro.jpg" alt="On-screen card: CRO. Chief revenue officer: the executive who owns sales targets and the money coming in." loading="lazy" width="960" height="540"></button><figcaption><b>CRO</b><span>His example buyer for a Salesforce rollout. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2710s">45:10</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 13 -->
+      <section id="productivity">
+        <div class="step">Step 13 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2880s">48:00</a></div>
+        <h2>Productivity is the wrong thing to measure</h2>
+        <div class="prose">
+          <p>Big tech will go through a predictable sequence: a token leaderboard appears, people max their usage, quality control arrives, it breaks down, best practices spread, and it gets tied to performance reviews. Enterprises haven't yet accepted that proving impact on short cycles means changing their performance reviews.</p>
+          <p>On productivity he goes to operations research. Toyota beat everyone because it understood that speeding up one station on an assembly line often lowers the throughput of the whole line. You get more friction, more inventory and fewer finished products.</p>
+        </div>
+        <blockquote class="big"><p>Local maxima lead to global minima.</p></blockquote>
+        <p class="footnote" style="margin-top:-6px"><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3000s">50:00</a></p>
+        <div class="prose">
+          <p>So is AI accelerating anything? Very clearly, he says, but you can only see it in the frontier labs and in pockets of big tech. The depth Claude Code has gained in a year would be "humanly impossible" for a team starting cold, and OpenAI goes from decision to shipped product in about nine months. He isn't arguing about whose harness design is best. His point is how much they ship.</p>
+        </div>
+        <blockquote><p>"It is never about people being clueless … these are people running multi-billion dollar corporations. Calling them clueless is at best engineer's bias."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2537s">52:17</a></cite></blockquote>
+        <div class="prose">
+          <p>The real reason is the innovator's dilemma. A 30-year-old company with $5B in revenue has fitted itself closely to its market over decades, and rebuilding it around acceleration would damage that fit. So the realistic move is to bolt something on. "And I am that bolt on. Bolt me on."</p>
+        </div>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-token-leaderboard.jpg"><img src="img/def-token-leaderboard.jpg" alt="On-screen card: Token leaderboard. A ranking of who burns the most AI tokens. The crude first metric companies reach for when told to prove AI adoption." loading="lazy" width="960" height="540"></button><figcaption><b>Token leaderboard</b><span>The crude first metric. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=2881s">48:01</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-harness.jpg"><img src="img/def-harness.jpg" alt="On-screen card: Harness. The software wrapped around a model: tools, memory, permissions, loops. The same model behaves differently in a different harness." loading="lazy" width="960" height="540"></button><figcaption><b>Harness</b><span>Claude Code, Codex, Pi and OpenClaw all make different choices here. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3070s">51:10</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-innovators-dilemma.jpg"><img src="img/def-innovators-dilemma.jpg" alt="On-screen card: Innovator's dilemma. Clayton Christensen's trap: a successful firm cannot disrupt itself without wrecking the business that pays its bills." loading="lazy" width="960" height="540"></button><figcaption><b>Innovator's dilemma</b><span>Why big firms have to bolt something on. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3228s">53:48</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section id="acceleration">
+        <div class="step">Step 14 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3306s">55:06</a></div>
+        <h2>Speed now matters even for oil and gas</h2>
+        <div class="ask"><div><small>Bhuvanesh asks</small>Is it time to change how big organizations run, or is this just hype?</div></div>
+        <div class="prose">
+          <p>He isn't sure about the timeline, but the trend over the last 30 years is clear. More and more of the Fortune 500 are companies whose strategy rests on acceleration. Whether that applies to an oil and gas company was always debatable, because software can't make the drill bit faster.</p>
+          <p>What's different now is where the speed comes from. AI makes each leader much more capable, not only the operations. Better dashboards and data pipelines have always helped leaders decide. What's new is making the leader personally superhuman.</p>
+        </div>
+        <blockquote><p>"Now we are on that trajectory where acceleration as a core pillar across the board for every company is now non-negotiable."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3420s">57:00</a></cite></blockquote>
+        <div class="prose">
+          <p>Pranav compares this to earlier management ideas that became core pillars, like Toyota's kaizen and Ford's Taylorism. Sidu then describes his own dilemma. His deepest market is BFSI, where regulation rightly limits how fast anything can change. He could chase that deep revenue pool with acceleration capped, or go after shallower pools where he can prove that a customer beats its competitors using AI.</p>
+        </div>
+        <blockquote><p>"Speed in and of itself is not the point. Productivity is not the point. Taking your competition to the cleaners using AI is the point."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3542s">59:02</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-kaizen.jpg"><img src="img/def-kaizen.jpg" alt="On-screen card: Kaizen. Toyota's practice of continuous small improvements made by workers on the line, not by managers from above." loading="lazy" width="960" height="540"></button><figcaption><b>Kaizen</b><span>Toyota's earlier core pillar. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3451s">57:31</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-taylorism.jpg"><img src="img/def-taylorism.jpg" alt="On-screen card: Taylorism. Frederick Taylor's 1900s method: time every task, standardise it, squeeze maximum output from each worker." loading="lazy" width="960" height="540"></button><figcaption><b>Taylorism</b><span>Ford's earlier core pillar. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3483s">58:03</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-bfsi.jpg"><img src="img/def-bfsi.jpg" alt="On-screen card: BFSI. Banking, financial services and insurance: the deep-pocketed but heavily regulated industries he most wants to sell into." loading="lazy" width="960" height="540"></button><figcaption><b>BFSI</b><span>Deep pockets, and regulation that limits speed. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3522s">58:42</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 15 -->
+      <section id="proof">
+        <div class="step">Step 15 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3597s">59:57</a></div>
+        <h2>Enterprise AI is waiting for its first real example</h2>
+        <div class="prose">
+          <p>He asks the hosts to name one enterprise that is beating its competition because of AI. They can't. Where AI has spread most widely, in support and inside sales, it was used to cut costs, and customers got a worse experience. Nobody's support got better.</p>
+        </div>
+        <blockquote><p>"We have just got another shitty support experience to alternate to the call center because the approach has been cost cutting."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3661s">01:01:01</a></cite></blockquote>
+        <div class="prose">
+          <p>OpenAI and Anthropic show that it can be done: they ship products people enjoy, quickly, and everyone from the board down believes in it. Enterprises buy on logos and case studies, so they need to see one of their own do it first. He's confident that in each vertical one company will break the pattern, and it won't win by a small margin.</p>
+        </div>
+        <blockquote><p>"You respond to RFP in 2 weeks, I respond in 2 days. Crushing overwhelming superiority. And when that happens is when the inflection takes off."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3804s">01:03:24</a></cite></blockquote>
+        <blockquote><p>"It is a belief problem."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3735s">01:02:15</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-tpot.jpg"><img src="img/def-tpot.jpg" alt="On-screen card: TPOT. 'This part of Twitter': the loose tech and finance subculture whose timelines all three of them share. Pronounced 'teapot'." loading="lazy" width="960" height="540"></button><figcaption><b>TPOT</b><span>Where all three of them saw no such enterprise. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3604s">01:00:04</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-rfp.jpg"><img src="img/def-rfp.jpg" alt="On-screen card: RFP. Request for proposal: the formal document a company sends vendors asking them to bid. Enterprise sales start here." loading="lazy" width="960" height="540"></button><figcaption><b>RFP</b><span>Two weeks versus two days. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3804s">01:03:24</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 16 -->
+      <section id="outcomes">
+        <div class="step">Step 16 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3833s">01:03:53</a></div>
+        <h2>Sell a provable outcome before you sell the religion</h2>
+        <div class="prose">
+          <p>Pranav brings up Sidu's tweet about a salesperson building a working demo during a sales call. Sidu explains why this matters. In traditional IT services, software projects usually fail, the customer pushes the risk onto the vendor, and the vendor's only lever is staffing. So the vendor needs a 2-to-5-year contract to make money, and success is measured by a sign-off that "the CRM was adopted", not by hard numbers.</p>
+          <p>Measuring real usage, like where a field salesperson gets stuck and whether that workflow turns into a closed deal, was never worth the cost. Now it is, and it needs a different kind of talent.</p>
+        </div>
+        <figure class="shot wide"><button type="button" data-full="img/tweet-salesforce-demo.jpg"><img src="img/tweet-salesforce-demo.jpg" alt="Tweet by Sidu Ponnappa, 20 January 2026: We just did our first sales meeting today where the salesperson singlehandedly built a working Salesforce demo on the call in 18 minutes." loading="lazy" width="1280" height="720"></button><figcaption><b>The 18-minute demo</b><span>Shown in the episode. He clarifies that it wasn't from scratch: it was built on Salesforce. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=3873s">01:04:33</a></span></figcaption></figure>
+        <div class="prose">
+          <p>The enterprise doesn't yet believe outcomes like this are possible, so he sells only into problems with a clear line to revenue or cost.</p>
+        </div>
+        <div class="pair">
+          <div class="ok"><b>He'll take it</b>"I have a March deadline. We're in December. At my current trajectory I am going to complete this 9 months late. Can you get this done in the next 2 months?"</div>
+          <div class="rock"><b>He won't touch it</b>"A cool chatbot that is going to engage my employees and help them understand leave policy." The CFO will never think the vendor behind that is critical.</div>
+        </div>
+        <blockquote><p>"First I need faith, then I will sell the religion. Today I don't have faith. So I have to sell into the clear problem."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4040s">01:07:20</a></cite></blockquote>
+        <blockquote><p>"I need to be the vendor who the CFO believes is mission critical."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4098s">01:08:18</a></cite></blockquote>
+      </section>
+
+      <!-- 17 -->
+      <section id="knowledge">
+        <div class="step">Step 17 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4140s">01:09:00</a></div>
+        <h2>Most IP is worth less now, and tacit knowledge is moving into the repo</h2>
+        <div class="prose">
+          <p>On intellectual property he is blunt. AI was trained on IP that nobody paid for, and the result is that most IP has lost its value except at the very top. His example is the art director in <i>Delhi Belly</i> who asks for the banana to smile 7% more. The craftsperson who had to work out what "7% more" meant now has a job with no economic value. The same is true of building simple websites.</p>
+          <p>Tacit knowledge in knowledge work is also becoming explicit, because digital work is easy to observe. The conventions a new consultant used to pick up over weeks now live in the repository and the harness: how commits are written, how tickets and requirement documents are structured. They also live in the dozens of small scripts that run a modern project's workflow.</p>
+        </div>
+        <blockquote><p>"A consultant who's coming cold onto this project, well, 80% of my tacit knowledge is sitting right there. Instead of onboarding in weeks, they're onboarding in days now. And I believe we can bring that down to hours."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4364s">01:12:44</a></cite></blockquote>
+        <blockquote><p>"Building observability in a digital world is trivial."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4310s">01:11:50</a></cite></blockquote>
+        <div class="ask"><div><small>Bhuvanesh asks</small>How do you teach a new workforce when junior and middle roles go?</div></div>
+        <div class="prose">
+          <p>He says this is an open question that he now spends real time on. Fifteen years of his onboarding playbooks no longer work. You can't do "wax on, wax off" drills if the agent does the drill for you, and working with agents needs a discipline he doesn't have mental models for yet. He's sure about one thing, though: the AI course is the wrong idea.</p>
+        </div>
+        <blockquote><p>"You don't learn about AI from a course. You learn about AI by asking the AI to teach you."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4640s">01:17:20</a></cite></blockquote>
+        <p>He also says AI courses aren't a scam. People sell them in good faith. They're just obsolete, because the AI can build you a curriculum to your own taste.</p>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-wax-on.jpg"><img src="img/def-wax-on.jpg" alt="On-screen card: Wax on, wax off. The Karate Kid's chores-as-training: repetitive drills that build skill before the student knows why. Agents skip the drills." loading="lazy" width="960" height="540"></button><figcaption><b>Wax on, wax off</b><span>"I'll go to the gym and the robot will lift the weights for me." <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4525s">01:15:25</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 18 -->
+      <section id="middle">
+        <div class="step">Step 18 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4651s">01:17:31</a></div>
+        <h2>The middle tier of talent has disappeared</h2>
+        <div class="prose">
+          <p>I think this is the most important idea in the episode. Most of the economy runs on an unspoken agreement: for this team and this workflow, average talent and average results are fine. India's education system reasonably produces large numbers of people who are good enough.</p>
+          <p>Give a good-enough person an agent and they suddenly face weeks' worth of decisions in a single day. Is the requirements document right? Are the acceptance criteria there? Are the tests written? Is the log clean? Decision fatigue arrives early, they start giving up, slop gets in, and slop compounds into debt.</p>
+        </div>
+        <figure>
+          <div class="board"><svg id="d-band" viewBox="0 0 1120 380" role="img" aria-label="Talent bands before and after agents. Before: exceptional talent for important problems, a $30 an hour good-enough band that needs some management and produces adequate outcomes, and a $5 an hour band that needs micromanagement and usually fails. After agents: exceptional people produce excellent work, and everyone else produces slop. The $30 band drops into the bottom group because of decision fatigue."></svg></div>
+          <figcaption>Before agents there were three bands. With agents there are two. The middle band doesn't get somewhat worse. It falls into the bottom band, because the agent multiplies the number of decisions each person has to get right.</figcaption>
+        </figure>
+        <blockquote><p>"What has happened now because of agents is that $30 an hour good enough band has suddenly dropped down here. There is no $30 an hour band anymore. There is no middle."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4816s">01:20:16</a></cite></blockquote>
+        <blockquote class="big"><p>Either they're producing slop or they're producing bangers.</p></blockquote>
+        <p class="footnote" style="margin-top:-6px"><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4841s">01:20:41</a></p>
+        <div class="prose">
+          <p>He doesn't blame anyone for this. Producing a million IIT-grade graduates a year was never possible, and aiming for good enough was a sensible strategy. It has just stopped working.</p>
+        </div>
+        <blockquote><p>"Welcome to the foothills of the singularity. Perfectly sensible choices suddenly invalidated."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4875s">01:21:15</a></cite></blockquote>
+        <blockquote><p>"Everything happened in its time for the right reason. The problem is when you deal with acceleration that time ends quickly and suddenly."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4922s">01:22:02</a></cite></blockquote>
+      </section>
+
+      <!-- 19 -->
+      <section id="india">
+        <div class="step">Step 19 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=4936s">01:22:16</a></div>
+        <h2>India should aim to be a clear number three</h2>
+        <div class="ask"><div><small>Pranav asks</small>Why are you pessimistic about India's sovereign AI efforts?</div></div>
+        <div class="prose">
+          <p>He sharpens his position. He isn't pessimistic about sovereign AI. He's pessimistic about trying to copy the US or China, which are $20–30 trillion economies with social systems nobody else has. India is in the $4–5 trillion group with Germany, Japan and France. The sensible goal is to beat them and be a clear third.</p>
+          <p>India's Fable access was blocked, which shows how a foreign lab can move a country to a lower tier overnight. So India has to build the muscle, starting with properly funding Sarvam and more companies like it. It also has to fix research. He says 60% of notable research papers now come from China, while India's best researchers leave because their breakthroughs are valued elsewhere.</p>
+        </div>
+        <blockquote><p>"If France has Mistral, we should be able to do something, right? Why are we not financing Sarvam properly here?"</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5050s">01:24:10</a></cite></blockquote>
+        <blockquote><p>"The game is we have to be number three. We have to be clean … number three."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5060s">01:24:20</a></cite></blockquote>
+        <div class="prose">
+          <p>Why India struggles to innovate at scale: an ecosystem gets started either by technocrats at the top, as in China, or by stubborn, rebellious individuals at the bottom, as in the US. India has neither. Asked about academia-industry links, he's just as direct. Outside a few exceptions like IIT Madras and IISc, "there is no academia here, there are teachers."</p>
+        </div>
+        <blockquote><p>"You don't have the technocrats at the top and you don't have rugged individualism at the bottom."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5410s">01:30:10</a></cite></blockquote>
+        <div class="defs">
+          <figure class="shot"><button type="button" data-full="img/def-fable.jpg"><img src="img/def-fable.jpg" alt="On-screen card: Fable. Claude Fable: Anthropic's frontier model tier. His point is that a foreign lab can switch India to a lower tier overnight." loading="lazy" width="960" height="540"></button><figcaption><b>Fable</b><span>Losing access to a frontier tier. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5162s">01:26:02</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-technocrat.jpg"><img src="img/def-technocrat.jpg" alt="On-screen card: Technocrat. A leader trained as an engineer or scientist rather than as a lawyer or politician. China's top ranks are full of them." loading="lazy" width="960" height="540"></button><figcaption><b>Technocrat</b><span>China's leaders are engineers. The West's are lawyers. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5386s">01:29:46</a></span></figcaption></figure>
+          <figure class="shot"><button type="button" data-full="img/def-spv.jpg"><img src="img/def-spv.jpg" alt="On-screen card: Special purpose vehicle. A separate legal entity created for one job, here so an IIT incubator can hold company stakes the college itself cannot." loading="lazy" width="960" height="540"></button><figcaption><b>Special purpose vehicle</b><span>How IIT incubators work around rules on commercial ventures. <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5474s">01:31:14</a></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 20 -->
+      <section id="bangalore">
+        <div class="step">Step 20 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5609s">01:33:29</a></div>
+        <h2>What happens to IT services, and to Bangalore</h2>
+        <div class="prose">
+          <p>He's honest that he doesn't know. Businesses that deal in physical things should keep getting more efficient. Bangalore, though, depends on one industry. All the startups together won't add more than 2–3% of the headcount sitting in IT services. Bombay has six industries to fall back on, and Bangalore doesn't.</p>
+          <p>He's also clear about how hard the change is for a large IT services firm. Its whole talent supply chain, from campus hiring through its training centres, would have to be disrupted. Making one team truly AI-native means doing all of the following:</p>
+          <ul>
+            <li>fork the compensation bands</li>
+            <li>cut review cycles to one quarter</li>
+            <li>move the team into a new management structure that reports to the board, not necessarily the CEO</li>
+            <li>scale it while it eats into the existing business without spooking investors, and "Indian investors are easily spooked"</li>
+          </ul>
+        </div>
+        <blockquote><p>"Technology is at the heart of our culture. That is over. That's not a discussion anymore. Like in 1999, we could have had a conversation about it. Not in 2026."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5720s">01:35:20</a></cite></blockquote>
+        <p>He also points out what IT services firms still have: the relationships, strong revenue, and trust earned over decades of delivering for Fortune 500 companies.</p>
+      </section>
+
+      <!-- 21 -->
+      <section id="flips">
+        <div class="step">Step 21 · <a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5836s">01:37:16</a></div>
+        <h2>What he changed his mind on</h2>
+        <ol class="flip">
+          <li><div class="body"><h3>He stopped trying to supercharge India's median export</h3><p>For two and a half years Realfast's mission was to make the $30-an-hour median developer far more productive. India exports hundreds of billions of dollars of that work. He has done a full U-turn, because at that price point there's nothing left to do. At one end are trivial prototypes that anyone can get done for $20. At the other is a fight with Amazon for the top 1% of people who can really use an agent.</p>
+          <blockquote><p>"This is now a game for the 99th percentile talent. Nothing else. Very clear."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5916s">01:38:36</a></cite></blockquote></div></li>
+          <li><div class="body"><h3>He stopped treating the agent as someone else</h3><p>The personal change is the idea he opened with. He used to think of an agent as something he delegated work to. Now he treats it as part of himself. What it amplifies is your subconscious, so if your subconscious is in a bad state, the work will go badly too.</p>
+          <blockquote><p>"Using an agent is equivalent to deciding to move your hand or to lift this glass … They're not system two. They are system one. This I've pulled a 180."</p><cite><a class="ts" href="https://www.youtube.com/watch?v=CPISElKbFFg&t=5983s">01:39:43</a></cite></blockquote></div></li>
+        </ol>
+        <div class="takeaway"><b>What I'm taking from this</b>If I compress the episode to one test for an AI-native firm, it's this. Find the few things that will still be true after the next model release, build on those, and expect to pivot on the rest every quarter. For Sidu, what's left is people: the humans who keep a system's pillars standing while an agent does the work.</div>
+      </section>
+
+      <!-- glossary -->
+      <section id="glossary">
+        <h2>Glossary of the on-screen definitions</h2>
+        <p>Zerodha's editors put 28 definition cards on screen during the episode. Here is the text of each, in the order they appear. The time links go to the card in the video.</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Term</th><th>On-screen definition</th><th>At</th></tr></thead>
+            <tbody id="gloss"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="notes">
+        <h2>Notes on sources</h2>
+        <div class="prose">
+          <p>Source: <a href="https://www.youtube.com/watch?v=CPISElKbFFg">"What is an AI-native firm? ft. Sidu Ponnappa", Subtext by Zerodha</a>, published 2 October 2026, hosted by Pranav Manie with Bhuvanesh R. Screenshots are frames from that video.</p>
+          <p>The quotes come from YouTube's auto-generated captions. I've corrected obvious caption errors (for example "real fast" → Realfast, "Opus 45" → Opus 4.5, "Lindy" spelled out, "Serbam" → Sarvam) and used "…" where I cut words. I haven't otherwise changed wording, so you'll see Sidu's spoken grammar. Timestamps are approximate to within a few seconds.</p>
+          <p>The diagrams are my sketches of his arguments, not slides from the show.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog class="lightbox" id="lightbox" aria-label="Screenshot">
+  <form method="dialog"><button type="submit" style="all:unset;cursor:zoom-out;display:block"><img id="lightbox-img" alt=""></button></form>
+  <p id="lightbox-cap"></p>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script>
+(function () {
+  // ── Glossary rows (text as shown on the on-screen cards) ─────────
+  const GLOSS = [
+    ["Slop", "Low-quality output that slips in unnoticed. Here: each decision an agent gets subtly wrong, which then compounds across a system.", 365],
+    ["Technical debt", "The cost of shortcuts taken today. Every quick fix makes tomorrow's changes slower and riskier until someone pays it down.", 409],
+    ["System 1 and System 2", "Kahneman's split: System 1 is fast, automatic thinking; System 2 is slow, deliberate reasoning. He is saying agents are System 1.", 460],
+    ["Singularity", "The point where machine intelligence improves itself faster than humans can follow, after which nothing can be predicted.", 524],
+    ["Invariant", "Something that stays true while everything around it changes. Here: the few rules a business can build on for over three months.", 550],
+    ["Info hazard", "Information that harms you just by being taken in. He means an agent's flattering reflection of your own biases.", 741],
+    ["Transhumanism", "The belief that people should use technology to go beyond human limits: longer life, sharper minds, stronger bodies.", 781],
+    ["Step change", "A sudden jump in what the models can do, not a gradual improvement. Each one can make a business strategy obsolete overnight.", 1229],
+    ["Diffs", "The exact lines changed between two versions of a file. Getting an AI to produce clean, correct diffs was a hard problem in 2024.", 1277],
+    ["Bourse", "A stock exchange. The old system had to connect live to an exchange by a hard deadline.", 1471],
+    ["PR", "Pull request: a proposed code change submitted for review before it is merged. Reviewing them is routine, high-volume work.", 1552],
+    ["Lindy", "The Lindy effect: the longer something has already survived, the longer it will probably last. People outlast every technology.", 1791],
+    ["ZIRP", "Zero interest rate policy: the 2009 to 2021 era of near-free money that funded the startup boom and made big-tech jobs glamorous.", 1909],
+    ["Jevons paradox", "Making something cheaper to use often makes total use go up, not down. Cheaper software work could mean far more software work.", 2221],
+    ["1% rollout", "A consumer-tech habit: ship a change to 1% of users first, measure, then widen. He says enterprises are stuck at that first step.", 2645],
+    ["CRO", "Chief revenue officer: the executive who owns sales targets and the money coming in.", 2710],
+    ["Token leaderboard", "A ranking of who burns the most AI tokens. The crude first metric companies reach for when told to prove AI adoption.", 2881],
+    ["Harness", "The software wrapped around a model: tools, memory, permissions, loops. The same model behaves differently in a different harness.", 3070],
+    ["Innovator's dilemma", "Clayton Christensen's trap: a successful firm cannot disrupt itself without wrecking the business that pays its bills.", 3228],
+    ["Kaizen", "Toyota's practice of continuous small improvements made by workers on the line, not by managers from above.", 3451],
+    ["Taylorism", "Frederick Taylor's 1900s method: time every task, standardise it, squeeze maximum output from each worker.", 3483],
+    ["BFSI", "Banking, financial services and insurance: the deep-pocketed but heavily regulated industries he most wants to sell into.", 3522],
+    ["TPOT", "'This part of Twitter': the loose tech and finance subculture whose timelines all three of them share. Pronounced 'teapot'.", 3604],
+    ["RFP", "Request for proposal: the formal document a company sends vendors asking them to bid. Enterprise sales start here.", 3804],
+    ["Wax on, wax off", "The Karate Kid's chores-as-training: repetitive drills that build skill before the student knows why. Agents skip the drills.", 4525],
+    ["Fable", "Claude Fable: Anthropic's frontier model tier. His point is that a foreign lab can switch India to a lower tier overnight.", 5162],
+    ["Technocrat", "A leader trained as an engineer or scientist rather than as a lawyer or politician. China's top ranks are full of them.", 5386],
+    ["Special purpose vehicle", "A separate legal entity created for one job, here so an IIT incubator can hold company stakes the college itself cannot.", 5474],
+  ];
+  const fmt = s => { const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60, p = n => String(n).padStart(2, "0"); return h ? `${p(h)}:${p(m)}:${p(x)}` : `${p(m)}:${p(x)}`; };
+  const tb = document.getElementById("gloss");
+  GLOSS.forEach(([term, def, t]) => {
+    const tr = document.createElement("tr");
+    const a = document.createElement("td"); a.className = "term"; a.textContent = term;
+    const b = document.createElement("td"); b.textContent = def;
+    const c = document.createElement("td"); c.className = "num";
+    const l = document.createElement("a"); l.className = "ts"; l.href = `https://www.youtube.com/watch?v=CPISElKbFFg&t=${t}s`; l.textContent = fmt(t);
+    c.appendChild(l); tr.append(a, b, c); tb.appendChild(tr);
+  });
+
+  // ── Lightbox for screenshots ──────────────────────────────────────
+  const dlg = document.getElementById("lightbox"), dImg = document.getElementById("lightbox-img"), dCap = document.getElementById("lightbox-cap");
+  document.querySelectorAll(".shot button[data-full]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const img = btn.querySelector("img");
+      dImg.src = btn.dataset.full; dImg.alt = img.alt; dCap.textContent = img.alt;
+      if (dlg.showModal) dlg.showModal(); else window.open(btn.dataset.full);
+    });
+  });
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+
+  // ── Hand-drawn diagrams (same renderer as the whiteboard review) ──
+  const NS = "http://www.w3.org/2000/svg";
+  const KIND = {
+    det:   ["--ink", "--neutral-fill"],
+    store: ["--blue", "--blue-fill"],
+    llm:   ["--violet", "--violet-fill"],
+    hot:   ["--red", "--red-fill"],
+    new:   ["--green", "--green-fill"],
+    warn:  ["--amber", "--amber-fill"],
+    exit:  ["--muted", "--canvas"],
+  };
+  const PH_STROKE = "#ff00f1", PH_FILL = "#00ff0f";
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function tokenize(g, stroke, fill) {
+    g.querySelectorAll("path").forEach(p => {
+      const s = p.getAttribute("stroke"), f = p.getAttribute("fill");
+      if (s === PH_STROKE) { p.removeAttribute("stroke"); p.style.stroke = `var(${stroke})`; }
+      if (s === PH_FILL) { p.removeAttribute("stroke"); p.style.stroke = `var(${fill})`; }
+      if (f === PH_FILL) { p.removeAttribute("fill"); p.style.fill = `var(${fill})`; }
+      if (f === PH_STROKE) { p.removeAttribute("fill"); p.style.fill = `var(${stroke})`; }
+    });
+    return g;
+  }
+
+  function draw(svgId, spec) {
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    const rc = window.rough ? window.rough.svg(svg) : null;
+    const layerEdges = el("g", {}, svg), layerNodes = el("g", {}, svg), layerLabels = el("g", {}, svg);
+    const nodes = {};
+    let seed = 7;
+
+    spec.nodes.forEach(n => {
+      nodes[n.id] = n;
+      const [sTok, fTok] = KIND[n.kind || "det"];
+      const dashed = n.kind === "new" || n.kind === "exit";
+      el("rect", { x: n.x, y: n.y, width: n.w, height: n.h, rx: 8, style: "fill:var(--canvas)" }, layerNodes);
+      if (rc) {
+        const g = rc.rectangle(n.x, n.y, n.w, n.h, {
+          seed: seed++, roughness: 1.15, bowing: 1.2, strokeWidth: 1.7,
+          stroke: PH_STROKE, fill: n.kind === "exit" ? undefined : PH_FILL,
+          fillStyle: "hachure", hachureGap: 7, fillWeight: 1.1, hachureAngle: -41,
+          strokeLineDash: dashed ? [7, 6] : undefined,
+        });
+        layerNodes.appendChild(tokenize(g, sTok, fTok));
+      } else {
+        el("rect", { x: n.x, y: n.y, width: n.w, height: n.h, rx: 8,
+          style: `fill:var(${fTok});stroke:var(${sTok});stroke-width:1.6;${dashed ? "stroke-dasharray:7 6" : ""}` }, layerNodes);
+      }
+      const lines = n.sub ? n.sub.split("\n") : [];
+      const lh = 17, titleH = 22;
+      const total = titleH + lines.length * lh;
+      const y = n.y + n.h / 2 - total / 2 + 16;
+      const t = el("text", { x: n.x + n.w / 2, y, "text-anchor": "middle", class: "t t-title" }, layerLabels);
+      t.textContent = n.label;
+      lines.forEach((ln, i) => {
+        const s = el("text", { x: n.x + n.w / 2, y: y + titleH + i * lh - 2, "text-anchor": "middle", class: "t t-sub" }, layerLabels);
+        s.textContent = ln;
+      });
+      if (n.tag) {
+        const [tsTok] = KIND[n.kind];
+        const tg = el("text", { x: n.x + n.w - 8, y: n.y - 7, "text-anchor": "end", class: "t t-tag", style: `fill:var(${tsTok})` }, layerLabels);
+        tg.textContent = n.tag;
+      }
+    });
+
+    function anchor(n, side, f) {
+      f = f == null ? 0.5 : f;
+      if (side === "l") return [n.x, n.y + n.h * f];
+      if (side === "r") return [n.x + n.w, n.y + n.h * f];
+      if (side === "t") return [n.x + n.w * f, n.y];
+      return [n.x + n.w * f, n.y + n.h];
+    }
+
+    spec.edges.forEach(e => {
+      const a = nodes[e.from], b = nodes[e.to];
+      const p0 = anchor(a, e.s[0], e.s[1]);
+      const p1 = anchor(b, e.e[0], e.e[1]);
+      const pts = [p0, ...(e.via || []), p1];
+      const sTok = e.color || "--ink";
+      const opts = { seed: seed++, roughness: 0.9, bowing: 0.8, strokeWidth: 1.5, stroke: PH_STROKE,
+        strokeLineDash: e.dashed ? [6, 6] : undefined };
+      const [ax, ay] = pts[pts.length - 2], [bx, by] = pts[pts.length - 1];
+      const ang = Math.atan2(by - ay, bx - ax), L = 12, spread = 0.45;
+      const h1 = [bx - L * Math.cos(ang - spread), by - L * Math.sin(ang - spread)];
+      const h2 = [bx - L * Math.cos(ang + spread), by - L * Math.sin(ang + spread)];
+      if (rc) {
+        layerEdges.appendChild(tokenize(rc.linearPath(pts, opts), sTok, sTok));
+        layerEdges.appendChild(tokenize(rc.linearPath([h1, [bx, by], h2], { seed: seed++, roughness: 0.6, strokeWidth: 1.6, stroke: PH_STROKE }), sTok, sTok));
+      } else {
+        el("polyline", { points: pts.map(p => p.join(",")).join(" "), style: `fill:none;stroke:var(${sTok});stroke-width:1.5;${e.dashed ? "stroke-dasharray:6 6" : ""}` }, layerEdges);
+        el("polyline", { points: [h1, [bx, by], h2].map(p => p.join(",")).join(" "), style: `fill:none;stroke:var(${sTok});stroke-width:1.6` }, layerEdges);
+      }
+      if (e.label) {
+        let lx, ly;
+        if (e.at) { [lx, ly] = e.at; }
+        else {
+          let best = 0, bi = 0;
+          for (let i = 0; i < pts.length - 1; i++) {
+            const d = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]);
+            if (d > best) { best = d; bi = i; }
+          }
+          lx = (pts[bi][0] + pts[bi + 1][0]) / 2; ly = (pts[bi][1] + pts[bi + 1][1]) / 2;
+        }
+        const t = el("text", { x: lx, y: ly + 5, "text-anchor": "middle", class: "t t-edge" }, layerLabels);
+        t.textContent = e.label;
+        if (e.color) t.style.fill = `var(${e.color})`;
+        const bb = t.getBBox();
+        const bg = el("rect", { x: bb.x - 5, y: bb.y - 1, width: bb.width + 10, height: bb.height + 2, rx: 4, style: "fill:var(--canvas)" });
+        layerLabels.insertBefore(bg, t);
+      }
+    });
+
+    (spec.notes || []).forEach(n => {
+      const t = el("text", { x: n.x, y: n.y, "text-anchor": n.anchor || "start", class: "note", style: `fill:var(${n.color || "--muted"})` }, layerLabels);
+      t.textContent = n.text;
+    });
+  }
+
+  function render() {
+    // ── 01. Two pictures of an agent ─────────────────────────────
+    draw("d-agent", {
+      nodes: [
+        { id: "you",   x: 40,  y: 80,  w: 190, h: 70, label: "You", sub: "hand over a task" },
+        { id: "agent", x: 320, y: 80,  w: 200, h: 70, label: "Agent", sub: "a separate worker" },
+        { id: "out",   x: 320, y: 240, w: 200, h: 70, label: "Output", sub: "drifts off your pillars", kind: "hot" },
+        { id: "s2",    x: 620, y: 80,  w: 200, h: 70, label: "Your System 2", sub: "decides the objective", kind: "store" },
+        { id: "s1",    x: 890, y: 80,  w: 200, h: 70, label: "Agent as System 1", sub: "executes, like your hand", kind: "llm" },
+        { id: "chk",   x: 755, y: 240, w: 200, h: 70, label: "You again", sub: "check against the pillars", kind: "store" },
+      ],
+      edges: [
+        { from: "you", to: "agent", s: ["r"], e: ["l"], label: "delegate" },
+        { from: "agent", to: "out", s: ["b"], e: ["t"], label: "runs alone" },
+        { from: "s2", to: "s1", s: ["r"], e: ["l"], label: "delegate", color: "--violet" },
+        { from: "s1", to: "chk", s: ["b", 0.5], e: ["r", 0.5], via: [[990, 275]], label: "output", at: [1030, 275] },
+        { from: "chk", to: "s2", s: ["l", 0.5], e: ["b", 0.5], via: [[720, 275]], dashed: true, label: "fix drift", color: "--blue", at: [690, 205] },
+      ],
+      notes: [
+        { x: 40, y: 40, text: "The popular picture: an agent is another person", color: "--red" },
+        { x: 620, y: 40, text: "Sidu's picture: the agent is part of you", color: "--violet" },
+        { x: 40, y: 345, text: "anthropomorphised → \"dangerously flawed\"" },
+        { x: 620, y: 345, text: "\"an extension of your own subconscious\"" },
+      ],
+    });
+
+    // ── 03. How slop compounds ────────────────────────────────────
+    draw("d-debt", {
+      nodes: [
+        { id: "d1", x: 40,  y: 70, w: 220, h: 84, label: "Day 1", sub: "dozens of decisions\none quietly slips" },
+        { id: "d2", x: 310, y: 70, w: 220, h: 84, label: "Day 2", sub: "new work builds\non the slip", kind: "warn" },
+        { id: "w1", x: 580, y: 70, w: 220, h: 84, label: "Week 1", sub: "slips start to\ninteract", kind: "warn" },
+        { id: "w2", x: 850, y: 70, w: 230, h: 84, label: "Week 2", sub: "slop at the\narchitecture level", kind: "hot" },
+      ],
+      edges: [
+        { from: "d1", to: "d2", s: ["r"], e: ["l"] },
+        { from: "d2", to: "w1", s: ["r"], e: ["l"] },
+        { from: "w1", to: "w2", s: ["r"], e: ["l"] },
+      ],
+      notes: [
+        { x: 40, y: 40, text: "even a careful human misses some decisions at a steady rate" },
+        { x: 1080, y: 200, anchor: "end", text: "\"The threshold has reached 2 weeks. Beyond that, it turns to slop.\"", color: "--red" },
+        { x: 40, y: 200, text: "the human in the loop is the only brake on this", color: "--blue" },
+      ],
+    });
+
+    // ── 07. Realfast's step changes ───────────────────────────────
+    const PY = 96, PH = 104, PW = 200, PX = [40, 270, 500, 730, 960];
+    draw("d-pivot", {
+      nodes: [
+        { id: "a", x: PX[0], y: PY, w: PW, h: PH, label: "GPT-4 era", sub: "4 months spent\nsolving diffs" },
+        { id: "b", x: PX[1], y: PY, w: PW, h: PH, label: "GPT-4o", sub: "makes diffs moot\n4–5 months to\nretire the strategy", kind: "hot" },
+        { id: "c", x: PX[2], y: PY, w: PW, h: PH, label: "Sonnet 4 + Claude Code", sub: "\"the first true agent\"\nstill reacting late", kind: "warn" },
+        { id: "d", x: PX[3], y: PY, w: PW, h: PH, label: "Opus 4.5", sub: "Oct–Nov 2025\nrevisit the thesis\non purpose", kind: "llm", tag: "the lesson" },
+        { id: "e", x: PX[4], y: PY, w: PW, h: PH, label: "20 Jan 2026", sub: "seven-figure revenue\n10× in 2 months", kind: "new" },
+      ],
+      edges: [
+        { from: "a", to: "b", s: ["r"], e: ["l"] },
+        { from: "b", to: "c", s: ["r"], e: ["l"] },
+        { from: "c", to: "d", s: ["r"], e: ["l"] },
+        { from: "d", to: "e", s: ["r"], e: ["l"], color: "--green" },
+      ],
+      notes: [
+        { x: 40, y: 50, text: "each box is a model step change, and what it did to Realfast's strategy" },
+        { x: 40, y: 250, text: "before: build to a thesis, lag each step change by ~6 months", color: "--red" },
+        { x: 1160, y: 250, anchor: "end", text: "after: every step change → re-check the thesis → turn hard", color: "--green" },
+        { x: 1160, y: 280, anchor: "end", text: "off-thesis deals became on-thesis", color: "--muted" },
+      ],
+    });
+
+    // ── 12. Where enterprise AI is stuck ──────────────────────────
+    draw("d-rollout", {
+      nodes: [
+        { id: "board", x: 40,  y: 110, w: 190, h: 70, label: "Board", sub: "\"we must do AI\"" },
+        { id: "pilot", x: 300, y: 40,  w: 220, h: 70, label: "CIO: 1–5% rollout", sub: "dip a toe in", kind: "store" },
+        { id: "cfo",   x: 590, y: 40,  w: 220, h: 70, label: "CFO", sub: "\"show me the impact\"" },
+        { id: "all",   x: 300, y: 190, w: 220, h: 70, label: "100% rollout", sub: "leadership goes all in", kind: "store" },
+        { id: "burn",  x: 590, y: 190, w: 220, h: 70, label: "Massive burn", sub: "licences, tokens", kind: "warn" },
+        { id: "stuck", x: 880, y: 110, w: 210, h: 70, label: "No proof of impact", sub: "no metrics to show it", kind: "hot" },
+      ],
+      edges: [
+        { from: "board", to: "pilot", s: ["r", 0.3], e: ["l", 0.5], via: [[265, 131], [265, 75]] },
+        { from: "board", to: "all", s: ["r", 0.7], e: ["l", 0.5], via: [[265, 159], [265, 225]] },
+        { from: "pilot", to: "cfo", s: ["r"], e: ["l"], label: "results?" },
+        { from: "all", to: "burn", s: ["r"], e: ["l"] },
+        { from: "cfo", to: "stuck", s: ["r", 0.5], e: ["t", 0.5], via: [[985, 75]] },
+        { from: "burn", to: "stuck", s: ["r", 0.5], e: ["b", 0.5], via: [[985, 225]] },
+      ],
+      notes: [
+        { x: 1090, y: 290, anchor: "end", text: "\"this is the current, this-quarter situation\"", color: "--red" },
+      ],
+    });
+
+    // ── 18. Talent bands before and after agents ──────────────────
+    draw("d-band", {
+      nodes: [
+        { id: "t0", x: 40,  y: 60,  w: 300, h: 70, label: "Exceptional talent", sub: "for the important problems", kind: "store" },
+        { id: "m0", x: 40,  y: 160, w: 300, h: 70, label: "$30/hr · good enough", sub: "some management, adequate outcome" },
+        { id: "b0", x: 40,  y: 260, w: 300, h: 70, label: "$5/hr", sub: "micromanaged, usually fails", kind: "exit" },
+        { id: "t1", x: 760, y: 60,  w: 320, h: 70, label: "Exceptional + agent", sub: "bangers", kind: "new" },
+        { id: "m1", x: 760, y: 160, w: 320, h: 70, label: "no middle band", sub: "\"there are no people who produce okay results\"", kind: "exit" },
+        { id: "b1", x: 760, y: 260, w: 320, h: 70, label: "Everyone else + agent", sub: "slop", kind: "hot" },
+      ],
+      edges: [
+        { from: "t0", to: "t1", s: ["r"], e: ["l"], label: "agent multiplies judgment", color: "--green" },
+        { from: "m0", to: "b1", s: ["r", 0.5], e: ["l", 0.4], via: [[560, 195], [560, 288]], label: "decision fatigue", color: "--red", at: [560, 240] },
+        { from: "b0", to: "b1", s: ["r", 0.6], e: ["l", 0.75], dashed: true, color: "--muted" },
+      ],
+      notes: [
+        { x: 40, y: 36, text: "before agents" },
+        { x: 760, y: 36, text: "with agents" },
+        { x: 560, y: 365, anchor: "middle", text: "20 decisions in a day instead of over two or three weeks", color: "--muted" },
+      ],
+    });
+  }
+
+  const go = () => (document.fonts && document.fonts.ready ? document.fonts.ready.then(render) : render());
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
+})();
+</script>
+</body>
+</html>
