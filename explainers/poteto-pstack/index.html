@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lauren Tan's agent kitchen: how she scaled to 2,500 PRs</title>
+<meta name="description" content="A detailed, timestamped guide to Lauren Tan's conversation with Matt Pocock about pstack, verification, constrained codebases, coordinator agents, post-merge sampling, and the limits of autonomous software work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+:root {
+  --bg: #f7f8fa; --canvas: #fff; --grid: #e3e6ec; --ink: #1e1e24; --muted: #5d6170; --rule: #d9dce3;
+  --blue: #1971c2; --blue-fill: #d7efff; --violet: #6741d9; --violet-fill: #eee8ff;
+  --red: #c92a2a; --red-fill: #fff0f0; --green: #2b8a3e; --green-fill: #ebfbee;
+  --amber: #9c5700; --amber-fill: #fff4cc; --neutral-fill: #eef0f3;
+  --hand: "Patrick Hand", "Comic Sans MS", "Segoe Print", cursive;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#121316; --canvas:#1a1b20; --grid:#2a2c33; --ink:#e8e8ec; --muted:#a2a6b3; --rule:#353842;
+    --blue:#74b9ff; --blue-fill:#173f60; --violet:#b197fc; --violet-fill:#352d5c;
+    --red:#ff8787; --red-fill:#522525; --green:#69db7c; --green-fill:#1d472c;
+    --amber:#ffc078; --amber-fill:#4c3917; --neutral-fill:#2c2f37; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#121316; --canvas:#1a1b20; --grid:#2a2c33; --ink:#e8e8ec; --muted:#a2a6b3; --rule:#353842;
+  --blue:#74b9ff; --blue-fill:#173f60; --violet:#b197fc; --violet-fill:#352d5c;
+  --red:#ff8787; --red-fill:#522525; --green:#69db7c; --green-fill:#1d472c;
+  --amber:#ffc078; --amber-fill:#4c3917; --neutral-fill:#2c2f37; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.67; }
+button, summary { font:inherit; }
+a { color:var(--blue); }
+.wrap { max-width:1240px; margin:0 auto; padding:40px 16px 80px; }
+@media (min-width:700px) { .wrap { padding-inline:24px; } }
+.top { display:grid; gap:16px; padding-bottom:32px; border-bottom:1px solid var(--rule); margin-bottom:36px; }
+.topline { display:flex; gap:12px; justify-content:space-between; align-items:start; flex-wrap:wrap; }
+.eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.theme { border:1px solid var(--rule); border-radius:999px; background:var(--canvas); color:var(--ink); padding:5px 10px; cursor:pointer; }
+.theme:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible { outline:2px solid var(--violet); outline-offset:3px; }
+h1 { font-family:var(--hand); font-size:clamp(42px,6.5vw,68px); font-weight:400; line-height:1.01; margin:0; max-width:19ch; text-wrap:balance; }
+h1 .scribble { color:var(--violet); }
+.lede { max-width:74ch; font-size:18px; margin:0; }
+.scope-note { max-width:78ch; border:2px solid var(--amber); border-radius:12px; padding:13px 16px; background:var(--amber-fill); }
+.scope-note b { font-family:var(--hand); font-size:22px; font-weight:400; color:var(--amber); }
+.facts { display:flex; flex-wrap:wrap; gap:16px 34px; }
+.fact { display:grid; gap:1px; max-width:25ch; }
+.fact b { font-family:var(--hand); font-size:31px; line-height:1.05; font-weight:400; font-variant-numeric:tabular-nums; }
+.fact span { color:var(--muted); font-size:13px; }
+.hero { display:grid; grid-template-columns:minmax(0,420px) minmax(0,1fr); gap:20px; align-items:center; }
+.hero img { width:100%; height:auto; display:block; border:1px solid var(--rule); border-radius:10px; }
+.hero p { margin:0; max-width:62ch; color:var(--muted); font-size:14.5px; }
+@media (max-width:740px) { .hero { grid-template-columns:1fr; } }
+.layout { display:grid; grid-template-columns:218px minmax(0,1fr); gap:48px; }
+.toc { position:sticky; top:20px; align-self:start; display:grid; gap:1px; max-height:calc(100vh - 40px); overflow:auto; font-size:13px; }
+.toc a { color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding:3px 0 3px 10px; line-height:1.28; }
+.toc a:hover, .toc a[aria-current="true"] { color:var(--ink); border-left-color:var(--violet); }
+.toc .n { font-family:var(--mono); font-size:10.5px; margin-right:5px; }
+@media (max-width:920px) { .layout { grid-template-columns:1fr; } .toc { display:none; } }
+main { display:grid; gap:76px; min-width:0; }
+section { display:grid; gap:16px; min-width:0; scroll-margin-top:18px; }
+.step { color:var(--violet); font:500 12px var(--mono); letter-spacing:.07em; text-transform:uppercase; }
+h2 { margin:-8px 0 0; font:400 clamp(31px,4vw,39px)/1.08 var(--hand); text-wrap:balance; }
+h3 { margin:8px 0 0; font-size:17px; }
+p { margin:0; max-width:72ch; }
+.prose { display:grid; gap:12px; }
+.prose ul { margin:0; padding-left:21px; max-width:70ch; display:grid; gap:7px; }
+.ts { color:var(--muted); text-decoration:none; white-space:nowrap; border-bottom:1px dotted var(--muted); font:12px var(--mono); }
+.ts:hover { color:var(--blue); border-color:var(--blue); }
+.ask, .paraphrase, .takeaway, .caveat { max-width:74ch; border-radius:10px; background:var(--canvas); }
+.ask { display:grid; grid-template-columns:9px minmax(0,1fr); border:1px solid var(--rule); overflow:hidden; }
+.ask::before { content:""; background:var(--blue); }
+.ask div { padding:10px 14px; font-weight:500; }
+.ask small, .paraphrase small { display:block; color:var(--muted); font:11px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+.paraphrase { border-left:4px solid var(--violet); padding:13px 16px; background:var(--violet-fill); display:grid; gap:4px; }
+.paraphrase p { font:400 24px/1.25 var(--hand); }
+.takeaway { border:2px dashed var(--green); padding:12px 16px; display:grid; gap:4px; }
+.takeaway b { color:var(--green); font:400 21px var(--hand); }
+.caveat { border:1px solid var(--amber); padding:12px 15px; background:var(--amber-fill); font-size:14px; }
+blockquote { margin:0; max-width:70ch; padding:5px 0 5px 18px; border-left:3px solid var(--violet); }
+blockquote p { font-size:18px; }
+blockquote cite { display:block; margin-top:5px; color:var(--muted); font:normal 12px var(--mono); }
+.board { background-color:var(--canvas); background-image:radial-gradient(var(--grid) 1.1px,transparent 1.2px); background-size:20px 20px; border:1px solid var(--rule); border-radius:10px; overflow:auto; padding:12px; }
+.board svg { display:block; width:100%; min-width:780px; height:auto; color:var(--ink); }
+.board text { font-family:var(--hand); fill:currentColor; }
+.board .sub { font-family:var(--sans); font-size:13px; fill:var(--muted); }
+.board .line { fill:none; stroke:currentColor; stroke-width:2; marker-end:url(#arrow); }
+.board .dash { stroke-dasharray:7 7; }
+.board .box { fill:var(--canvas); stroke:currentColor; stroke-width:2; rx:10; }
+.board .blue { color:var(--blue); } .board .violet { color:var(--violet); } .board .green { color:var(--green); } .board .red { color:var(--red); } .board .amber { color:var(--amber); }
+figure { margin:0; display:grid; gap:9px; min-width:0; }
+figcaption { max-width:80ch; color:var(--muted); font-size:13.5px; }
+.shots { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
+.shot { background:var(--canvas); border:1px solid var(--rule); border-radius:10px; overflow:hidden; }
+.shot button { all:unset; display:block; cursor:zoom-in; width:100%; }
+.shot img { display:block; width:100%; height:auto; aspect-ratio:16/9; object-fit:cover; }
+.shot figcaption { color:var(--ink); padding:9px 12px 11px; display:grid; gap:2px; }
+.shot figcaption b { font:400 20px/1.1 var(--hand); }
+.shot figcaption span { color:var(--muted); }
+.compare { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; }
+.compare > div { border:1.5px solid var(--rule); background:var(--canvas); border-radius:10px; padding:12px 14px; display:grid; gap:5px; align-content:start; }
+.compare b { font:400 20px var(--hand); }
+.compare .good { border-color:var(--green); } .compare .good b { color:var(--green); }
+.compare .warn { border-color:var(--amber); } .compare .warn b { color:var(--amber); }
+.compare .bad { border-color:var(--red); } .compare .bad b { color:var(--red); }
+.transcript-tools { display:flex; gap:8px; flex-wrap:wrap; }
+.transcript-tools button { border:1px solid var(--rule); background:var(--canvas); color:var(--ink); border-radius:7px; padding:5px 9px; cursor:pointer; font-size:13px; }
+details.transcript { max-width:74ch; border:1px solid var(--rule); border-radius:8px; background:var(--canvas); }
+details.transcript summary { cursor:pointer; padding:9px 12px; color:var(--muted); font:12px var(--mono); }
+details.transcript div { padding:0 12px 12px; font-size:14px; color:var(--muted); }
+.tablewrap { max-width:850px; overflow:auto; border:1px solid var(--rule); border-radius:10px; background:var(--canvas); }
+table { border-collapse:collapse; width:100%; min-width:650px; font-size:14px; }
+th,td { padding:10px 13px; text-align:left; vertical-align:top; border-bottom:1px solid var(--rule); }
+th { color:var(--muted); background:var(--bg); font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+td:first-child { font-family:var(--hand); font-size:19px; white-space:nowrap; }
+.sources { font-size:14px; }
+.sources li { margin-bottom:7px; }
+dialog { border:0; padding:0; background:transparent; max-width:min(1280px,96vw); }
+dialog::backdrop { background:rgba(8,8,12,.84); }
+dialog img { display:block; max-width:100%; max-height:88vh; border-radius:8px; }
+dialog button { all:unset; cursor:zoom-out; display:block; }
+dialog p { color:#fff; margin:7px 2px 0; font-size:13px; max-width:none; }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print {
+  :root, :root[data-theme="dark"], :root[data-theme="light"] { --bg:#fff; --canvas:#fff; --grid:#ddd; --ink:#000; --muted:#444; --rule:#bbb; --blue:#155d9b; --violet:#5133ae; --red:#922; --green:#176c2d; --amber:#754000; --blue-fill:#eef7ff; --violet-fill:#f3efff; --red-fill:#fff5f5; --green-fill:#f1fbf3; --amber-fill:#fff8df; color-scheme:light; }
+  body, .paraphrase, .scope-note, .caveat, .takeaway, .compare > div, details.transcript { background:#fff !important; color:#000 !important; }
+  .wrap { max-width:none; padding:0; } .toc,.theme,.transcript-tools,dialog { display:none !important; }
+  .layout { display:block; } main { gap:38px; } section { break-inside:avoid; } details.transcript { display:block; }
+  details.transcript > summary { display:none; } details.transcript > div { display:block; padding-top:10px; }
+  a { color:inherit; text-decoration:none; } .board { background-image:none; } .shot button { cursor:default; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="topline">
+      <div class="eyebrow">A 65 minute conversation, rebuilt as a reading guide</div>
+      <button class="theme" type="button" id="theme" aria-label="Toggle color theme">Theme</button>
+    </div>
+    <h1>Lauren Tan's agent kitchen: <span class="scribble">how she scaled to 2,500 PRs</span></h1>
+    <p class="lede">Lauren Tan, known online as poteto, explains how she moved from supervising one coding agent to running many coordinated projects. Her method starts with verification, then changes the codebase and tools until agents face fewer bad choices. Only after that foundation does parallel work become useful.</p>
+    <div class="scope-note"><b>Read the headline carefully.</b> The 2,500 pull requests in a month are Lauren's account of her own output. The figure was not independently audited in the interview, and she says many of those PRs were maintenance and codebase gardening. They were not 2,500 product features.</div>
+    <div class="facts">
+      <div class="fact"><b>2,500 PRs</b><span>Lauren's reported monthly total, including maintenance</span></div>
+      <div class="fact"><b>&gt;10 coordinators</b><span>her reported chief of staff agents across separate work areas</span></div>
+      <div class="fact"><b>8 huge files</b><span>her description of early Grok Bot code, each at least 10,000 lines</span></div>
+      <div class="fact"><b>65:36</b><span>full interview duration, covered through the closing skills discussion</span></div>
+    </div>
+    <div class="hero">
+      <button class="shot" type="button" data-full="img/0760-kitchen.jpg" aria-label="Open full video frame"><img src="img/0760-kitchen.jpg" width="960" height="540" alt="Matt Pocock and Lauren Tan speaking in a split-screen interview at 12 minutes 40 seconds"></button>
+      <p>Matt Pocock interviews Lauren on 3 October 2026. This guide pairs a small number of real interview frames with explanatory diagrams. Every frame comes from the stated interval. <a href="https://www.youtube.com/watch?v=MN9dGgmLyso">Watch the source video</a>.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Sections">
+      <a href="#trust"><span class="n">01</span>Earn trust</a><a href="#intent"><span class="n">02</span>Express intent</a>
+      <a href="#kitchen"><span class="n">03</span>Build the kitchen</a><a href="#verification"><span class="n">04</span>Close the loop</a>
+      <a href="#determinism"><span class="n">05</span>Encode mechanics</a><a href="#environment"><span class="n">06</span>Invest first</a>
+      <a href="#dune"><span class="n">07</span>Narrow choices</a><a href="#loops"><span class="n">08</span>Connect context</a>
+      <a href="#projects"><span class="n">09</span>Scale projects</a><a href="#coordination"><span class="n">10</span>Coordinate reports</a>
+      <a href="#gardening"><span class="n">11</span>Count gardening</a><a href="#buffer"><span class="n">12</span>Buffer findings</a>
+      <a href="#sampling"><span class="n">13</span>Sample and repair</a><a href="#autopilot"><span class="n">14</span>Autopilot</a>
+      <a href="#limits"><span class="n">15</span>Know the limits</a><a href="#personal-skills"><span class="n">16</span>Own your skills</a>
+      <a href="#recall"><span class="n">17</span>Recall the process</a><a href="#glossary">Glossary</a><a href="#sources">Source notes</a>
+    </nav>
+
+    <main>
+      <div class="transcript-tools" aria-label="Transcript summary controls"><button type="button" id="open-all">Open all transcript summaries</button><button type="button" id="close-all">Close all</button></div>
+
+      <section id="trust">
+        <div class="step">01 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=95s">01:35</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=380s">06:20</a></div>
+        <h2>Trust began with removing herself as the human adapter</h2>
+        <div class="ask"><div><small>Matt's opening question</small>How did Lauren climb from one supervised agent to large-scale parallel work?</div></div>
+        <div class="prose">
+          <p>Lauren traces pstack back to a side project after leaving Meta's React team. In January or February, she found herself spending hours micromanaging one agent. She started writing skills and a brain directory to transfer parts of her own working method into the agent. She could iterate quickly, but she had little evidence that a skill improved the result.</p>
+          <p>She joined Cursor in March and soon worked on performance problems in its agent window. The early work was manual. She read flame graphs, inspected heap snapshots, and passed information between the agent and Chrome DevTools. Her own labor connected the model to the evidence it needed.</p>
+          <p>That bottleneck shaped the rest of her method. A capable model still reaches for shortcuts. The useful intervention is to redesign the process so that the quick path also produces the desired result.</p>
+        </div>
+        <blockquote><p>"how do I make the easy thing the right thing?"</p><cite>Lauren Tan, <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=376s">06:16</a></cite></blockquote>
+        <div class="takeaway"><b>The trust ladder is earned through evidence.</b><span>Lauren does not describe trust as confidence in a model brand. Each higher level follows from giving the agent better tools, constraints, context, and feedback.</span></div>
+        <details class="transcript"><summary>Transcript summary · 00:00 to 06:20</summary><div>Matt frames the interview as a follow-up to Lauren's earlier talk. Lauren covers her Meta background, the side project that became the basis for pstack, her March start at Cursor, and the manual performance debugging that exposed her role as the bridge between agent and browser evidence.</div></details>
+      </section>
+
+      <section id="intent">
+        <div class="step">02 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=380s">06:20</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=645s">10:45</a></div>
+        <h2>Better models make precise intent more valuable</h2>
+        <div class="prose">
+          <p>Lauren argues that domain expertise gains value when the model can carry out more of the implementation. The limiting step moves toward the human's ability to define the goal, recognize a good result, and explain the constraints. A doctor, lawyer, or engineer with enough technical fluency can use an agent to build around knowledge the model does not own.</p>
+          <p>Matt connects this to language. A term such as test-driven development changes which evidence the agent seeks. His grilling method asks questions until hidden requirements become explicit. Lauren adds tautological tests as an example of a precise label. Such a test restates the implementation and can pass without increasing confidence in behavior.</p>
+          <p>Vocabulary compresses a working concept into a phrase the agent can reuse. That compression helps communication, but it does not prove the agent understood the requirement or implemented it correctly. Verification still has to supply that evidence.</p>
+        </div>
+        <div class="paraphrase"><small>In plain words</small><p>When execution gets cheaper, deciding what good means becomes more of the job.</p></div>
+        <details class="transcript"><summary>Transcript summary · 06:20 to 10:45</summary><div>Lauren says domain experts have an advantage because clear intent becomes the bottleneck. Matt discusses how terms such as TDD guide agent attention. They use tautological tests to show how a compact technical term can carry a detailed criticism.</div></details>
+      </section>
+
+      <section id="kitchen">
+        <div class="step">03 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=645s">10:45</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=966s">16:06</a></div>
+        <h2>The kitchen metaphor keeps quality in the throughput story</h2>
+        <div class="prose">
+          <p>Lauren accepts that software factory describes high-volume production, but she prefers a Michelin kitchen. A factory can suggest interchangeable work and indifferent quality. A serious kitchen still produces at scale, yet its organization exists to protect craft, user experience, and the finished dish.</p>
+          <p>A solo cook prepares ingredients, cooks, and cleans. Adding more people without stations, tools, or shared methods creates congestion. The chef's work changes as the kitchen grows. She chooses ingredients, prepares stations, defines methods, and owns the result even when other people do most of the cooking.</p>
+          <p>Lauren maps that role to engineering. The codebase, tools, skills, and verification system become the kitchen. Agents do more implementation, while the engineer designs the conditions in which implementation happens. The engineer's name and reputation still attach to the outcome.</p>
+        </div>
+        <figure><div class="board"><svg viewBox="0 0 980 300" role="img" aria-label="A reconstruction of the progression from one supervised agent to an organized kitchen and then several coordinated projects">
+          <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+          <g class="red"><rect class="box" x="35" y="80" width="240" height="100"/><text x="155" y="118" text-anchor="middle" font-size="24">Solo cook</text><text class="sub" x="155" y="145" text-anchor="middle">one agent, constant supervision</text><text class="sub" x="155" y="164" text-anchor="middle">human carries every order</text></g>
+          <path class="line amber" d="M280 130H365"/><text x="322" y="113" text-anchor="middle" font-size="17">tools</text>
+          <g class="violet"><rect class="box" x="370" y="65" width="240" height="130"/><text x="490" y="108" text-anchor="middle" font-size="24">Organized kitchen</text><text class="sub" x="490" y="137" text-anchor="middle">stations, constraints, verification</text><text class="sub" x="490" y="157" text-anchor="middle">shared methods and evidence</text></g>
+          <path class="line green" d="M615 130H700"/><text x="657" y="113" text-anchor="middle" font-size="17">trust</text>
+          <g class="green"><rect class="box" x="705" y="80" width="240" height="100"/><text x="825" y="118" text-anchor="middle" font-size="24">Several projects</text><text class="sub" x="825" y="145" text-anchor="middle">coordinators route context</text><text class="sub" x="825" y="164" text-anchor="middle">workers execute in parallel</text></g>
+          <text class="sub" x="490" y="250" text-anchor="middle">Explainer's reconstruction of the progression, not formal pstack levels</text>
+        </svg></div><figcaption>The scale comes after the middle box. More agents can add coordination problems when the environment is unprepared.</figcaption></figure>
+        <div class="shots"><figure class="shot"><button type="button" data-full="img/0760-kitchen.jpg"><img src="img/0760-kitchen.jpg" loading="lazy" width="960" height="540" alt="Lauren Tan speaking with Matt Pocock during the kitchen analogy at 12 minutes 40 seconds"></button><figcaption><b>The kitchen analogy</b><span>Lauren compares adding agents to adding cooks who need stations, tools, and a division of work. <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=760s">12:40</a></span></figcaption></figure></div>
+        <details class="transcript"><summary>Transcript summary · 10:45 to 16:06</summary><div>Lauren explains why she prefers the kitchen metaphor, walks from a home cook to a chef who organizes many people, and assigns the human engineer final responsibility for the product. Matt turns the discussion toward the environment in which agents work.</div></details>
+      </section>
+
+      <section id="verification">
+        <div class="step">04 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=966s">16:06</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1138s">18:58</a></div>
+        <h2>Verification is the part that turns a sequence into a loop</h2>
+        <div class="prose">
+          <p>Lauren's first high-value skill at Cursor let the agent operate the application and observe the result. For interface work, that can mean running the app, interacting with it as a user, inspecting traces, reading browser state, and taking snapshots. Without those abilities, the agent has to ask a person what happened.</p>
+          <p>Planning and explanation skills can improve the proposed change, but they do not close the feedback loop. The agent must compare observed behavior with an explicit goal and revise. Lauren calls this foundation more important than any particular pstack command.</p>
+          <p>She connects the loop to hill climbing. If a performance goal has a reliable score or rubric, the agent can try a change, measure it, and keep improvements. She relates the idea to Andrej Karpathy's autoresearch. The interview gives no measured performance result, so this is a method, not a benchmark claim.</p>
+        </div>
+        <figure><div class="board"><svg viewBox="0 0 980 320" role="img" aria-label="Verification loop from explicit goal through implementation, real application run, observation, judgment, and revision">
+          <defs><marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+          <g class="blue"><rect class="box" x="35" y="105" width="150" height="78"/><text x="110" y="137" text-anchor="middle" font-size="22">Goal</text><text class="sub" x="110" y="160" text-anchor="middle">rubric or behavior</text></g>
+          <g class="violet"><rect class="box" x="225" y="105" width="150" height="78"/><text x="300" y="137" text-anchor="middle" font-size="22">Implement</text><text class="sub" x="300" y="160" text-anchor="middle">make one change</text></g>
+          <g class="amber"><rect class="box" x="415" y="105" width="150" height="78"/><text x="490" y="137" text-anchor="middle" font-size="22">Run</text><text class="sub" x="490" y="160" text-anchor="middle">use the real app</text></g>
+          <g class="green"><rect class="box" x="605" y="105" width="150" height="78"/><text x="680" y="137" text-anchor="middle" font-size="22">Observe</text><text class="sub" x="680" y="160" text-anchor="middle">traces and output</text></g>
+          <g class="red"><rect class="box" x="795" y="105" width="150" height="78"/><text x="870" y="137" text-anchor="middle" font-size="22">Judge</text><text class="sub" x="870" y="160" text-anchor="middle">compare with goal</text></g>
+          <path d="M185 144H220M375 144H410M565 144H600M755 144H790" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#arrow2)"/>
+          <path d="M870 188V255H300V188" fill="none" stroke="var(--violet)" stroke-width="2" stroke-dasharray="7 7" marker-end="url(#arrow2)"/><text x="585" y="278" text-anchor="middle" font-size="18" fill="var(--violet)">revise with evidence</text>
+        </svg></div><figcaption>Verification supplies the observation and comparison steps. A test command alone is useful only when it checks the behavior that matters.</figcaption></figure>
+        <div class="shots"><figure class="shot"><button type="button" data-full="img/1010-verification.jpg"><img src="img/1010-verification.jpg" loading="lazy" width="960" height="540" alt="Lauren Tan explaining application verification at 16 minutes 50 seconds"></button><figcaption><b>Give the agent a way to see the result</b><span>The discussion covers application interaction, debugging, traces, and snapshots. <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1010s">16:50</a></span></figcaption></figure></div>
+        <details class="transcript"><summary>Transcript summary · 16:06 to 18:58</summary><div>Lauren defines verification as giving an agent ways to run and inspect its work. She explains why her earlier analysis skills still left her in the middle and how a measurable rubric makes iterative improvement possible.</div></details>
+      </section>
+
+      <section id="determinism">
+        <div class="step">05 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1138s">18:58</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1495s">24:55</a></div>
+        <h2>Move repeatable mechanics out of the agent's judgment path</h2>
+        <div class="prose">
+          <p>Lauren reports that each application in her organization has a shared, automatically maintained verification skill. A custom command-line tool handles browser interaction through Playwright and the Chrome DevTools Protocol. She is careful about its novelty. It is glue around existing APIs, not a new verification engine.</p>
+          <p>Concern in the agent community that compaction weakened results first motivated the tool, because a small command preserved context space. The longer-lasting benefit is consistency. Without the tool, every agent rebuilt a browser driver, debugged it, and discarded it. The next agent repeated the same work with a different result.</p>
+          <p>Her general rule is to separate judgment from mechanics. An agent can decide what evidence matters or how to respond to a failure. A script should handle steps whose correct execution is known in advance. She extends the same idea to migrations, where codemods and abstract syntax tree transforms can perform mechanical changes before an agent handles ambiguous cases.</p>
+        </div>
+        <div class="compare"><div class="bad"><b>Instructions only</b><span>Each agent invents its own driver, spends tokens on setup, and fails in different ways.</span></div><div class="good"><b>Reusable deterministic tool</b><span>One tested interface performs known steps. The agent spends judgment on what to inspect and what to change.</span></div></div>
+        <div class="takeaway"><b>A skill can be a thin guide around a tool.</b><span>The prose explains when to use the tool and how to interpret evidence. The script preserves the repeatable part.</span></div>
+        <details class="transcript"><summary>Transcript summary · 18:58 to 24:55</summary><div>Lauren describes shared verification skills, a CLI over Playwright and browser APIs, the original context-window concern, and the speed gained by reusing deterministic code. She applies the same split to codemods and migrations.</div></details>
+      </section>
+
+      <section id="environment">
+        <div class="step">06 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1495s">24:55</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1717s">28:37</a></div>
+        <h2>Parallelism should wait until the environment can absorb it</h2>
+        <div class="prose">
+          <p>A low-trust setup traps the engineer in supervision. Each agent needs correction, so deadlines consume all available attention. The team then has no time to build better tools, which keeps trust low. Lauren compares the cycle to working with a dull knife because sharpening feels too slow during dinner service.</p>
+          <p>Her remedy is an explicit investment in the environment. That includes fast tests, useful types, focused modules, lint rules, stable tool interfaces, and application-level verification. The interview does not prescribe a percentage of engineering time or a fixed setup period. The work depends on observed failure modes.</p>
+          <p>A good environment helps human engineers too. It reduces the number of local conventions someone must remember and makes a safe change easier to recognize. Agent readiness and maintainability point in the same direction here.</p>
+        </div>
+        <div class="paraphrase"><small>Paraphrase of Lauren's explanation</small><p>If every deadline forces more supervision, the missing task is improving the place where the work happens.</p></div>
+        <details class="transcript"><summary>Transcript summary · 24:55 to 28:37</summary><div>Matt frames quality as ease of safe change. Lauren explains the low-trust micromanagement cycle and argues for time spent on tools and constraints before trying to multiply agents.</div></details>
+      </section>
+
+      <section id="dune">
+        <div class="step">07 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1717s">28:37</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2012s">33:32</a></div>
+        <h2>Dune narrows the set of possible mistakes</h2>
+        <div class="prose">
+          <p>Lauren uses TypeScript narrowing as the conceptual model. A broad string type permits many invalid states. Runtime checks and type guards can narrow it to a specific valid form. She applies the same move to repository design by reducing the number of places and patterns an agent can choose.</p>
+          <p>Dune is her internal framework for Electron applications. She describes it as similar to Next.js in the way it supplies conventions. It is not open source. Features live in dedicated directories, a registry discovers them, and restrictive lint rules reject patterns the team has decided against.</p>
+          <p>The framework grew from concrete failure. Lauren says early Grok Bot versions accumulated about eight huge files, each at least 10,000 lines. Feature directories prevent the easy move of appending more code to a central file. Every recurring mistake becomes a design question: can a type, directory convention, linter, or API make that mistake impossible?</p>
+        </div>
+        <div class="caveat"><b>Dune is an internal example.</b> The interview gives its principles and a few conventions, not a public API. This guide does not infer implementation details beyond those statements.</div>
+        <details class="transcript"><summary>Transcript summary · 28:37 to 33:32</summary><div>The discussion moves from TypeScript narrowing to Dune. Lauren describes feature directories, registry discovery, lint rules, early Grok Bot files, and the practice of turning observed agent failures into codebase constraints.</div></details>
+      </section>
+
+      <section id="loops">
+        <div class="step">08 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2012s">33:32</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2330s">38:50</a></div>
+        <h2>The inner loop needs fresh context from the outer loop</h2>
+        <div class="prose">
+          <p>Once the implementation environment works, the next human bottleneck is context transfer. Lauren calls engineering agents working against a captured goal the inner loop. That goal is only a snapshot. New bug reports, product decisions, infrastructure limits, and user feedback arrive elsewhere and can make the snapshot stale.</p>
+          <p>The outer loop is the set of systems where that information appears. She names Slack, Linear, X, and email. Grok Bot routines can subscribe to relevant sources and pass reports into an engineering project. The key value is not the number of connectors. It is removing the person who repeatedly copies information between systems.</p>
+          <p>A report still needs investigation. The engineering agent should reproduce the problem on the current main branch and distinguish a product bug from account data, local setup, or a missing dependency. Context ingestion should supply real evidence, not permission to guess.</p>
+        </div>
+        <figure><div class="board"><svg viewBox="0 0 1020 330" role="img" aria-label="Outer systems feed reports into context ingestion, then a coordinator routes work to engineering agents, which verify in the application and return evidence">
+          <defs><marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+          <g class="blue"><rect class="box" x="30" y="50" width="180" height="220"/><text x="120" y="90" text-anchor="middle" font-size="24">Outer loop</text><text class="sub" x="120" y="130" text-anchor="middle">Slack reports</text><text class="sub" x="120" y="158" text-anchor="middle">Linear issues</text><text class="sub" x="120" y="186" text-anchor="middle">email and X</text><text class="sub" x="120" y="226" text-anchor="middle">new context</text></g>
+          <g class="amber"><rect class="box" x="280" y="105" width="180" height="110"/><text x="370" y="145" text-anchor="middle" font-size="24">Ingest</text><text class="sub" x="370" y="173" text-anchor="middle">filter and group reports</text></g>
+          <g class="violet"><rect class="box" x="530" y="105" width="180" height="110"/><text x="620" y="145" text-anchor="middle" font-size="24">Coordinate</text><text class="sub" x="620" y="173" text-anchor="middle">pass intent and context</text></g>
+          <g class="green"><rect class="box" x="780" y="50" width="210" height="220"/><text x="885" y="90" text-anchor="middle" font-size="24">Inner loop</text><text class="sub" x="885" y="130" text-anchor="middle">reproduce on main</text><text class="sub" x="885" y="158" text-anchor="middle">implement change</text><text class="sub" x="885" y="186" text-anchor="middle">run verification</text><text class="sub" x="885" y="226" text-anchor="middle">return evidence</text></g>
+          <path d="M215 160H275M465 160H525M715 160H775" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#arrow3)"/>
+          <path d="M885 275V310H120V275" fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="7 7" marker-end="url(#arrow3)"/><text x="500" y="304" text-anchor="middle" font-size="17" fill="var(--green)">verified outcome updates the next decision</text>
+        </svg></div><figcaption>The outer loop refreshes intent. The inner loop still has to reproduce and verify the report before changing code.</figcaption></figure>
+        <details class="transcript"><summary>Transcript summary · 33:32 to 38:50</summary><div>Lauren says the prepared environment is a prerequisite for volume. She defines inner projects and outer information sources, then explains how subscriptions can deliver real reports to agents that reproduce and triage them.</div></details>
+      </section>
+
+      <section id="projects">
+        <div class="step">09 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2330s">38:50</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2410s">40:10</a></div>
+        <h2>The unit of scale is a project, not a pile of chats</h2>
+        <div class="prose">
+          <p>Lauren is not manually opening 2,500 conversations. She describes Cursor Projects as persistent coordinators. A coordinator supervises a task list, creates worker agents, carries context between them, and tracks the work. Its main job is management rather than implementation.</p>
+          <p>She worked backward from a concrete target: what conditions would let an agent merge its own code? That question forces attention onto verification, repository constraints, context freshness, and failure recovery. The PR count is an effect of those systems, not the first control to turn.</p>
+        </div>
+        <div class="paraphrase"><small>In plain words</small><p>Do not scale prompts. Scale a prepared unit of work that can gather context, delegate, verify, and report.</p></div>
+        <details class="transcript"><summary>Transcript summary · 38:50 to 40:10</summary><div>Lauren connects high PR volume to persistent projects and coordinator agents. She says the turning point was designing toward safe agent merges rather than manually reviewing an ever-growing number of chats.</div></details>
+      </section>
+
+      <section id="coordination">
+        <div class="step">10 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2410s">40:10</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2731s">45:31</a></div>
+        <h2>Coordination preserves shared context across related reports</h2>
+        <div class="prose">
+          <p>Lauren's concrete setup combines Grok Bot routines with Cursor Projects. Grok Bot watches selected external sources and sends relevant work to a project. The project runs in the cloud with a coordinator and its own computer. The coordinator can choose worker arrangements, delegate tasks, and pass findings between them.</p>
+          <p>She connects the design to a management lesson from Netflix: give context that enables self-sufficiency. A burst of 30 reports is Matt's hypothetical example, not Lauren's measured workload. The useful point is that a coordinator can group related reports before assigning work.</p>
+          <p>If several users report similar performance failures, one worker per report may duplicate the same investigation or produce competing fixes. A coordinator can compare the reports, identify the common layer, and send workers after distinct parts of one root problem.</p>
+        </div>
+        <div class="compare"><div class="warn"><b>One report, one worker</b><span>Fast dispatch, but repeated investigation and local fixes can hide the shared cause.</span></div><div class="good"><b>Group, then delegate</b><span>The coordinator retains the thread between reports and splits work after forming a broader hypothesis.</span></div></div>
+        <div class="shots"><figure class="shot"><button type="button" data-full="img/2580-coordination.jpg"><img src="img/2580-coordination.jpg" loading="lazy" width="960" height="540" alt="Lauren Tan explaining coordinator agents at 43 minutes"></button><figcaption><b>A coordinator manages workers</b><span>Lauren compares the project coordinator to an executive chef or chief of staff. <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2580s">43:00</a></span></figcaption></figure></div>
+        <details class="transcript"><summary>Transcript summary · 40:10 to 45:31</summary><div>Matt asks what Lauren sees when managing many agents. She separates Grok Bot's external context role from Cursor Projects, describes coordinators and worker topologies, and explains why grouping related bug reports can reveal a higher-level cause.</div></details>
+      </section>
+
+      <section id="gardening">
+        <div class="step">11 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2731s">45:31</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2853s">47:33</a></div>
+        <h2>The PR total contains a large amount of gardening</h2>
+        <div class="prose">
+          <p>Lauren explicitly corrects an easy misreading of the headline. The monthly total is not 2,500 features. Much of the work is codebase gardening: small maintenance changes, cleanup, refactoring, and improvements to the environment.</p>
+          <p>That work benefits every engineer. A new hire inherits clearer structure and better defaults. Existing engineers spend less time navigating old shortcuts. Agents also encounter fewer ambiguous choices. The same PR can therefore raise future throughput without adding visible product behavior.</p>
+          <p>PR count remains a volume measure. It does not reveal size, risk, user value, defect rate, or review quality. Lauren's interview explains the operating system behind the count, but it does not supply an independent outcome audit.</p>
+        </div>
+        <div class="scope-note"><b>2,500 PRs does not mean 2,500 features.</b> Treat the number as Lauren's reported work volume. Evaluate the method through the evidence and safeguards she describes, not through the count alone.</div>
+        <details class="transcript"><summary>Transcript summary · 45:31 to 47:33</summary><div>Matt asks what else feeds the work queue. Lauren says code reading and gardening produce many PRs and explains how a prepared environment helps agents, the existing team, and new hires.</div></details>
+      </section>
+
+      <section id="buffer">
+        <div class="step">12 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2853s">47:33</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2959s">49:19</a></div>
+        <h2>A queue can reveal a pattern that immediate fixes would hide</h2>
+        <div class="prose">
+          <p>One recurring agent scans React code for problematic patterns. It does not open a fix for every finding. It appends observations to a document. Every few days, Lauren reviews the accumulated items and asks whether they are instances of the same underlying problem.</p>
+          <p>The delay is deliberate. Immediate execution optimizes each item in isolation. A buffer creates material for comparison and gives a human or coordinator time to choose one systemic change, such as a lint rule, shared abstraction, codemod, or repository constraint.</p>
+        </div>
+        <figure><div class="board"><svg viewBox="0 0 980 250" role="img" aria-label="Several isolated findings enter a queue, are grouped into a pattern, and produce one systemic fix">
+          <defs><marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+          <g class="amber"><rect class="box" x="30" y="35" width="170" height="50"/><text x="115" y="67" text-anchor="middle" font-size="20">finding A</text><rect class="box" x="30" y="100" width="170" height="50"/><text x="115" y="132" text-anchor="middle" font-size="20">finding B</text><rect class="box" x="30" y="165" width="170" height="50"/><text x="115" y="197" text-anchor="middle" font-size="20">finding C</text></g>
+          <g class="violet"><rect class="box" x="315" y="75" width="240" height="100"/><text x="435" y="115" text-anchor="middle" font-size="23">Buffered document</text><text class="sub" x="435" y="145" text-anchor="middle">compare every few days</text></g>
+          <g class="blue"><rect class="box" x="660" y="75" width="285" height="100"/><text x="802" y="115" text-anchor="middle" font-size="23">One common pattern</text><text class="sub" x="802" y="145" text-anchor="middle">rule, structure, or shared fix</text></g>
+          <path d="M205 60L310 105M205 125H310M205 190L310 145M560 125H655" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#arrow4)"/>
+        </svg></div><figcaption>The queue is an analysis tool. It prevents a swarm of local fixes from erasing the evidence of a shared cause.</figcaption></figure>
+        <details class="transcript"><summary>Transcript summary · 47:33 to 49:19</summary><div>Lauren gives the React anti-pattern scan as an example. Findings accumulate in a document so repeated cases can be grouped before the system chooses a broader intervention.</div></details>
+      </section>
+
+      <section id="sampling">
+        <div class="step">13 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2959s">49:19</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3115s">51:55</a></div>
+        <h2>Review samples rigorously, then repair the production process</h2>
+        <div class="prose">
+          <p>Lauren does not claim to read every PR. She samples code and pull requests, reportedly every day, and inspects them closely. The object of review is both the change and the system that produced it.</p>
+          <p>A one-off error may need a local correction. Several agents taking the same shortcut point to an environmental defect. She then changes a skill, lint rule, type, constraint, or shared abstraction so the next worker does not repeat it.</p>
+          <p>This resembles statistical quality control, but the interview gives no sampling rate or defect threshold. The practical requirement is enough scrutiny to notice recurring failure. Lauren also warns that reaching this state takes substantial effort. Installing pstack does not transfer her trust or her codebase conditions to another team.</p>
+        </div>
+        <div class="compare"><div class="warn"><b>Fix the sampled PR</b><span>Necessary when the change is wrong, but it improves only one output.</span></div><div class="good"><b>Fix the repeated cause</b><span>Change the rule or environment when the same failure appears across workers.</span></div></div>
+        <details class="transcript"><summary>Transcript summary · 49:19 to 51:55</summary><div>Lauren says scale requires sampling rather than reading every change. She explains how recurring shortcuts trigger changes to the environment and stresses the time needed to build enough confidence for this workflow.</div></details>
+      </section>
+
+      <section id="autopilot">
+        <div class="step">14 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3115s">51:55</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3340s">55:40</a></div>
+        <h2>Some changes merge before human review</h2>
+        <div class="prose">
+          <p>Lauren says her agents run around the clock and that she has more than ten coordinator agents. They cover areas such as desktop performance, user-reported bugs, and an exploratory native rewrite that she calls a toy. These are separate work areas with separate management context.</p>
+          <p>Full autopilot can start several verifier agents for one PR. They run the application, interact with it, look for regressions, report problems, and trigger another repair cycle. Lauren loosely calls this fuzzing. In this context, it includes exploratory application interaction, so readers should not assume it means only a formal coverage-guided fuzzer.</p>
+          <p>The process consumes many tokens and can be tuned. Lauren gives ten verifiers, one verifier, or self-verification as examples. Some PRs merge before her review. In the morning she samples commit history and can modify, revert, or add rules after seeing a problem.</p>
+          <p>This is post-merge human review backed by pre-merge machine checks. Lauren grounds her confidence in the constrained codebase and verification system she described earlier.</p>
+        </div>
+        <div class="caveat"><b>Explainer clarification.</b> Post-merge review carries different risk from mandatory human approval. UI interaction cannot prove every system property, and a larger verifier count does not guarantee coverage.</div>
+        <details class="transcript"><summary>Transcript summary · 51:55 to 55:40</summary><div>Lauren describes more than ten coordinators, overnight merges, multiple verifier agents, repeated repair, token cost, and morning history review. Matt distinguishes this setup from treating code as irrelevant.</div></details>
+      </section>
+
+      <section id="limits">
+        <div class="step">15 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3340s">55:40</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3577s">59:37</a></div>
+        <h2>Autonomy depends on what can be verified and reversed</h2>
+        <div class="ask"><div><small>Matt's challenge</small>What happens when a change can lose data or cause harm in medicine, law, or finance?</div></div>
+        <div class="prose">
+          <p>Lauren says the answer depends on the quality of available verification. She regards much software work as verifiable and gives mathematical proofs as another example, while acknowledging that neither field is entirely verifiable. Other domains are much harder to evaluate programmatically. She says she does not have a universal answer.</p>
+          <p>She suggests that better formal methods and agent-oriented languages may expand what can be checked. She mentions Bend, Lean, and TLA+ while discussing code and proofs. Her direction is toward stronger machine-checkable evidence, not a claim that current tools make all changes safe.</p>
+          <p><b>Explainer clarification.</b> Verification and reversibility are distinct. A test may lower the probability of a harmful change, but it does not restore deleted data or reverse an external action. A proof establishes the properties encoded in the proof under its assumptions. It does not cover a requirement that nobody wrote down.</p>
+        </div>
+        <div class="scope-note"><b>Explainer clarification.</b> Lauren's method scales best where work can be checked. High-stakes, irreversible work needs controls beyond the workflow shown here.</div>
+        <div class="shots"><figure class="shot"><button type="button" data-full="img/3420-limits.jpg"><img src="img/3420-limits.jpg" loading="lazy" width="960" height="540" alt="Lauren Tan discussing limits of verifiability at 57 minutes"></button><figcaption><b>No universal answer</b><span>The conversation turns to irreversible changes and domains that resist programmatic verification. <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3420s">57:00</a></span></figcaption></figure></div>
+        <details class="transcript"><summary>Transcript summary · 55:40 to 59:37</summary><div>Matt raises one-way changes and regulated domains. Lauren ties safe autonomy to verifiability, acknowledges the gap for hard-to-check work, and discusses formal proof systems and future languages as one possible direction.</div></details>
+      </section>
+
+      <section id="personal-skills">
+        <div class="step">16 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3577s">59:37</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3772s">62:52</a></div>
+        <h2>A useful skill library should become your own</h2>
+        <div class="prose">
+          <p>Matt asks how people should combine his skills with pstack. Lauren rejects the idea that the libraries compete as complete systems. A skill is a process written down. Users can combine Matt's questioning or Wayfinder work with pstack execution, or take only the pieces that fit their environment.</p>
+          <p>Trust here means understanding the tool well enough to predict its behavior and correct it. A chef carries familiar knives between jobs. In the same way, an engineer should adapt a personal set of prompts, scripts, rules, and verification methods rather than copy a library unchanged.</p>
+          <p>Past agent chats are evidence for that library. Repeated corrections reveal missing instructions. Repeated workarounds may belong in a lint rule or tool. A good skill begins with a real intervention that the person no longer wants to repeat manually.</p>
+        </div>
+        <blockquote><p>"everyone should have their own set of knives"</p><cite>Lauren Tan, <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3687s">61:27</a></cite></blockquote>
+        <div class="paraphrase"><small>Paraphrase of Lauren's explanation</small><p>Borrow processes freely, then keep only the ones you understand and can verify in your own work.</p></div>
+        <details class="transcript"><summary>Transcript summary · 59:37 to 62:52</summary><div>Matt asks whether users should choose one skill library. Lauren says workflows are composable, encourages people to understand their tools, and recommends mining past chats for corrections that should become reusable processes or rules.</div></details>
+      </section>
+
+      <section id="recall">
+        <div class="step">17 · <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3772s">62:52</a> to <a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3910s">65:10</a></div>
+        <h2>Recall turns repeated context recovery into a workflow</h2>
+        <div class="prose">
+          <p>Lauren's recall skill came from debugging virtualization in Cursor. Each new chat needed context from earlier attempts, and manually explaining where to look became repetitive. Recall compresses that instruction into a reusable workflow that finds and carries forward relevant history.</p>
+          <p>She expects stronger models to need fewer low-level command recipes and more concise process descriptions. That does not cancel her earlier argument for deterministic tools. Commands still belong in scripts when exact execution matters. The skill can become shorter because it points to stable tools and states the decision process around them.</p>
+          <p>The conversation ends with a permissive model of skill design. Combine Wayfinder and poteto-mode, rewrite them, or extract a smaller method. The durable asset is the tested process behind the words.</p>
+        </div>
+        <div class="takeaway"><b>The complete path is circular.</b><span>Observe your own repeated intervention, encode it as a process or constraint, verify the result, and use the next failure to improve the environment again.</span></div>
+        <details class="transcript"><summary>Transcript summary · 62:52 to 65:36</summary><div>Lauren explains how repeated virtualization debugging led to recall, predicts more compact workflow-oriented skills, and encourages users to combine existing processes. The remaining seconds are thanks and sign-off.</div></details>
+      </section>
+
+      <section id="glossary">
+        <div class="step">Reference</div><h2>Terms used in the conversation</h2>
+        <div class="tablewrap"><table><thead><tr><th>Term</th><th>Meaning in this guide</th><th>First useful point</th></tr></thead><tbody>
+          <tr><td>pstack</td><td>Lauren's skill and workflow collection. Automatic captions often render the name as PAC.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=220s">03:40</a></td></tr>
+          <tr><td>Verification</td><td>Giving an agent tools to run the product, observe behavior, and compare evidence with an explicit goal.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=966s">16:06</a></td></tr>
+          <tr><td>Hill climbing</td><td>Repeatedly changing a system against a score or rubric and retaining improvements.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1060s">17:40</a></td></tr>
+          <tr><td>Dune</td><td>An internal, closed framework Lauren describes as a convention-heavy base for Electron applications.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=1780s">29:40</a></td></tr>
+          <tr><td>Outer loop</td><td>External context sources and routines that keep engineering projects current.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2110s">35:10</a></td></tr>
+          <tr><td>Inner loop</td><td>Engineering agents implementing and verifying work against a captured intent.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2135s">35:35</a></td></tr>
+          <tr><td>Gardening</td><td>Maintenance, cleanup, refactoring, and improvements to the working environment.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=2760s">46:00</a></td></tr>
+          <tr><td>Full autopilot</td><td>Lauren's pstack mode that runs intensive machine verification and can merge before human review.</td><td><a class="ts" href="https://www.youtube.com/watch?v=MN9dGgmLyso&amp;t=3160s">52:40</a></td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section id="sources">
+        <div class="step">Method and provenance</div><h2>Source notes</h2>
+        <div class="prose sources">
+          <p>This guide is grounded in the complete 65 minute 36 second video and its English automatic captions. The source was reviewed from start to finish. The public page contains concise transcript summaries rather than a reproduced transcript. The untouched SRT and raw JSON remain in the local research record outside the public explainer directory.</p>
+          <p>Automatic captions repeatedly misheard names. The guide normalizes PAC to pstack, potato to poteto, several Grok Bot variants to the official spelling, and the language reference to the current Bend2 project. The <a href="source-manifest.json">source manifest</a> records all section intervals and frame times.</p>
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=MN9dGgmLyso">Original interview on Matt Pocock's channel</a></li>
+            <li><a href="https://github.com/cursor/plugins/blob/main/pstack/skills/poteto-mode/SKILL.md">pstack poteto-mode source</a></li>
+            <li><a href="https://cursor.com/docs/grok-bot">Official Grok Bot documentation</a></li>
+            <li><a href="https://cursor.com/blog/joining-spacex">Cursor's announcement that it joined SpaceX</a>, dated 14 August 2026</li>
+            <li><a href="https://github.com/bendlang/bend">Current Bend2 repository</a> and its <a href="https://github.com/bendlang/bend/blob/main/guide/GUIDE.md">language guide</a></li>
+          </ul>
+          <p>Numbers about PRs, file sizes, coordinator count, daily sampling, and internal practices are attributed to Lauren because the interview supplies them as her account. All diagrams are original explainer reconstructions of the processes she describes. Editorial clarifications distinguish verification from reversibility and formal proof from unencoded requirements.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="lightbox" aria-label="Video frame"><button type="button" id="lightbox-close" aria-label="Close enlarged frame"><img id="lightbox-img" alt=""></button><p id="lightbox-caption"></p></dialog>
+<script>
+(function () {
+  const root = document.documentElement;
+  const theme = document.getElementById("theme");
+  let saved = null;
+  try { saved = localStorage.getItem("poteto-theme"); } catch (error) { saved = null; }
+  if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+  theme.addEventListener("click", function () {
+    const current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    root.dataset.theme = current === "dark" ? "light" : "dark";
+    try { localStorage.setItem("poteto-theme", root.dataset.theme); } catch (error) { /* Theme still works for this page view. */ }
+  });
+
+  const summaries = Array.from(document.querySelectorAll("details.transcript"));
+  document.getElementById("open-all").addEventListener("click", function () { summaries.forEach(function (item) { item.open = true; }); });
+  document.getElementById("close-all").addEventListener("click", function () { summaries.forEach(function (item) { item.open = false; }); });
+
+  const dialog = document.getElementById("lightbox");
+  const dialogImage = document.getElementById("lightbox-img");
+  const dialogCaption = document.getElementById("lightbox-caption");
+  document.querySelectorAll("button[data-full]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const image = button.querySelector("img");
+      dialogImage.src = button.dataset.full;
+      dialogImage.alt = image.alt;
+      dialogCaption.textContent = image.alt;
+      if (dialog.showModal) dialog.showModal(); else window.open(button.dataset.full, "_blank", "noopener");
+    });
+  });
+  document.getElementById("lightbox-close").addEventListener("click", function () { dialog.close(); });
+  dialog.addEventListener("click", function (event) { if (event.target === dialog) dialog.close(); });
+
+  const links = Array.from(document.querySelectorAll(".toc a[href^='#']"));
+  const sections = links.map(function (link) { return document.querySelector(link.getAttribute("href")); }).filter(Boolean);
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(function (entries) {
+      entries.filter(function (entry) { return entry.isIntersecting; }).forEach(function (entry) {
+        links.forEach(function (link) { link.removeAttribute("aria-current"); });
+        const active = links.find(function (link) { return link.getAttribute("href") === "#" + entry.target.id; });
+        if (active) active.setAttribute("aria-current", "true");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    sections.forEach(function (section) { observer.observe(section); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "title": "Lauren Tan's agent kitchen: how she scaled to 2,500 PRs",
+  "source_url": "https://www.youtube.com/watch?v=MN9dGgmLyso",
+  "source_label": "Matt Pocock interview with Lauren Tan, also known as poteto",
+  "video_id": "MN9dGgmLyso",
+  "published": "2026-10-03",
+  "duration_seconds": 3936,
+  "caption_provenance": "English automatic captions acquired from YouTube. The untouched SRT and JSON are retained in the local research record, outside the public site.",
+  "normalizations": {
+    "PAC": "pstack",
+    "potato": "poteto",
+    "Grokbot variants": "Grok Bot",
+    "Bend variants": "Bend2"
+  },
+  "scenes": [
+    {"id":"trust","title":"From micromanaging to earned trust","start":0,"end":380,"frame_time":376,"explanation":"Lauren traces pstack to repeated effort supervising one agent and removing herself as the bridge to debugging evidence."},
+    {"id":"intent","title":"Expertise becomes expressible intent","start":380,"end":645,"frame_time":520,"explanation":"Stronger execution raises the value of domain knowledge, precise goals, and vocabulary that makes hidden requirements explicit."},
+    {"id":"kitchen","title":"Why a Michelin kitchen","start":645,"end":966,"frame_time":760,"image":"img/0760-kitchen.jpg","explanation":"The kitchen metaphor combines throughput with craft and assigns the human responsibility for tools, organization, and final quality."},
+    {"id":"verification","title":"Verification closes the loop","start":966,"end":1138,"frame_time":1010,"image":"img/1010-verification.jpg","explanation":"Agents need tools to run the application, observe behavior, compare it with a goal, and revise their work."},
+    {"id":"determinism","title":"Put deterministic work in tools","start":1138,"end":1495,"frame_time":1320,"explanation":"A reusable CLI handles repeatable mechanics while the agent spends judgment on ambiguous decisions and evidence."},
+    {"id":"environment","title":"Invest in the environment before parallelism","start":1495,"end":1717,"frame_time":1600,"explanation":"Low trust creates a micromanagement cycle, so tools and constraints need deliberate investment before agent count grows."},
+    {"id":"dune","title":"Dune narrows possible mistakes","start":1717,"end":2012,"frame_time":1830,"explanation":"Lauren uses internal framework conventions, feature directories, and lint rules to reduce the number of invalid implementation paths."},
+    {"id":"loops","title":"Connect the outer and inner loops","start":2012,"end":2330,"frame_time":2200,"explanation":"External reports must refresh engineering context, while inner-loop agents still reproduce and verify each problem."},
+    {"id":"projects","title":"Scale projects, not chats","start":2330,"end":2410,"frame_time":2360,"explanation":"Persistent coordinators manage task lists, workers, and shared context instead of multiplying independent chats."},
+    {"id":"coordination","title":"Coordinate with context","start":2410,"end":2731,"frame_time":2580,"image":"img/2580-coordination.jpg","explanation":"Grouping related reports before delegation can expose a common root cause and avoid duplicate fixes."},
+    {"id":"gardening","title":"The PR count includes gardening","start":2731,"end":2853,"frame_time":2780,"explanation":"Lauren says much of the reported PR volume is maintenance that improves the environment rather than new features."},
+    {"id":"buffer","title":"Buffer findings to see patterns","start":2853,"end":2959,"frame_time":2865,"explanation":"A recurring scan records findings for later comparison so a systemic fix can replace many reactive patches."},
+    {"id":"sampling","title":"Sample code and repair the process","start":2959,"end":3115,"frame_time":3030,"explanation":"Lauren samples landed work and changes shared rules when several agents repeat the same shortcut."},
+    {"id":"autopilot","title":"Overnight autopilot and its cost","start":3115,"end":3340,"frame_time":3190,"explanation":"Multiple verifier agents can test, repair, and merge before human review, at substantial token cost and with remaining coverage limits."},
+    {"id":"limits","title":"Where autonomy remains unresolved","start":3340,"end":3577,"frame_time":3420,"image":"img/3420-limits.jpg","explanation":"Lauren ties autonomy to verifiability and acknowledges that irreversible or hard-to-check work has no universal solution."},
+    {"id":"personal-skills","title":"Skills are personal, combinable process","start":3577,"end":3772,"frame_time":3690,"explanation":"Users can combine skill libraries, but should understand, adapt, and verify the processes they carry between projects."},
+    {"id":"recall","title":"Recall and compact workflow skills","start":3772,"end":3936,"frame_time":3840,"explanation":"Recall compresses repeated context recovery into a workflow, followed by the closing view that stronger models can use shorter process descriptions."}
+  ]
+}
