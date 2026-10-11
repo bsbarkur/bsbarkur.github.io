@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muon vs AdamW, step by step</title>
+<meta name="description" content="A visual explainer of what an optimiser does during training, how Adam and AdamW work, and how Muon replaces the update for weight matrices with an orthogonalised one.">
+<style>
+:root{--paper:#f4efe5;--sheet:#fffdf8;--ink:#20221f;--muted:#65645d;--line:#d7cfbf;--blue:#2456a6;--blue-soft:#e4ebf7;--copper:#a74723;--copper-soft:#f8e4d8;--green:#386853;--green-soft:#deeee6;--violet:#66539a;--violet-soft:#ebe7f6;--amber:#9c6a0b;--amber-soft:#faefcf;--rail:#252823;--code:#191d1a;--radius:10px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.74 Charter,'Bitstream Charter','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif}
+a{color:var(--blue);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:4px}button{font:inherit}
+h1,h2,h3,p{margin-top:0}h1,h2{font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:500;letter-spacing:-.03em;line-height:1.08}
+h1{font-size:clamp(2.4rem,5.4vw,5rem);max-width:980px;margin-bottom:22px}h2{font-size:clamp(1.8rem,3.1vw,2.8rem);max-width:850px;margin-bottom:18px}
+h3{font:650 1.05rem/1.35 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin-bottom:9px}p{margin-bottom:18px}
+.layout{display:grid;grid-template-columns:272px minmax(0,1fr)}
+.rail{position:sticky;top:0;height:100vh;overflow:auto;background:var(--rail);color:#f2eee5;padding:30px 22px}
+.rail-mark{display:flex;align-items:center;gap:11px;padding-bottom:20px;border-bottom:1px solid #4a4d47}
+.rail-glyph{display:grid;place-items:center;width:38px;height:38px;border:1px solid #9ea396;border-radius:50%;font:700 .72rem ui-monospace,SFMono-Regular,Consolas,monospace}
+.rail-title{font:500 1.05rem/1.25 'Iowan Old Style',Georgia,serif}
+.rail-label,.eyebrow,.label,.tag{font:650 .73rem/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.095em;text-transform:uppercase}
+.rail-label{display:block;color:#b7bcaf;margin:25px 8px 10px}
+.rail nav a{display:block;color:#dedfd7;text-decoration:none;border-left:1px solid #5d6258;padding:7px 10px;font:500 .84rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.rail nav a:hover,.rail nav a.active{color:#fff;border-color:#f3a56f;background:#30342e}
+.rail nav a small{display:block;color:#aeb3a7;font:600 .66rem/1.2 ui-monospace,SFMono-Regular,monospace;letter-spacing:.05em}
+.rail-foot{font:400 .76rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#b7bcaf;border-top:1px solid #4a4d47;padding-top:16px;margin-top:28px}.rail-foot a{color:#f1bc95}
+.content{width:100%;max-width:1320px;padding:50px clamp(24px,5vw,78px) 80px}
+.hero{padding:clamp(12px,3vh,40px) 0 40px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--copper);margin-bottom:17px}
+.hero .lede{font-size:clamp(1.12rem,1.7vw,1.36rem);line-height:1.55;max-width:850px;color:#42443f}
+.meta{display:flex;gap:8px 24px;flex-wrap:wrap;font:500 .82rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted);margin:25px 0 0}
+.section{margin-top:68px;scroll-margin-top:20px}.intro{max-width:820px;font-size:1.06rem;color:#4f504a}.prose{max-width:820px}
+.chapter{display:flex;align-items:center;gap:12px;margin-bottom:13px}.chapter::after{content:"";height:1px;flex:1;background:var(--line)}.chapter .label{color:var(--copper)}
+.panel,figure,.card,.stepper{background:var(--sheet);border:1px solid var(--line);border-radius:var(--radius)}.panel{padding:22px}
+.note{background:var(--amber-soft);border-left:4px solid var(--amber);border-radius:0 7px 7px 0;padding:15px 19px;margin:23px 0;font-size:.95rem;max-width:880px}.note p:last-child{margin-bottom:0}
+.grid2,.grid3{display:grid;gap:15px;margin:23px 0}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:21px}.card p{font-size:.95rem}.card p:last-child{margin-bottom:0}.card .label{display:block;color:var(--blue);margin-bottom:9px}
+.fact-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:25px 0}
+.fact{background:var(--sheet);padding:18px}.fact b{display:block;font:500 1.4rem/1.2 'Iowan Old Style',Georgia,serif;margin-bottom:6px}.fact span{display:block;color:var(--muted);font:500 .79rem/1.45 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+figure{padding:22px 22px 14px;margin:27px 0}figure svg{width:100%;height:auto;display:block;color:var(--ink)}
+figcaption{color:var(--muted);font:400 .88rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin-top:13px;max-width:100ch}figcaption b{color:var(--ink)}
+.figure-title{font:650 .74rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--copper);margin-bottom:15px}
+.tag{display:inline-block;color:var(--green);background:var(--green-soft);padding:3px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;font-size:.61rem}.tag.warn{color:var(--copper);background:var(--copper-soft)}
+.key{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0 0;font:500 .78rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted)}
+.key i{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:3px;margin-right:6px}
+/* Stepper */
+.stepper{padding:23px;margin:28px 0}.step-head{display:flex;align-items:start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.step-count{font:650 .76rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--copper);letter-spacing:.07em;text-transform:uppercase}
+.step-copy{max-width:700px;min-height:120px}.step-copy h3{font-family:'Iowan Old Style',Georgia,serif;font-size:1.5rem;font-weight:500}.step-copy p{color:var(--muted);font-size:.95rem;margin-bottom:8px}
+.step-controls{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.step-controls button,.ctl button{border:1px solid var(--line);background:var(--sheet);color:var(--ink);cursor:pointer;font:650 .76rem ui-monospace,SFMono-Regular,monospace}
+.step-controls button{width:38px;height:38px;border-radius:50%}
+.step-controls button[aria-current="step"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.stage{transition:opacity .22s}.stage.dim{opacity:.2}.stage.current rect{stroke-width:3}
+/* Controls */
+.ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:0 0 14px;font:500 .84rem/1.4 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted)}
+.ctl button{border-radius:999px;padding:6px 13px;font:600 .8rem/1.3 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.ctl button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.ctl input[type=range]{width:220px;accent-color:var(--copper)}
+.ctl output{font:650 .85rem ui-monospace,SFMono-Regular,monospace;color:var(--ink);min-width:3ch}
+.formula{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:20px 0;font:500 1.08rem/1.7 'Iowan Old Style',Georgia,serif;max-width:880px}
+.formula small{display:block;font:500 .8rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted);margin-top:6px}
+.formula .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;padding:6px 0;border-bottom:1px dashed var(--line)}.formula .row:last-of-type{border-bottom:0}
+.formula .row span:last-child{font:400 .88rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted);align-self:center}
+pre{background:var(--code);color:#e9e6dc;border-radius:var(--radius);padding:18px 20px;overflow-x:auto;font:400 .84rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;margin:22px 0;max-width:880px}
+pre .c{color:#9aa294}pre .k{color:#f1bc95}
+.comparison{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--sheet);margin:22px 0}
+.comparison>div{padding:23px}.comparison>div+div{border-left:1px solid var(--line);background:#f8f5ee}.comparison .label{display:block;color:var(--copper);margin-bottom:10px}.comparison p{font-size:.93rem}.comparison p:last-child{margin-bottom:0}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--sheet);margin:23px 0}
+table{width:100%;border-collapse:collapse;font:500 .88rem/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+th,td{text-align:left;vertical-align:top;padding:12px 15px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font:650 .7rem/1.4 ui-monospace,SFMono-Regular,monospace;text-transform:uppercase;letter-spacing:.06em;background:#f6f1e8}tr:last-child td{border-bottom:0}
+.source-list{list-style:none;padding:0}.source-list li{padding:14px 0;border-bottom:1px solid var(--line)}.source-list p{margin:4px 0 0;color:var(--muted);font-size:.9rem}.source-list a{font-weight:650}
+.fine{font:500 .78rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--muted)}
+.math{font-family:'Iowan Old Style',Georgia,serif;font-style:italic}
+figure.wide{overflow-x:auto}figure.wide svg{min-width:640px}.stepper{overflow-x:auto}.step-svg{min-width:680px}
+.readout{font:500 .86rem/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#4f504a}
+@media(max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}.rail{position:static;height:auto}.content{min-width:0;padding:32px 16px 60px}.grid2,.grid3,.comparison,.formula .row{grid-template-columns:minmax(0,1fr)}.comparison>div+div{border-left:0;border-top:1px solid var(--line)}.fact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.ctl input[type=range]{width:160px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="rail" aria-label="Page navigation">
+  <div class="rail-mark"><div class="rail-glyph">∇W</div><div class="rail-title">Muon vs AdamW, step by step</div></div>
+  <span class="rail-label">On this page</span>
+  <nav>
+    <a href="#loop">What an optimiser does<small>01 · the training loop</small></a>
+    <a href="#valley">Momentum<small>02 · a long narrow valley</small></a>
+    <a href="#adam">Adam<small>03 · a step size per number</small></a>
+    <a href="#adamw">AdamW<small>04 · weight decay done right</small></a>
+    <a href="#muon">Muon<small>05 · orthogonalise the update</small></a>
+    <a href="#ns">Newton–Schulz<small>06 · five cheap matmuls</small></a>
+    <a href="#split">Who gets Muon<small>07 · the parameter split</small></a>
+    <a href="#evidence">Does it work?<small>08 · speedruns to ASR</small></a>
+    <a href="#sources">Sources<small>09 · papers and posts</small></a>
+  </nav>
+  <div class="rail-foot">Written October 2026. The valley, the three-weight example and the weight-decay bars are toy problems computed in this page. The Newton–Schulz figure runs the real coefficients from Muon. <a href="/">Back to the blog</a></div>
+</aside>
+
+<main class="content" id="main">
+<header class="hero">
+  <p class="eyebrow">Optimisers · a visual explainer</p>
+  <h1>Muon vs AdamW, one update at a time</h1>
+  <p class="lede">A teammate, Shaurya, trained the same speech recognition model twice this week, once with AdamW and once with Muon. He tuned the learning rate only for AdamW and reused it for Muon, and Muon still won on 23 of his 29 test sets. That made me want to understand what Muon actually does differently. This page starts from what an optimiser is for, goes through momentum, Adam and AdamW, and then spends the second half on Muon.</p>
+  <div class="meta"><span>Reading time ≈ 15 min</span><span>3 interactive figures</span><span>No libraries, no web fonts</span></div>
+</header>
+
+<section class="section" id="loop">
+  <div class="chapter"><span class="label">01 / The training loop</span></div>
+  <h2>What an optimiser does</h2>
+  <p class="intro">A neural network is a long list of numbers called weights. Training is a loop that nudges those numbers so the model's mistakes get smaller. Each pass through the loop does four things, and the optimiser owns only the last one. Click through the steps.</p>
+  <div class="stepper" data-stepper="loop">
+    <div class="step-head">
+      <div class="step-copy" aria-live="polite"><div class="step-count" data-step-count>Step 1 of 4</div><h3 data-step-title></h3><p data-step-body></p></div>
+      <div class="step-controls" role="group" aria-label="Choose a step"><button data-prev aria-label="Previous step">‹</button><button data-step>1</button><button data-step>2</button><button data-step>3</button><button data-step>4</button><button data-next aria-label="Next step">›</button></div>
+    </div>
+    <svg class="step-svg" viewBox="0 0 1000 250" role="img" aria-labelledby="loop-t"><title id="loop-t">The training loop: forward pass, loss, backward pass, optimiser update, and back to the forward pass</title>
+      <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f">
+      <g fill="none" stroke="#20221f" stroke-width="1.6" marker-end="url(#ar1)"><path d="M215 100H268"/><path d="M465 100H518"/><path d="M715 100H768"/><path d="M870 140V205H120V142"/></g>
+      <text x="495" y="225" text-anchor="middle" font-size="11" fill="#65645d">repeat for every batch · a large language model does this hundreds of thousands of times</text>
+      <g class="stage" data-stage><rect x="20" y="58" width="195" height="84" rx="10" fill="#ebe7f6" stroke="#66539a" stroke-width="1.5"/><text x="117" y="92" text-anchor="middle" font-size="14" font-weight="700">Forward pass</text><text x="117" y="113" text-anchor="middle" font-size="11" fill="#65645d">batch in, predictions out</text></g>
+      <g class="stage" data-stage><rect x="270" y="58" width="195" height="84" rx="10" fill="#faefcf" stroke="#9c6a0b" stroke-width="1.5"/><text x="367" y="92" text-anchor="middle" font-size="14" font-weight="700">Loss</text><text x="367" y="113" text-anchor="middle" font-size="11" fill="#65645d">one number: how wrong?</text></g>
+      <g class="stage" data-stage><rect x="520" y="58" width="195" height="84" rx="10" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.5"/><text x="617" y="92" text-anchor="middle" font-size="14" font-weight="700">Backward pass</text><text x="617" y="113" text-anchor="middle" font-size="11" fill="#65645d">a gradient for every weight</text></g>
+      <g class="stage" data-stage><rect x="770" y="58" width="200" height="84" rx="10" fill="#f8e4d8" stroke="#a74723" stroke-width="1.5"/><text x="870" y="88" text-anchor="middle" font-size="14" font-weight="700">Optimiser step</text><text x="870" y="108" text-anchor="middle" font-size="11" fill="#65645d">turn gradients into a change</text><text x="870" y="124" text-anchor="middle" font-size="11" fill="#65645d">SGD · Adam · AdamW · Muon</text></g>
+      </g></svg>
+  </div>
+  <div class="prose">
+    <p>The simplest optimiser takes each weight and moves it a little in the opposite direction of its gradient. That is plain gradient descent, or SGD when the gradient comes from a random batch. The size of the move is the learning rate, usually written <span class="math">η</span>.</p>
+  </div>
+  <div class="formula">w ← w − η · g<small>w is a weight, g is its gradient. Everything on this page is a different answer to the question "what should we subtract?"</small></div>
+  <div class="prose"><p>So why do we need anything fancier? Because the loss surface of a real network is a bad shape to walk down. Some directions are very steep and others are almost flat. One learning rate is too big for the steep directions and too small for the flat ones. Every optimiser after SGD is a way of fixing that.</p></div>
+</section>
+
+<section class="section" id="valley">
+  <div class="chapter"><span class="label">02 / Momentum</span></div>
+  <h2>Walking down a long narrow valley</h2>
+  <p class="intro">Here is the problem in two dimensions. The loss is a valley that is a hundred times steeper across than along. Every optimiser starts at the same point on the left and gets 60 steps to reach the bottom at the centre. Press play, or drag the slider to scrub through the steps.</p>
+  <figure class="wide">
+    <div class="figure-title">Figure 2 · Three optimisers in a narrow valley <span class="tag warn">toy problem</span></div>
+    <div class="ctl" role="group" aria-label="Valley controls">
+      <button id="vPlay" aria-pressed="false">▶ Play</button>
+      <label>step <input type="range" id="vStep" min="0" max="60" value="60"></label><output id="vOut">60</output>
+      <span id="vShow"></span>
+    </div>
+    <svg id="valleySvg" viewBox="0 0 900 360" role="img" aria-label="Contour plot of an elongated valley with the paths of SGD, momentum and Adam"></svg>
+    <div class="key"><span><i style="background:#9b9384"></i>SGD, η = 0.45</span><span><i style="background:#2456a6"></i>SGD with momentum, β = 0.9, η = 0.1</span><span><i style="background:#a74723"></i>Adam, η = 0.3</span></div>
+    <figcaption><b>What to look for.</b> SGD's learning rate is just under the point where it would blow up across the steep direction. It zigzags at first, and after 60 steps it has still covered only two-thirds of the long direction. Momentum keeps a running sum of past gradients, so the side-to-side pushes cancel out and the along-the-valley pushes add up. Adam rescales each coordinate separately, so the flat direction gets as big a step as the steep one. It covers the long distance quickly and overshoots a little at the end. Loss here is <span class="math">½(0.04x² + 4y²)</span>.</figcaption>
+  </figure>
+  <div class="formula">
+    <div class="row"><span>m ← β · m + g</span><span>Momentum: keep a running sum of recent gradients, decaying by β each step (0.9 is typical).</span></div>
+    <div class="row"><span>w ← w − η · m</span><span>Step along the running sum instead of the raw gradient.</span></div>
+  </div>
+  <div class="prose"><p>Momentum dates back to Boris Polyak in 1964, and Sutskever and colleagues showed in 2013 that it matters a lot for deep networks. It is still inside every optimiser on this page, Muon included.</p></div>
+</section>
+
+<section class="section" id="adam">
+  <div class="chapter"><span class="label">03 / Adam</span></div>
+  <h2>Adam gives every number its own step size</h2>
+  <p class="intro">Adam, from Diederik Kingma and Jimmy Ba in 2014, keeps two running averages for each weight. The first, <span class="math">m</span>, is momentum. The second, <span class="math">v</span>, is the average of the squared gradient, which tells you how big that weight's gradients usually are. Adam divides one by the square root of the other.</p>
+  <div class="formula">
+    <div class="row"><span>m ← β₁ m + (1 − β₁) g</span><span>Average gradient, β₁ = 0.9. Which way has this weight been pushed lately?</span></div>
+    <div class="row"><span>v ← β₂ v + (1 − β₂) g²</span><span>Average squared gradient, β₂ = 0.999 (LLMs often use 0.95). How hard has it been pushed?</span></div>
+    <div class="row"><span>w ← w − η · m̂ / (√v̂ + ε)</span><span>The hats are a bias correction for the first few steps, when m and v start at zero.</span></div>
+  </div>
+  <p class="prose">The division is the whole trick. If a weight's gradients are large, the step is divided by something large. If they are tiny, it is divided by something tiny. When the gradient is steady, <span class="math">m̂ / √v̂</span> comes out close to ±1, so every weight moves by roughly <span class="math">η</span> no matter how big its gradient was. When the gradient keeps flipping sign, the average in <span class="math">m</span> cancels out while <span class="math">v</span> stays large, and the step shrinks. The figure below shows three weights that get very different gradients.</p>
+  <figure>
+    <div class="figure-title">Figure 3 · How big a step does each weight take? <span class="tag warn">made-up gradients</span></div>
+    <div class="ctl"><label>step <input type="range" id="aStep" min="1" max="30" value="10"></label><output id="aOut">10</output></div>
+    <svg id="adamSvg" viewBox="0 0 900 300" role="img" aria-label="Bar chart comparing SGD and Adam step sizes for three weights with large steady, tiny steady and noisy gradients"></svg>
+    <figcaption><b>Same learning rate, η = 0.01, for both.</b> SGD's step is just η times the gradient, so the weight with tiny gradients barely moves and the weight with large ones moves 200 times more. Adam's steps for the two steady weights are both about 0.01. The noisy weight, whose gradient alternates between +3 and −2.6, gets a small Adam step because its average direction is weak compared to its size.</figcaption>
+  </figure>
+  <div class="note"><p><b>The cost.</b> Adam stores two extra numbers, m and v, for every weight. A model with 7 billion weights carries 14 billion more numbers of optimiser state. Muon keeps only m.</p></div>
+  <div class="prose"><p>One way to read Adam that becomes useful later: if you turn off the averaging, <span class="math">g / √g²</span> is just the sign of <span class="math">g</span>. Adam is a smoothed version of "move every number by the same amount in the direction of its gradient." Each number is treated on its own. Adam has no idea that the 4,096 × 4,096 numbers in one attention projection belong together as a matrix.</p></div>
+</section>
+
+<section class="section" id="adamw">
+  <div class="chapter"><span class="label">04 / AdamW</span></div>
+  <h2>AdamW fixes how Adam shrinks weights</h2>
+  <p class="intro">Weight decay pulls every weight slightly towards zero on each step. It stops weights from growing without bound and acts as a regulariser. With SGD, the usual way to do it is to add <span class="math">λw</span> to the gradient, which is the same as adding <span class="math">½λw²</span> to the loss. Ilya Loshchilov and Frank Hutter noticed in 2017 that this stops being the same thing once Adam is involved.</p>
+  <div class="comparison">
+    <div><span class="label">Adam with L2</span><p>The decay term is added to the gradient, <span class="math">g + λw</span>, and then the whole thing goes through Adam's division by <span class="math">√v</span>. A weight that gets large gradients has a large <span class="math">√v</span>, so its decay is divided away to almost nothing. Weights that are pushed hardest get regularised least.</p><p><code>m, v ← from (g + λw)</code><br><code>w ← w − η · m̂/√v̂</code></p></div>
+    <div><span class="label">AdamW, decoupled</span><p>Adam only sees the real gradient. The decay is applied separately, straight to the weight, after the Adam step. Every weight shrinks by the same fraction <span class="math">ηλ</span>, whatever its gradients look like.</p><p><code>m, v ← from g</code><br><code>w ← w − η · (m̂/√v̂ + λw)</code></p></div>
+  </div>
+  <figure>
+    <div class="figure-title">Figure 4 · Pull towards zero per step, for two weights both equal to 1.0 <span class="tag warn">illustrative</span></div>
+    <svg id="wdSvg" viewBox="0 0 900 230" role="img" aria-label="Bar chart showing that Adam with L2 decays two equal weights very differently depending on their gradients, while AdamW decays both equally"></svg>
+    <figcaption><b>Why this mattered.</b> Both weights are the same size, so a regulariser should treat them the same. AdamW pulls each by 0.1 η. Adam with L2 pulls weight B, the quiet one, about 46 times harder than weight A, because A's large gradients swamp the decay term before the division. AdamW became the default for training Transformers. Most LLMs from GPT-3 onwards were trained with it, usually with β₂ = 0.95 and λ = 0.1.</figcaption>
+  </figure>
+  <div class="prose"><p>That is the baseline Muon is up against. AdamW is robust, well understood, and has a decade of tuning folklore behind it. It is also elementwise. Every one of the millions of numbers in a weight matrix gets its own step, worked out without looking at any of the others.</p></div>
+</section>
+
+<section class="section" id="muon">
+  <div class="chapter"><span class="label">05 / Muon</span></div>
+  <h2>Muon treats a weight matrix as a matrix</h2>
+  <p class="intro">Muon was written up by Keller Jordan in December 2024, after it set records in the NanoGPT and CIFAR-10 speedruns. The name stands for MomentUm Orthogonalized by Newton–Schulz. It applies only to the 2D weight matrices inside the network, and it does one thing differently from SGD with momentum: before applying the momentum, it replaces it with the nearest <em>orthogonal</em> matrix.</p>
+  <div class="formula">
+    <div class="row"><span>M ← μ M + G</span><span>Momentum on the whole gradient matrix G, μ = 0.95, usually Nesterov-style.</span></div>
+    <div class="row"><span>O ← Orthogonalise(M)</span><span>If M = U S Vᵀ, then O = U Vᵀ. Same directions, every singular value set to 1.</span></div>
+    <div class="row"><span>W ← W − η · O</span><span>Apply the orthogonalised update. Moonshot's version also scales it and adds AdamW-style decay (section 08).</span></div>
+  </div>
+  <p class="prose">To see why that helps, picture what a weight update does. A matrix maps input vectors to output vectors. If you feed it every unit-length input, the outputs trace out an ellipse (in many dimensions, an ellipsoid). The lengths of the ellipse's axes are the matrix's singular values. Gradient updates for Transformer layers turn out to have very lopsided singular values. A few directions dominate and the rest are close to zero, so the update is nearly low rank.</p>
+  <figure class="wide">
+    <div class="figure-title">Figure 5 · What orthogonalising does to a 2 × 2 update</div>
+    <svg viewBox="0 0 900 300" role="img" aria-labelledby="ell-t ell-d"><title id="ell-t">A unit circle mapped by the momentum matrix and by its orthogonalised version</title><desc id="ell-d">On the left, a unit circle of inputs. In the middle, the momentum matrix stretches it into a long thin ellipse with axes 1.0 and 0.08. On the right, the orthogonalised matrix maps it to a circle of radius 1, rotated.</desc>
+      <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" overflow="visible"><path d="M0 0L10 5L0 10z" fill="#20221f"/></marker></defs>
+      <g font-family="system-ui,sans-serif" fill="#20221f" font-size="12">
+      <circle cx="140" cy="150" r="80" fill="#ebe7f6" stroke="#66539a" stroke-width="1.6"/><line x1="140" y1="150" x2="220" y2="150" stroke="#66539a" stroke-width="1.6"/><line x1="140" y1="150" x2="140" y2="70" stroke="#66539a" stroke-width="1.6"/>
+      <text x="140" y="262" text-anchor="middle" font-weight="700">every input of length 1</text>
+      <g fill="none" stroke="#20221f" stroke-width="1.5" marker-end="url(#ar5)"><path d="M240 150H330"/><path d="M570 150H660"/></g>
+      <text x="285" y="138" text-anchor="middle" font-size="11" fill="#65645d">momentum M</text><text x="615" y="138" text-anchor="middle" font-size="11" fill="#65645d">Muon: U Vᵀ</text>
+      <g transform="translate(450 150) rotate(-28)"><ellipse rx="100" ry="8" fill="#e4ebf7" stroke="#2456a6" stroke-width="1.6"/><line x1="0" y1="0" x2="100" y2="0" stroke="#2456a6" stroke-width="2"/><line x1="0" y1="0" x2="0" y2="-8" stroke="#a74723" stroke-width="2"/></g>
+      <text x="450" y="236" text-anchor="middle" font-size="11" fill="#2456a6">long axis σ₁ = 1.0</text><text x="450" y="251" text-anchor="middle" font-size="11" fill="#a74723">short axis σ₂ = 0.08</text>
+      <text x="450" y="274" text-anchor="middle" font-weight="700">the update mostly pushes one way</text>
+      <g transform="translate(770 150) rotate(-28)"><circle r="80" fill="#f8e4d8" stroke="#a74723" stroke-width="1.6"/><line x1="0" y1="0" x2="80" y2="0" stroke="#2456a6" stroke-width="2"/><line x1="0" y1="0" x2="0" y2="-80" stroke="#a74723" stroke-width="2"/></g>
+      <text x="770" y="262" text-anchor="middle" font-weight="700">both directions get a full step</text>
+      </g></svg>
+    <figcaption><b>Same directions, different lengths.</b> Orthogonalising keeps the axes of the ellipse where they were and makes them all the same length. The weak direction, which plain momentum would have nudged by 8% of the strong one, now gets an equal share of the update. Keller Jordan's explanation is that those rare directions matter for learning but get drowned out in an ordinary update.</figcaption>
+  </figure>
+  <div class="grid2">
+    <div class="card"><span class="label">Adam's view of a weight matrix</span><p>Each entry is normalised on its own, so roughly every entry moves by the same amount. In the language of Bernstein and Newhouse, that is steepest descent when you measure the size of a step by its largest entry.</p></div>
+    <div class="card"><span class="label">Muon's view</span><p>The whole matrix is normalised, so every singular direction moves by the same amount. That is steepest descent when you measure the size of a step by its largest singular value, the spectral norm. For a layer that maps vectors to vectors, that is the natural way to measure how much the layer's behaviour changed.</p></div>
+  </div>
+</section>
+
+<section class="section" id="ns">
+  <div class="chapter"><span class="label">06 / Newton–Schulz</span></div>
+  <h2>Orthogonalising without an SVD</h2>
+  <p class="intro">The obvious way to compute <span class="math">U Vᵀ</span> is a singular value decomposition, which is far too slow to run on every weight matrix at every step. Muon uses a Newton–Schulz iteration instead. It is five rounds of the same small polynomial, built only from matrix multiplications, and it runs fine in bfloat16 on a GPU.</p>
+  <div class="formula">X₀ = M / ‖M‖<sub>F</sub> &nbsp;&nbsp; then five times: &nbsp; X ← a X + (b A + c A²) X, &nbsp; A = X Xᵀ<small>(a, b, c) = (3.4445, −4.7750, 2.0315). Dividing by the Frobenius norm first guarantees every singular value starts at 1 or below.</small></div>
+  <p class="prose">The trick is that this polynomial acts on each singular value separately and leaves the directions alone. Each round sends a singular value <span class="math">σ</span> to <span class="math">aσ + bσ³ + cσ⁵</span>. Near zero that is about 3.4 times bigger, so small values grow fast, while values near 1 stay near 1. Drag the slider to watch sixteen singular values from a lopsided update go through the five rounds.</p>
+  <figure class="wide">
+    <div class="figure-title">Figure 6 · Singular values through the Newton–Schulz iteration <span class="tag">real coefficients</span></div>
+    <div class="ctl"><label>round <input type="range" id="nsStep" min="0" max="5" value="0"></label><output id="nsOut">0</output><span id="nsNote"></span></div>
+    <svg id="nsSvg" viewBox="0 0 900 330" role="img" aria-label="Sixteen singular values on a log scale moving into a band between about 0.7 and 1.2 over five iterations"></svg>
+    <figcaption><b>Not exactly 1, and that is fine.</b> The coefficients were tuned to pull small values up as fast as possible, at the cost of landing in a band of roughly 0.7 to 1.2 rather than on 1 exactly. Keller Jordan found the noise did not hurt training. A value below about 0.001 does not make it into the band in five rounds, but those directions are tiny to begin with. The starting values here are spaced evenly on a log scale from 0.9 down to 0.003.</figcaption>
+  </figure>
+  <p class="prose">This is the core of the PyTorch reference code, lightly trimmed. It transposes tall matrices so <span class="math">X Xᵀ</span> is the smaller of the two products.</p>
+<pre><span class="k">def</span> newton_schulz(G, steps=5):
+    a, b, c = 3.4445, -4.7750, 2.0315
+    X = G.bfloat16()
+    tall = G.size(-2) &gt; G.size(-1)
+    <span class="k">if</span> tall: X = X.mT
+    X = X / (X.norm(dim=(-2, -1), keepdim=True) + 1e-7)
+    <span class="k">for</span> _ <span class="k">in</span> range(steps):
+        A = X @ X.mT
+        B = b * A + c * A @ A
+        X = a * X + B @ X
+    <span class="k">if</span> tall: X = X.mT
+    <span class="k">return</span> X</pre>
+  <div class="fact-strip">
+    <div class="fact"><b>5</b><span>Newton–Schulz rounds per step, each three matmuls</span></div>
+    <div class="fact"><b>&lt; 1%</b><span>extra FLOPs for typical LM training, per Keller Jordan's estimate</span></div>
+    <div class="fact"><b>1 buffer</b><span>of optimiser state per weight (momentum), against Adam's 2</span></div>
+    <div class="fact"><b>0.95</b><span>momentum μ, Nesterov-style, the common default</span></div>
+  </div>
+</section>
+
+<section class="section" id="split">
+  <div class="chapter"><span class="label">07 / The parameter split</span></div>
+  <h2>Muon does not replace AdamW, it shares the model with it</h2>
+  <p class="intro">Orthogonalising only means something for a matrix that maps one hidden vector to another. The embedding table is a lookup, not a linear map in that sense, and the output head behaves differently too. Norm gains and biases are vectors. So every Muon setup I have seen runs two optimisers side by side.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Shape</th><th>Optimiser</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><b>Attention Q, K, V, output projections</b></td><td>2D, hidden × hidden</td><td>Muon</td><td>Hidden-to-hidden maps. Keller Jordan reports Q, K and V work better orthogonalised separately than as one fused matrix.</td></tr>
+      <tr><td><b>Feed-forward / expert matrices</b></td><td>2D</td><td>Muon</td><td>Most of the model's weights live here, so most of the benefit does too.</td></tr>
+      <tr><td><b>Conv filters</b></td><td>4D</td><td>Muon, flattened to 2D</td><td>Used in the CIFAR-10 speedrun and in ASR encoders with conv modules.</td></tr>
+      <tr><td><b>Token embedding</b></td><td>2D, vocab × hidden</td><td>AdamW</td><td>Each step only touches the rows for tokens in the batch. It is a table, not a map between hidden spaces.</td></tr>
+      <tr><td><b>Output head / classifier</b></td><td>2D, hidden × vocab</td><td>AdamW</td><td>Empirically better with AdamW in the original speedrun work.</td></tr>
+      <tr><td><b>Norm gains, biases, scalars</b></td><td>1D or 0D</td><td>AdamW</td><td>There is nothing to orthogonalise in a vector.</td></tr>
+    </tbody>
+  </table></div>
+  <pre><span class="c"># PyTorch has shipped torch.optim.Muon since 2.9; it only accepts 2D params</span>
+hidden = [p <span class="k">for</span> n, p <span class="k">in</span> model.named_parameters() <span class="k">if</span> p.ndim == 2 <span class="k">and</span> <span class="c">"embed"</span> <span class="k">not in</span> n <span class="k">and</span> <span class="c">"head"</span> <span class="k">not in</span> n]
+ids    = {id(p) <span class="k">for</span> p <span class="k">in</span> hidden}
+rest   = [p <span class="k">for</span> p <span class="k">in</span> model.parameters() <span class="k">if</span> id(p) <span class="k">not in</span> ids]
+opt_muon  = torch.optim.Muon(hidden, lr=0.02, momentum=0.95, weight_decay=0.1)
+opt_adamw = torch.optim.AdamW(rest, lr=3e-4, betas=(0.9, 0.95), weight_decay=0.1)
+<span class="c"># every step: loss.backward(); opt_muon.step(); opt_adamw.step(); zero both</span></pre>
+  <p class="fine">The learning rates above are placeholders to show that the two groups usually have different values. PyTorch's <code>adjust_lr_fn="match_rms_adamw"</code> option rescales Muon's update so the two can share one learning rate, which is the Moonshot trick in the next section.</p>
+</section>
+
+<section class="section" id="evidence">
+  <div class="chapter"><span class="label">08 / Evidence</span></div>
+  <h2>Does it actually work?</h2>
+  <p class="intro">Muon started on small speedrun benchmarks, and the obvious worry was whether it would hold up at scale. Over 2025 and 2026 several large training runs answered that.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>When</th><th>Who</th><th>What they found</th></tr></thead>
+    <tbody>
+      <tr><td>Oct–Dec 2024</td><td><a href="https://kellerjordan.github.io/posts/muon/">Keller Jordan et al.</a></td><td>NanoGPT speedrun about 1.35× faster than AdamW. CIFAR-10 to 94% in 2.6 A100-seconds, down from 3.3. A 1.5B model hit GPT-2 XL HellaSwag in 10 8×H100-hours against 13.3 for AdamW.</td></tr>
+      <tr><td>Feb 2025</td><td><a href="https://arxiv.org/abs/2502.16982">Moonshot AI, "Muon is Scalable for LLM Training"</a></td><td>Two changes were needed at scale. They added AdamW-style weight decay, and scaled each update by <span class="math">0.2·√max(A, B)</span> for an A × B matrix so its RMS matches a typical AdamW update. Muon needed about 52% of AdamW's FLOPs to reach the same loss. They trained Moonlight, a 16B-total, 3B-active MoE, on 5.7T tokens.</td></tr>
+      <tr><td>Jul 2025</td><td><a href="https://arxiv.org/abs/2507.20534">Moonshot AI, Kimi K2</a></td><td>A 1T-parameter MoE (32B active) trained on 15.5T tokens with MuonClip, which adds QK-clip to stop attention logits from blowing up. The report says "zero loss spike".</td></tr>
+      <tr><td>2026</td><td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash">DeepSeek V4 and V4.1 Flash</a></td><td>Muon for matrix parameters, AdamW for the rest. Their reports list momentum 0.95 and weight decay 0.1.</td></tr>
+      <tr><td>Oct 2026</td><td><a href="https://x.com/ShauryaSharthak/status/2108981684171682137">Shaurya Sharthak, ASR</a></td><td>Two-epoch run on a streaming ASR model with CTC and RNN-T heads. Learning rate swept for AdamW only. Muon WER 20.64 against 21.11, better on 23 of 29 sets.</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="wide">
+    <div class="figure-title">Figure 7 · Shaurya's run, word error rate on a few test sets (lower is better)</div>
+    <svg id="asrSvg" viewBox="0 0 900 380" role="img" aria-label="Paired bar chart of word error rates for Muon and AdamW across eight test sets; Muon is lower on six of them"></svg>
+    <div class="key"><span><i style="background:#a74723"></i>Muon</span><span><i style="background:#9b9384"></i>AdamW</span></div>
+    <figcaption><b>Numbers from the screenshots in Shaurya's post.</b> Muon gained most on phone audio, noisy far-field audio and meetings. AMI headset went the other way in both of his run pairs, which he flagged as worth looking into. At equal wall-clock time (28.8 minutes, about 10,160 Muon steps against 11,250 AdamW steps) Muon still came out ahead, 20.78 against 21.11. In his one-epoch pair the two optimisers tied, so I would treat this as one promising result rather than a settled one.</figcaption>
+  </figure>
+  <div class="note"><p><b>Things that are still open.</b> Muon needs the full gradient matrix to orthogonalise it, which complicates sharded training where each GPU holds a slice. Fine-tuning a model that was pre-trained with AdamW using Muon has given mixed results, and Moonshot's fine-tuning experiments did best when pre-training and fine-tuning used the same optimiser. And the learning rate does not transfer one-to-one from AdamW unless you use the RMS-matching scale.</p></div>
+</section>
+
+<section class="section" id="sources">
+  <div class="chapter"><span class="label">09 / Sources</span></div>
+  <h2>Papers and posts</h2>
+  <ul class="source-list">
+    <li><a href="https://kellerjordan.github.io/posts/muon/">Keller Jordan et al., "Muon: An optimizer for hidden layers in neural networks", December 2024</a><p>The algorithm, Newton–Schulz coefficients, the parameter split, speedrun numbers and the FLOP overhead estimate. Code at <a href="https://github.com/KellerJordan/Muon">github.com/KellerJordan/Muon</a>.</p></li>
+    <li><a href="https://arxiv.org/abs/2409.20325">Bernstein and Newhouse, "Old Optimizer, New Norm: An Anthology", 2024</a><p>Reads Adam, Shampoo and others as steepest descent under different norms, and proposed Newton–Schulz for the orthogonalisation step. Also see Jeremy Bernstein's <a href="https://jeremybernste.in/writing/deriving-muon">"Deriving Muon"</a>.</p></li>
+    <li><a href="https://arxiv.org/abs/2502.16982">Liu et al. (Moonshot AI), "Muon is Scalable for LLM Training", 2025</a><p>Weight decay and RMS-matched update scale (their Eq. 4), the 52% FLOPs figure, and Moonlight.</p></li>
+    <li><a href="https://arxiv.org/abs/2507.20534">Kimi Team, "Kimi K2: Open Agentic Intelligence", 2025</a><p>MuonClip and the 15.5T-token run.</p></li>
+    <li><a href="https://arxiv.org/abs/1412.6980">Kingma and Ba, "Adam: A Method for Stochastic Optimization", 2014</a><p>The update rule and bias correction in section 03.</p></li>
+    <li><a href="https://arxiv.org/abs/1711.05101">Loshchilov and Hutter, "Decoupled Weight Decay Regularization", 2017</a><p>The AdamW paper and the L2 versus decoupled argument in section 04.</p></li>
+    <li><a href="https://proceedings.mlr.press/v28/sutskever13.html">Sutskever, Martens, Dahl and Hinton, "On the importance of initialization and momentum in deep learning", ICML 2013</a><p>Momentum and Nesterov momentum for deep networks.</p></li>
+    <li><a href="https://arxiv.org/abs/1802.09568">Gupta, Koren and Singer, "Shampoo: Preconditioned Stochastic Tensor Optimization", 2018</a><p>Keller Jordan notes that Shampoo without its preconditioner accumulation gives the same orthogonalised update.</p></li>
+    <li><a href="https://docs.pytorch.org/docs/main/generated/torch.optim.Muon.html">PyTorch documentation, torch.optim.Muon</a><p>Defaults (momentum 0.95, Nesterov, 5 steps, the same coefficients) and the 2D-only restriction.</p></li>
+  </ul>
+  <p class="fine">Figures 2, 3 and 4 are toy problems I computed in this page so the mechanism is easy to see. They are not measurements of real training. Figure 6 runs Muon's actual polynomial on a made-up set of singular values. Figure 7 copies numbers from Shaurya's screenshots.</p>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const NS='http://www.w3.org/2000/svg';
+  const el=(n,a={},parent)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(parent)parent.appendChild(e);return e};
+  const txt=(x,y,s,a={},parent)=>{const t=el('text',Object.assign({x,y},a),parent);t.textContent=s;return t};
+  const C={ink:'#20221f',muted:'#65645d',line:'#d7cfbf',blue:'#2456a6',copper:'#a74723',grey:'#9b9384',green:'#386853',sheet:'#fffdf8',amber:'#9c6a0b'};
+  const font={'font-family':'system-ui,sans-serif'};
+
+  /* Figure 1: training loop stepper */
+  (function(){const root=$('[data-stepper="loop"]');const steps=[
+    ['Forward pass',"A batch of examples goes through the network with the current weights. For a language model that is a few million tokens, and the output is a guess at every next token."],
+    ['Loss',"The guesses are compared with the right answers and boiled down to one number. Cross-entropy is the usual choice. Lower is better, and the whole point of training is to push this number down."],
+    ['Backward pass',"Backpropagation works out, for every single weight, which direction would make the loss go up and how steeply. That direction is the gradient. A model with a billion weights gets a billion gradient numbers."],
+    ['Optimiser step',"Now something has to decide how far to move each weight. That is the optimiser. The gradient only says which way is downhill right here. The optimiser decides the step, using memory of past gradients and rules about scale. SGD, Adam, AdamW and Muon all live in this one box."]];
+    const btns=$$('[data-step]',root),st=$$('[data-stage]',root),cnt=$('[data-step-count]',root),ti=$('[data-step-title]',root),bo=$('[data-step-body]',root);let a=0;
+    function show(i){a=i;btns.forEach((b,j)=>j===i?b.setAttribute('aria-current','step'):b.removeAttribute('aria-current'));st.forEach((s,j)=>{s.classList.toggle('current',j===i);s.classList.toggle('dim',j!==i)});cnt.textContent='Step '+(i+1)+' of 4';ti.textContent=steps[i][0];bo.textContent=steps[i][1]}
+    btns.forEach((b,i)=>b.addEventListener('click',()=>show(i)));$('[data-prev]',root).addEventListener('click',()=>show((a+3)%4));$('[data-next]',root).addEventListener('click',()=>show((a+1)%4));show(0);})();
+
+  /* Figure 2: valley race */
+  (function(){const A=0.04,B=4,N=60,start=[-9,2.2];const grad=(x,y)=>[A*x,B*y];
+    function run(kind,lr){let x=start[0],y=start[1],vx=0,vy=0,mx=0,my=0,sx=0,sy=0;const p=[[x,y]];
+      for(let t=1;t<=N;t++){const [gx,gy]=grad(x,y);
+        if(kind==='sgd'){x-=lr*gx;y-=lr*gy}
+        else if(kind==='mom'){vx=.9*vx+gx;vy=.9*vy+gy;x-=lr*vx;y-=lr*vy}
+        else{mx=.9*mx+.1*gx;my=.9*my+.1*gy;sx=.999*sx+.001*gx*gx;sy=.999*sy+.001*gy*gy;const b1=1-Math.pow(.9,t),b2=1-Math.pow(.999,t);x-=lr*(mx/b1)/(Math.sqrt(sx/b2)+1e-8);y-=lr*(my/b1)/(Math.sqrt(sy/b2)+1e-8)}
+        p.push([x,y])}return p}
+    const paths=[['SGD',run('sgd',.45),C.grey],['Momentum',run('mom',.1),C.blue],['Adam',run('adam',.3),C.copper]];
+    const svg=$('#valleySvg'),X=x=>450+x*45,Y=y=>180-y*55;
+    const g=el('g',font,svg);
+    [0.05,0.2,0.5,1,1.8,2.8,4,5.5,8,11.3].forEach(L=>{el('ellipse',{cx:X(0),cy:Y(0),rx:Math.sqrt(2*L/A)*45,ry:Math.sqrt(2*L/B)*55,fill:'none',stroke:C.line,'stroke-width':1},g)});
+    el('circle',{cx:X(0),cy:Y(0),r:5,fill:C.green},g);txt(X(0)+9,Y(0)+22,'minimum',{'font-size':11,fill:C.green,'font-weight':700},g);
+    el('circle',{cx:X(start[0]),cy:Y(start[1]),r:5,fill:C.ink},g);txt(X(start[0]),Y(start[1])-12,'start',{'font-size':11,'text-anchor':'middle','font-weight':700},g);
+    txt(450,350,'x: the long, gentle direction  ·  y: the steep direction (100× steeper)',{'text-anchor':'middle','font-size':11,fill:C.muted},g);
+    const lines=paths.map(([n,p,c])=>({p,c,n,line:el('polyline',{fill:'none',stroke:c,'stroke-width':2.2,'stroke-linejoin':'round'},g),dot:el('circle',{r:5.5,fill:c,stroke:'#fff','stroke-width':1.5},g)}));
+    const range=$('#vStep'),out=$('#vOut'),show=$('#vShow'),play=$('#vPlay');
+    const loss=(x,y)=>.5*(A*x*x+B*y*y);
+    function draw(k){out.textContent=k;lines.forEach(L=>{const pts=L.p.slice(0,k+1);L.line.setAttribute('points',pts.map(([x,y])=>X(x).toFixed(1)+','+Y(y).toFixed(1)).join(' '));const [x,y]=pts[pts.length-1];L.dot.setAttribute('cx',X(x));L.dot.setAttribute('cy',Y(y))});
+      show.textContent='loss after '+k+' steps: '+lines.map(L=>L.n+' '+loss(...L.p[k]).toFixed(3)).join(' · ')}
+    range.addEventListener('input',()=>{stop();draw(+range.value)});
+    let timer=null;function stop(){if(timer){clearInterval(timer);timer=null}play.setAttribute('aria-pressed','false');play.textContent='▶ Play'}
+    play.addEventListener('click',()=>{if(timer){stop();return}let k=+range.value>=N?0:+range.value;play.setAttribute('aria-pressed','true');play.textContent='❚❚ Pause';timer=setInterval(()=>{range.value=k;draw(k);if(++k>N)stop()},90)});
+    draw(N);})();
+
+  /* Figure 3: SGD vs Adam step sizes for three weights */
+  (function(){const lr=.01,T=30;
+    const seqs=[['steady, large',t=>2],['steady, tiny',t=>.01],['noisy',t=>t%2?3:-2.6]];
+    function adamSteps(f){let m=0,v=0;const out=[];for(let t=1;t<=T;t++){const gg=f(t);m=.9*m+.1*gg;v=.999*v+.001*gg*gg;const mh=m/(1-Math.pow(.9,t)),vh=v/(1-Math.pow(.999,t));out.push(lr*mh/(Math.sqrt(vh)+1e-8))}return out}
+    const ad=seqs.map(s=>adamSteps(s[1]));
+    const svg=$('#adamSvg'),range=$('#aStep'),out=$('#aOut');
+    const scale=v=>Math.log10(Math.max(Math.abs(v),1e-5)/1e-5)/Math.log10(.03/1e-5)*560;
+    function draw(t){out.textContent=t;svg.innerHTML='';const g=el('g',font,svg);
+      [1e-4,1e-3,1e-2].forEach(v=>{const x=240+scale(v);el('line',{x1:x,y1:20,x2:x,y2:262,stroke:C.line,'stroke-dasharray':'3 4'},g);txt(x,282,v===1e-2?'0.01 = η':String(v),{'text-anchor':'middle','font-size':10.5,fill:C.muted},g)});
+      txt(240+280,298,'size of the step taken by the weight (log scale)',{'text-anchor':'middle','font-size':10.5,fill:C.muted},g);
+      seqs.forEach((s,i)=>{const y0=30+i*80,gg=s[1](t),sgd=lr*gg,adam=ad[i][t-1];
+        txt(20,y0+18,'weight '+(i+1),{'font-size':13,'font-weight':700},g);txt(20,y0+36,s[0],{'font-size':11,fill:C.muted},g);txt(20,y0+52,'gradient now: '+gg,{'font-size':11,fill:C.muted},g);
+        el('rect',{x:240,y:y0,width:Math.max(2,scale(sgd)),height:22,rx:3,fill:C.grey},g);txt(246+Math.max(2,scale(sgd)),y0+15,'SGD '+Math.abs(sgd).toPrecision(2),{'font-size':11,'font-weight':650},g);
+        el('rect',{x:240,y:y0+28,width:Math.max(2,scale(adam)),height:22,rx:3,fill:C.copper},g);txt(246+Math.max(2,scale(adam)),y0+43,'Adam '+Math.abs(adam).toPrecision(2),{'font-size':11,'font-weight':650,fill:C.copper},g)});}
+    range.addEventListener('input',()=>draw(+range.value));draw(10);})();
+
+  /* Figure 4: weight decay pull */
+  (function(){const svg=$('#wdSvg'),g=el('g',font,svg),lam=.1;
+    /* steady gradient g, weight w=1: Adam+L2 pull = lam*w/|g+lam*w| (in units of eta), AdamW pull = lam*w */
+    const rows=[['weight A, gradients ≈ 5',5],['weight B, gradients ≈ 0.01',.01]];
+    const W=520,sx=v=>v/.12*W;
+    txt(260,22,'Adam + L2',{'font-size':11,'font-weight':700,fill:C.grey},g);txt(400,22,'AdamW',{'font-size':11,'font-weight':700,fill:C.copper},g);
+    rows.forEach(([n,gr],i)=>{const y=40+i*80,l2=lam/Math.abs(gr+lam),aw=lam;
+      txt(20,y+28,n,{'font-size':12,'font-weight':700},g);
+      el('rect',{x:240,y,width:Math.max(2,Math.min(W,sx(Math.min(l2,.12)))),height:22,rx:3,fill:C.grey},g);
+      txt(248+Math.max(2,Math.min(W,sx(Math.min(l2,.12)))),y+15,l2>.12?'0.91 η, off the chart':l2.toFixed(3)+' η',{'font-size':11,'font-weight':650},g);
+      el('rect',{x:240,y:y+28,width:sx(aw),height:22,rx:3,fill:C.copper},g);txt(248+sx(aw),y+43,aw.toFixed(3)+' η',{'font-size':11,'font-weight':650,fill:C.copper},g)});
+    txt(20,215,'λ = 0.1. Bars show how far each weight is pulled towards zero per step, in units of the learning rate.',{'font-size':10.5,fill:C.muted},g);})();
+
+  /* Figure 6: Newton-Schulz singular values */
+  (function(){const a=3.4445,b=-4.775,c=2.0315,f=s=>a*s+b*s*s*s+c*Math.pow(s,5);
+    const n=16,s0=[...Array(n)].map((_,i)=>.9*Math.pow(.003/.9,i/(n-1)));
+    const hist=[s0];for(let k=0;k<5;k++)hist.push(hist[k].map(f));
+    const svg=$('#nsSvg'),range=$('#nsStep'),out=$('#nsOut'),note=$('#nsNote');
+    const lo=Math.log10(.002),hi=Math.log10(1.5),Y=v=>290-(Math.log10(Math.max(v,.002))-lo)/(hi-lo)*260;
+    function draw(k){out.textContent=k;svg.innerHTML='';const g=el('g',font,svg);
+      el('rect',{x:70,y:Y(1.2),width:800,height:Y(.7)-Y(1.2),fill:'#deeee6'},g);txt(866,Y(1.2)-6,'band 0.7 to 1.2',{'text-anchor':'end','font-size':10.5,fill:C.green,'font-weight':700},g);
+      [.003,.01,.03,.1,.3,1].forEach(v=>{el('line',{x1:70,y1:Y(v),x2:870,y2:Y(v),stroke:C.line,'stroke-dasharray':'3 4'},g);txt(62,Y(v)+4,String(v),{'text-anchor':'end','font-size':10.5,fill:C.muted},g)});
+      txt(18,160,'singular value',{'font-size':10.5,fill:C.muted,transform:'rotate(-90 18 160)','text-anchor':'middle'},g);
+      const bw=800/n;hist[k].forEach((v,i)=>{const x=70+i*bw,prev=hist[0][i];
+        el('line',{x1:x+bw/2,y1:Y(prev),x2:x+bw/2,y2:Y(v),stroke:C.copper,'stroke-width':1.2,'stroke-dasharray':k?'2 3':'0','stroke-opacity':.6},g);
+        el('circle',{cx:x+bw/2,cy:Y(prev),r:3,fill:C.grey},g);
+        el('rect',{x:x+bw/2-9,y:Y(v)-4,width:18,height:8,rx:2,fill:k?C.copper:C.blue},g)});
+      txt(470,318,'sixteen singular values of one made-up momentum matrix, largest on the left',{'text-anchor':'middle','font-size':10.5,fill:C.muted},g);
+      const inBand=hist[k].filter(v=>v>=.69&&v<=1.21).length;
+      note.textContent=k===0?'Before: the largest is 300× the smallest.':'After round '+k+': '+inBand+' of 16 in the band, smallest '+Math.min(...hist[k]).toFixed(3)+'.'}
+    range.addEventListener('input',()=>draw(+range.value));draw(0);})();
+
+  /* Figure 7: ASR results from Shaurya's post */
+  (function(){const rows=[['phone',25.27,27.11],['VITW far-field + noise',31.90,33.41],['NOTSOFAR',46.50,47.82],['medical, phone copy',13.55,14.81],['medical, room copy',42.41,43.67],['VITW recording',30.85,31.85],['AMI headset',20.03,18.96],['AMI far-field',42.48,42.08],['all sets, hybrid',20.64,21.11]];
+    const svg=$('#asrSvg'),g=el('g',font,svg),sx=v=>v/50*560;
+    [0,10,20,30,40,50].forEach(v=>{el('line',{x1:200+sx(v),y1:10,x2:200+sx(v),y2:352,stroke:C.line,'stroke-dasharray':v?'3 4':'0'},g);txt(200+sx(v),370,v+'%',{'text-anchor':'middle','font-size':10.5,fill:C.muted},g)});
+    rows.forEach(([n,mu,aw],i)=>{const y=14+i*38,d=mu-aw,last=i===rows.length-1;
+      txt(190,y+18,n,{'text-anchor':'end','font-size':11.5,'font-weight':last?800:600},g);
+      el('rect',{x:200,y,width:sx(mu),height:14,rx:2,fill:C.copper},g);el('rect',{x:200,y:y+16,width:sx(aw),height:14,rx:2,fill:C.grey},g);
+      txt(206+Math.max(sx(mu),sx(aw)),y+20,(d<0?'−':'+')+Math.abs(d).toFixed(2),{'font-size':11.5,'font-weight':700,fill:d<0?C.green:C.copper},g)});})();
+
+  /* Rail highlight */
+  const links=$$('.rail nav a[href^="#"]'),targets=links.map(a=>$(a.getAttribute('href'))).filter(Boolean);
+  if('IntersectionObserver' in window){const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-15% 0px -72%'});targets.forEach(t=>ob.observe(t))}
+})();
+</script>
+</body>
+</html>
