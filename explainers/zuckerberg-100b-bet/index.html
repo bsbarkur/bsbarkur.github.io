@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zuckerberg’s $100B Bet — Analysis</title>
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --surface2:#f1eee7; --ink:#1b1a17; --ink2:#55524b; --ink3:#8a867c;
+  --line:#e2ddd2; --accent:#c2410c; --accent-soft:#fff1e8;
+  --m:#1d4ed8; --m-soft:#e8efff; --a:#047857; --a-soft:#e3f5ee; --j:#b45309; --j-soft:#fdf2e2; --u:#7c3aed; --u-soft:#f1eafe; --x:#6b7280; --x-soft:#eef0f3;
+  --mark:#fde68a; --good:#047857; --bad:#b91c1c; --mid:#a16207;
+  --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141412; --surface:#1d1d1a; --surface2:#262622; --ink:#f0ede6; --ink2:#bdb8ad; --ink3:#8a867c; --line:#34332e;
+  --accent:#fb923c; --accent-soft:#2c1f15;
+  --m:#7aa2ff; --m-soft:#1b2440; --a:#34d399; --a-soft:#14302a; --j:#fbbf24; --j-soft:#30260f; --u:#c4a5ff; --u-soft:#2a2140; --x:#a1a1aa; --x-soft:#27272a;
+  --mark:#713f12; --good:#34d399; --bad:#f87171; --mid:#facc15; --shadow:none;}}
+:root[data-theme="dark"]{
+  --bg:#141412; --surface:#1d1d1a; --surface2:#262622; --ink:#f0ede6; --ink2:#bdb8ad; --ink3:#8a867c; --line:#34332e;
+  --accent:#fb923c; --accent-soft:#2c1f15;
+  --m:#7aa2ff; --m-soft:#1b2440; --a:#34d399; --a-soft:#14302a; --j:#fbbf24; --j-soft:#30260f; --u:#c4a5ff; --u-soft:#2a2140; --x:#a1a1aa; --x-soft:#27272a;
+  --mark:#713f12; --good:#34d399; --bad:#f87171; --mid:#facc15; --shadow:none;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Inter,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header.hero{padding:56px 0 28px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--accent-soft),transparent)}
+.kicker{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 clamp(32px,5vw,56px)/1.05 Georgia,"Iowan Old Style",serif;margin:12px 0 14px;letter-spacing:-.02em}
+.lede{font-size:19px;color:var(--ink2);max-width:820px}
+.people{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.person{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;box-shadow:var(--shadow)}
+.dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px}
+.dot.m{background:var(--m)}.dot.a{background:var(--a)}.dot.j{background:var(--j)}.dot.u{background:var(--u)}.dot.x{background:var(--x)}
+.person small{display:block;color:var(--ink3);font-size:12px;line-height:1.2}
+.person b{font-size:14px;line-height:1.2}
+nav.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:8px;padding-bottom:8px;scrollbar-width:none}
+nav.toc a{white-space:nowrap;text-decoration:none;color:var(--ink2);font-size:13px;font-weight:600;padding:7px 11px;border-radius:999px}
+nav.toc a:hover,nav.toc a.on{background:var(--surface2);color:var(--ink)}
+#themeBtn{margin-left:auto;border:1px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+section{padding:46px 0 18px;border-bottom:1px solid var(--line)}
+h2{font:800 30px/1.15 Georgia,"Iowan Old Style",serif;margin:0 0 6px;letter-spacing:-.01em}
+h2 .n{font:600 13px ui-monospace,Menlo,monospace;color:var(--accent);display:block;margin-bottom:6px;letter-spacing:.08em}
+.sub{color:var(--ink2);margin:0 0 22px;max-width:860px}
+h3{font-size:18px;margin:26px 0 10px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:24px 0 8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.stat .v{font:800 28px/1.1 Georgia,serif;color:var(--accent)}
+.stat .l{font-size:13px;color:var(--ink2);margin-top:6px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.card h4{margin:0 0 8px;font-size:16px}
+.card p,.card li{color:var(--ink2);font-size:15px}
+.card ul{padding-left:18px;margin:6px 0}
+.pill{display:inline-block;font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em;padding:5px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
+.takeaways{counter-reset:t;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px;padding:0;list-style:none}
+.takeaways li{counter-increment:t;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 14px 56px;position:relative;color:var(--ink2);font-size:15px}
+.takeaways li::before{content:counter(t,decimal-leading-zero);position:absolute;left:16px;top:13px;font:800 20px Georgia,serif;color:var(--accent)}
+.takeaways b{color:var(--ink)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:18px 0}
+figure.quote{margin:0;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--x);border-radius:12px;padding:16px 18px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between}
+figure.quote.m{border-left-color:var(--m)}figure.quote.a{border-left-color:var(--a)}figure.quote.j{border-left-color:var(--j)}
+figure.quote blockquote{margin:0 0 12px;font:500 17px/1.5 Georgia,"Iowan Old Style",serif;color:var(--ink)}
+figure.quote.big blockquote{font-size:20px}
+figcaption{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px}
+figcaption .who{font-weight:700}
+figure.m .who{color:var(--m)}figure.a .who{color:var(--a)}figure.j .who{color:var(--j)}
+figcaption .ts{font-family:ui-monospace,Menlo,monospace;text-decoration:none;background:var(--surface2);padding:2px 7px;border-radius:5px;color:var(--ink2)}
+figcaption .tag{margin-left:auto;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:600}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+table.cmp{border-collapse:collapse;width:100%;min-width:860px;font-size:14px}
+table.cmp th,table.cmp td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp thead th{background:var(--surface2);font-size:13px;position:sticky;top:0}
+table.cmp th.dim{width:150px;color:var(--ink);font-weight:700;background:var(--surface2)}
+table.cmp td{color:var(--ink2)}
+table.cmp td.hl{background:var(--a-soft);color:var(--ink)}
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;margin-right:4px}
+.chip.g{background:var(--a-soft);color:var(--good)}.chip.r{background:#fde8e8;color:var(--bad)}.chip.y{background:#fef6d8;color:var(--mid)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip.r{background:#3a1717}:root:not([data-theme="light"]) .chip.y{background:#3a3010}}
+:root[data-theme="dark"] .chip.r{background:#3a1717}:root[data-theme="dark"] .chip.y{background:#3a3010}
+.note{font-size:13px;color:var(--ink3);margin-top:10px}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+.diagram svg{width:100%;height:auto;display:block}
+.svgt{fill:var(--ink);font:600 13px ui-sans-serif,-apple-system,sans-serif}
+.svgs{fill:var(--ink2);font:12px ui-sans-serif,-apple-system,sans-serif}
+.svgh{fill:var(--ink);font:800 15px Georgia,serif}
+.timeline{position:relative;margin:10px 0 0 8px;padding-left:26px;border-left:2px solid var(--line)}
+.tl{position:relative;margin:0 0 18px}
+.tl::before{content:"";position:absolute;left:-33px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.tl .d{font:700 12px ui-monospace,Menlo,monospace;color:var(--accent);letter-spacing:.05em}
+.tl .e{color:var(--ink2);font-size:15px}
+.ladder{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin:14px 0}
+.step{flex:1 1 200px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative}
+.step .k{font:700 12px ui-monospace,Menlo,monospace;color:var(--accent)}
+.step h5{margin:4px 0 6px;font-size:16px}
+.step p{margin:0;font-size:14px;color:var(--ink2)}
+.trend{display:grid;grid-template-columns:44px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.trend .ic{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;font-size:22px}
+.trend h4{margin:0 0 4px}
+.trend p{margin:0;color:var(--ink2);font-size:14.5px}
+.trend .src{margin-top:8px;font-size:12px;color:var(--ink3)}
+.bar{display:flex;height:16px;border-radius:999px;overflow:hidden;margin:10px 0 6px}
+.bar span{display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+/* quotes wall */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.filters button{border:1px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:600}
+.filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* transcript */
+.tx-tools{position:sticky;top:49px;z-index:10;background:var(--bg);padding:10px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
+.tx-tools input{flex:1 1 240px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 12px;font-size:14px}
+.tx-tools select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px}
+.tx-tools label{font-size:13px;color:var(--ink2);display:flex;gap:6px;align-items:center}
+#txCount{font-size:13px;color:var(--ink3)}
+.chap{font:800 20px Georgia,serif;margin:30px 0 8px;padding-top:6px;border-top:2px solid var(--ink)}
+.chap small{font:600 12px ui-monospace,Menlo,monospace;color:var(--accent);display:block}
+.turn{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.turn .spk{font-size:13px;font-weight:700;line-height:1.3}
+.turn .spk small{display:block;font-weight:500;color:var(--ink3);font-size:11.5px}
+.turn .spk a{font:12px ui-monospace,Menlo,monospace;color:var(--ink3);text-decoration:none;display:inline-block;margin-top:4px}
+.turn.m .spk b{color:var(--m)}.turn.a .spk b{color:var(--a)}.turn.j .spk b{color:var(--j)}.turn.u .spk b{color:var(--u)}.turn.x .spk b{color:var(--x)}
+.turn p{margin:0 0 8px;color:var(--ink)}
+.turn.j p{color:var(--ink2)}
+.turn mark.kq{background:var(--mark);color:inherit;padding:1px 2px;border-radius:3px}
+.turn mark.hit{background:var(--accent);color:#fff}
+.turn.hide{display:none}
+.chap.hide{display:none}
+footer{padding:36px 0 60px;color:var(--ink3);font-size:13px}
+@media (max-width:640px){.turn{grid-template-columns:1fr;gap:4px}.wrap{padding:0 16px}h2{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="wrap">
+  <div class="kicker">Cheeky Pint · Episode analysis · Published 12 Oct 2026 · 2h 14m</div>
+  <h1>Zuckerberg’s $100 Billion Bet</h1>
+  <p class="lede">Mark Zuckerberg and Alexandr Wang sit down with John Collison to launch <b>Muse Wonder</b>, explain how Meta Superintelligence Labs (MSL) was rebooted from scratch, and argue that the future of AI is a <b>personal agent with real memory</b>, not a coding bot or a chat box. Below: the key ideas, quotes from the episode, a Muse vs OpenClaw vs chat-assistant comparison, and the trends they point to.</p>
+  <div class="people">
+   <div class="person"><span class="dot m">MZ</span><div><b>Mark Zuckerberg</b><small>Founder &amp; CEO, Meta</small></div></div>
+   <div class="person"><span class="dot a">AW</span><div><b>Alexandr Wang</b><small>Chief AI Officer, MSL</small></div></div>
+   <div class="person"><span class="dot j">JC</span><div><b>John Collison</b><small>Host · Co-founder, Stripe</small></div></div>
+  </div>
+  <div class="stats">
+   <div class="stat"><div class="v">$100–200B</div><div class="l">The check Meta wrote before seeing whether the models would work</div></div>
+   <div class="stat"><div class="v">5 GW</div><div class="l">Hyperion cluster, Louisiana (Prometheus, Ohio: &gt;1 GW)</div></div>
+   <div class="stat"><div class="v">~$15B / yr</div><div class="l">Cost to run 1 GW for a year; capex ≈ $50–60B per GW</div></div>
+   <div class="stat"><div class="v">&lt;200</div><div class="l">People on the MSL research team (“closer to 100”)</div></div>
+   <div class="stat"><div class="v">~1 year</div><div class="l">MSL’s age: from the Llama 4 launch (Apr 2025) to frontier</div></div>
+   <div class="stat"><div class="v">10T+/day</div><div class="l">Tokens routed by OpenRouter (Stripe is acquiring it)</div></div>
+  </div>
+ </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+ <a href="/">← Blog</a><a href="#tldr">TL;DR</a><a href="#wonder">Muse Wonder</a><a href="#memory">Memory</a><a href="#compare">Muse vs OpenClaw vs others</a><a href="#product">The model is the product</a><a href="#training">How models are built</a><a href="#alignment">Alignment &amp; evals</a><a href="#bet">The $100B bet</a><a href="#commerce">Agentic commerce</a><a href="#devices">Beyond the phone</a><a href="#money">Funding</a><a href="#competition">Not winner-take-all</a><a href="#msl">Inside MSL</a><a href="#trends">Future trends</a><a href="#sources">Sources</a>
+ <button id="themeBtn" type="button" aria-label="Toggle theme">◐ Theme</button>
+</div></nav>
+
+<main class="wrap">
+
+<section id="tldr">
+ <h2><span class="n">00 · OVERVIEW</span>The 12 things that matter</h2>
+ <p class="sub">The episode in brief. Each point links to the sections and quotes below.</p>
+ <ol class="takeaways">
+  <li><b>Muse Wonder launches as a frontier model</b> in two versions, Wonder and Wonder Full. It is a new and much bigger pre-train (codename <i>Watermelon</i>) than the Muse Spark line (<i>Avocado</i>), and Meta calls it state of the art for personal and professional agents.</li>
+  <li><b>Memory is the main bet.</b> “Active memory” is trained <i>into the model</i>, and the model does its own compaction. They contrast this directly with OpenClaw’s harness-level compaction, which they call “buggy”.</li>
+  <li><b>Four headline capabilities:</b> active memory, active focus (persisting on long tasks), domain expertise (finance and legal evals), and frontier coding (DeepSWE, SWE-Marathon, Terminal-Bench 4).</li>
+  <li><b>“The model is the product.”</b> Personality, proactivity, discretion and reliability are set through post-training, not the UI. There is deliberately no model picker and no effort picker.</li>
+  <li><b>Personal superintelligence, not knowledge-work automation.</b> They argue the other labs are fixated on coding and automating knowledge work, and that the “highest use” of AI is invention and creation.</li>
+  <li><b>Alignment means alignment with the user.</b> The agent should do what you ask, with no “moralizing lecture”, refuse gracefully only when something is catastrophic, and practise <i>discretion</i>: doing things for you while revealing as little as possible about you.</li>
+  <li><b>A frontier lab means betting everything up front.</b> Tens of billions per model, data centres planned years ahead. They call it “the opposite of Lean Startup”. The CFO warned in Hawaii that if the model failed, things would be “really, really, really bad.”</li>
+  <li><b>The downside is backstopped.</b> If Meta’s models fail, other companies still want the compute. For the bet to be a total loss, “AI overall has to fail.”</li>
+  <li><b>Agentic commerce has started.</b> People are handing purchases to agents. Agents will hold their own accounts, which grows the total market. Every business will run agents, and browsing websites is a temporary bridge.</li>
+  <li><b>After the phone: glasses and gadgets.</b> Fully multimodal glasses, possibly with no app store. Muse Gadgets (such as HomeLink) and phone makers building Muse in. Voice input is taking off, but voice is a poor way to <i>receive</i> information.</li>
+  <li><b>It won’t be winner-take-all.</b> Lead labs make execution mistakes, distillation helps followers catch up, and talent picks sides. A diverse ecosystem is also safer.</li>
+  <li><b>How MSL was built:</b> a full reboot after Llama 4, a team chosen for talent density (fewer than 200 researchers), a flat structure with no non-technical managers, no deadlines, and a CEO who went “AI-pilled” and moved the whole company behind it.</li>
+ </ol>
+ <h3>Headline quotes</h3>
+ <div class="qgrid"><figure class="quote m big"><blockquote>“the model is the product.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=724s" target="_blank" rel="noopener">▶ 0:12:04</a><span class="tag">Product</span></figcaption></figure><figure class="quote a big"><blockquote>“So we&#x27;ve designed basically both the model and a system for the model to use to develop a much stronger form of memory. We call it active memory.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1162s" target="_blank" rel="noopener">▶ 0:19:22</a><span class="tag">Memory</span></figcaption></figure><figure class="quote a big"><blockquote>“This is the stuff that&#x27;s buggy AF in OpenClaw.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1145s" target="_blank" rel="noopener">▶ 0:19:05</a><span class="tag">OpenClaw</span></figcaption></figure><figure class="quote j big"><blockquote>“It&#x27;s not a harness, it&#x27;s in the model itself.”</blockquote><figcaption><span class="who">John Collison</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1185s" target="_blank" rel="noopener">▶ 0:19:45</a><span class="tag">Memory</span></figcaption></figure><figure class="quote m big"><blockquote>“I&#x27;m like, Alex, are you sure this is going to work?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=11s" target="_blank" rel="noopener">▶ 0:00:11</a><span class="tag">The Bet</span></figcaption></figure><figure class="quote m big"><blockquote>“the kind of highest use of superintelligence is invention and creation, not automation.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4026s" target="_blank" rel="noopener">▶ 1:07:06</a><span class="tag">Strategy</span></figcaption></figure><figure class="quote m big"><blockquote>“we view alignment as more of a question of instruction and values alignment with the person who it&#x27;s intending to serve.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2888s" target="_blank" rel="noopener">▶ 0:48:08</a><span class="tag">Alignment</span></figcaption></figure><figure class="quote m big"><blockquote>“Like, now agents are effectively going to have accounts.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4618s" target="_blank" rel="noopener">▶ 1:16:58</a><span class="tag">Commerce</span></figcaption></figure><figure class="quote j big"><blockquote>“There&#x27;s an anti-hegemonic force in the phenomenon of distilling a model.”</blockquote><figcaption><span class="who">John Collison</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5931s" target="_blank" rel="noopener">▶ 1:38:51</a><span class="tag">Competition</span></figcaption></figure><figure class="quote m big"><blockquote>“it&#x27;s the absence of non-technical managers, right?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=7576s" target="_blank" rel="noopener">▶ 2:06:16</a><span class="tag">MSL</span></figcaption></figure><figure class="quote m big"><blockquote>“basically everyone is actually going to be writing tons of code. They&#x27;re just not going to know that they&#x27;re writing code.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=182s" target="_blank" rel="noopener">▶ 0:03:02</a><span class="tag">Future</span></figcaption></figure><figure class="quote a big"><blockquote>“big model smell and feeling of benchmaxing are kind of like inverses of one another.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1567s" target="_blank" rel="noopener">▶ 0:26:07</a><span class="tag">Evals</span></figcaption></figure></div>
+</section>
+
+<section id="wonder">
+ <h2><span class="n">01 · LAUNCH</span>Meet Muse Wonder</h2>
+ <p class="sub">The first MSL model that Meta says sits <i>at</i> the frontier, rather than just catching up to it.</p>
+ <div class="grid3">
+  <div class="card"><span class="pill">Line-up</span><h4>Muse Spark → Muse Wonder → Wonder Full</h4><ul>
+   <li><b>Spark</b>: based on the pre-train from Dec 2025. Versions 1 → 1.3 only added more RL on the same base model.</li>
+   <li><b>Wonder</b>: a new pre-train that is “significantly bigger” and serves as Meta’s frontier model.</li>
+   <li><b>Wonder Full</b>: a “much higher-end” version, offered to Muse Code subscribers. (The name prompted a dad joke: “Wonder full.”)</li></ul></div>
+  <div class="card"><span class="pill">Availability</span><h4>Where you can use it</h4><ul>
+   <li>Muse app: paid subscriptions first, because Wonder is expensive to serve. Free users stay on Spark for now.</li>
+   <li>Meta Model API and OpenRouter.</li>
+   <li>Muse Code users; Wonder Full for Muse Code subscribers.</li>
+   <li>The goal: Wonder-level quality “in the Spark form factor” for hundreds of millions of people.</li></ul></div>
+  <div class="card"><span class="pill">Code names</span><h4>Avocado → Watermelon → ?</h4><p>Spark was <i>Avocado</i> and Wonder was <i>Watermelon</i>. “We’re out of fruits”: the only bigger fruit is the durian, which nobody wants. A Muse-ordered watermelon later shows up on the livestream and in the episode’s live demo.</p></div>
+ </div>
+ <h3>The four headline capabilities</h3>
+ <div class="ladder">
+  <div class="step"><div class="k">01</div><h5>Active memory</h5><p>Remembers what you tell it across days, weeks and months, and uses it in later tasks. The model is “aware of its memory as a core system” and handles its own compaction. Measured with Meta’s internal <b>Memory Bench</b>.</p></div>
+  <div class="step"><div class="k">02</div><h5>Active focus</h5><p>Persistence: finishing complete tasks “over very long horizons”, and when it hits setbacks, finding other solutions “in an aligned way”. Early testers say this is what stands out most.</p></div>
+  <div class="step"><div class="k">03</div><h5>Domain expertise</h5><p>“A team of experts in your corner”: legal, finance, medical and tax. Meta says it is state of the art on many finance and legal evals. This expertise comes from pre-training data, not just RL.</p></div>
+  <div class="step"><div class="k">04</div><h5>Frontier coding</h5><p>State of the art on DeepSWE and SWE-Marathon, strong on Terminal-Bench 4. Coders are a “minority” of Muse users, but they will see a big jump.</p></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“Very good memory, very good ability to persist through complicated tasks.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=966s" target="_blank" rel="noopener">▶ 0:16:06</a><span class="tag">Memory</span></figcaption></figure><figure class="quote a"><blockquote>“the best personal agent should feel like a team of experts in your corner.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2244s" target="_blank" rel="noopener">▶ 0:37:24</a><span class="tag">Wonder</span></figcaption></figure><figure class="quote a"><blockquote>“It&#x27;s basically like the ability to conduct complete tasks over very long horizons.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1270s" target="_blank" rel="noopener">▶ 0:21:10</a><span class="tag">Wonder</span></figcaption></figure><figure class="quote m"><blockquote>“the time between each subsequently bigger class of models, I think will now start to compress.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=990s" target="_blank" rel="noopener">▶ 0:16:30</a><span class="tag">Future</span></figcaption></figure></div>
+ <p class="note">On how it compares with rivals: John asks whether Astra, Fable and Wonder are “altogether at the frontier”. Mark answers “you can look at it empirically by the benchmarks”, and Alex claims it is “the best model in the world for the use case of personal professional agents.”</p>
+</section>
+
+<section id="memory">
+ <h2><span class="n">02 · DEEP DIVE</span>Memory: the core of the pitch</h2>
+ <p class="sub">The biggest technical difference they claim. Many people’s first experience of AI agents has been unreliable memory, and Meta says it fixed this in the model itself rather than in the harness around it.</p>
+ <div class="grid2">
+  <div class="card"><h4>What “memory” means here</h4><p>Asked how memory differs from context, Alex separates the two. <b>Context</b> is the working memory for the task in front of the model. <b>Memory</b> is about the experience over time: does the model remember what you told it weeks ago, and use it on a new task without being reminded?</p>
+  <p>Mark adds that compaction (summarizing older context so it fits) is “things that the model does”. John sums it up as “It’s not a harness, it’s in the model itself.” Alex confirms.</p></div>
+  <div class="card"><h4>Why it matters for agents</h4><ul>
+   <li>Alex calls memory “one of the clear requirements to build reliable agents.”</li>
+   <li>Meta says it invested in memory “disproportionately” compared with other labs.</li>
+   <li>Memory is also what makes the agent feel like a <i>character</i>. Alex says the Muse “little guy” only works because it has persistent memory, can take actions, and has a personality.</li>
+   <li>It powers personalization: one view of you across family, friends and colleagues, instead of separate recommendation systems that don’t talk to each other.</li>
+   <li>They admit it isn’t solved: “still plenty of room to improve.”</li></ul></div>
+ </div>
+ <h3>Diagram: harness compaction vs model-native active memory</h3>
+ <div class="diagram" role="img" aria-label="Diagram comparing OpenClaw harness-level memory compaction with Muse Wonder model-native active memory">
+ <svg viewBox="0 0 1080 360" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink3)"/></marker></defs>
+  <text x="20" y="30" class="svgh">OpenClaw-style persistent agent</text>
+  <text x="20" y="50" class="svgs">Memory handled by the harness around a general model</text>
+  <rect x="20" y="70" width="500" height="270" rx="14" fill="var(--surface2)" stroke="var(--line)"/>
+  <rect x="45" y="95" width="200" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="60" y="122" class="svgt">Working / short-term</text><text x="60" y="141" class="svgs">context window</text>
+  <rect x="295" y="95" width="200" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="310" y="122" class="svgt">Long-term memory</text><text x="310" y="141" class="svgs">files / store</text>
+  <rect x="140" y="200" width="260" height="56" rx="10" fill="var(--j-soft)" stroke="var(--j)"/><text x="160" y="224" class="svgt">Harness compaction step</text><text x="160" y="243" class="svgs">summarize → drop → reload</text>
+  <path d="M145 155 L230 200" stroke="var(--ink3)" stroke-width="1.6" fill="none" marker-end="url(#ar)"/><path d="M310 200 L395 155" stroke="var(--ink3)" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+  <rect x="140" y="275" width="260" height="46" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="160" y="303" class="svgt">Model (unaware of the memory system)</text>
+  <text x="430" y="300" class="svgs" fill="var(--bad)" style="fill:var(--bad)">“pretty buggy”</text><text x="430" y="318" class="svgs">after a while</text>
+
+  <text x="560" y="30" class="svgh">Muse Wonder “active memory”</text>
+  <text x="560" y="50" class="svgs">Model and memory system trained together</text>
+  <rect x="560" y="70" width="500" height="270" rx="14" fill="var(--a-soft)" stroke="var(--a)"/>
+  <rect x="590" y="95" width="440" height="120" rx="12" fill="var(--surface)" stroke="var(--a)"/>
+  <text x="610" y="122" class="svgt">Model trained end-to-end as a personal agent</text>
+  <text x="610" y="146" class="svgs">• aware of its memory “as a core system”</text>
+  <text x="610" y="166" class="svgs">• decides how to compact “most effectively”</text>
+  <text x="610" y="186" class="svgs">• draws on “various sources” for future tasks</text>
+  <text x="610" y="206" class="svgs">• benchmarked on internal Memory Bench</text>
+  <rect x="590" y="235" width="205" height="56" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="605" y="259" class="svgt">Memory system</text><text x="605" y="278" class="svgs">built for the model to use</text>
+  <rect x="825" y="235" width="205" height="56" rx="10" fill="var(--surface)" stroke="var(--line)"/><text x="840" y="259" class="svgt">Dedicated VM</text><text x="840" y="278" class="svgs">per-user, privacy-first</text>
+  <path d="M692 215 L692 235" stroke="var(--a)" stroke-width="2" marker-end="url(#ar)"/><path d="M928 215 L928 235" stroke="var(--a)" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="590" y="320" class="svgs">Remembers across days → weeks → months · “still plenty of room to improve”</text>
+ </svg></div>
+ <p class="note">The diagram is a simplified illustration of what the speakers describe. Meta did not show its internal architecture.</p>
+ <div class="qgrid"><figure class="quote a"><blockquote>“This is the stuff that&#x27;s buggy AF in OpenClaw.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1145s" target="_blank" rel="noopener">▶ 0:19:05</a><span class="tag">OpenClaw</span></figcaption></figure><figure class="quote a"><blockquote>“Very happy OpenClaw user, but it ultimately does this compaction where it has like the long-term memory and the working short-term memory or whatever.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1151s" target="_blank" rel="noopener">▶ 0:19:11</a><span class="tag">OpenClaw</span></figcaption></figure><figure class="quote a"><blockquote>“And I think once people use OpenClaw for a while, they find the memory pretty buggy.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1158s" target="_blank" rel="noopener">▶ 0:19:18</a><span class="tag">OpenClaw</span></figcaption></figure><figure class="quote a"><blockquote>“So we&#x27;ve designed basically both the model and a system for the model to use to develop a much stronger form of memory. We call it active memory.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1162s" target="_blank" rel="noopener">▶ 0:19:22</a><span class="tag">Memory</span></figcaption></figure></div>
+</section>
+
+<section id="compare">
+ <h2><span class="n">03 · COMPARISON</span>Muse vs OpenClaw vs chat assistants vs other labs</h2>
+ <p class="sub">Built only from what was said in the episode. Where the speakers didn’t cover something, the cell says so. Green highlights mark the differences Meta itself emphasised.</p>
+ <div class="tablewrap"><table class="cmp">
+  <thead><tr><th class="dim">Dimension</th><th>Text chat assistants<br><small>(e.g. Meta AI, “every company has one”)</small></th><th>OpenClaw<br><small>(persistent agent, open)</small></th><th>Muse on Spark<br><small>(free tier)</small></th><th>Muse on Wonder / Wonder Full</th><th>Other frontier labs<br><small>(Astra, Fable named)</small></th></tr></thead>
+  <tbody>
+   <tr><th class="dim">Core job</th><td>Information. “Retrieval, not delegation.” People don’t see it as something that gets things done.</td><td>Persistent agent with a computer; the product category the industry is converging on.</td><td>Proactive personal agent that acts for you, e.g. buying, booking, coaching.</td><td class="hl">Best “personal and professional agentic model”, handling harder and longer tasks.</td><td>Described as focused on coding and automating knowledge work.</td></tr>
+   <tr><th class="dim">Memory</th><td>Not discussed.</td><td><span class="chip r">weak</span>Harness compaction with long-term plus short-term memory; “pretty buggy” after extended use (“buggy AF”).</td><td>Pulls in context from other conversations, e.g. when shopping.</td><td class="hl"><span class="chip g">key bet</span>Active memory trained into the model; the model does its own compaction; Memory Bench evals; “room to improve”.</td><td>Not discussed specifically. Meta claims it invested in memory “disproportionately”.</td></tr>
+   <tr><th class="dim">Long tasks</th><td>—</td><td>—</td><td>Good enough to go viral; reliability is “a huge part of the magic”.</td><td class="hl">Active focus: long-horizon persistence and recovering from setbacks “in an aligned way”.</td><td>—</td></tr>
+   <tr><th class="dim">Compute / runtime</th><td>Shared elastic compute.</td><td>Has a computer. Mark used it for MMA coaching “before we even had Muse working”.</td><td colspan="2" class="hl">A dedicated VM per agent, “incredibly important” for security and privacy, so it isn’t “connecting to some elastic compute that just everyone uses.”</td><td>—</td></tr>
+   <tr><th class="dim">Privacy model</th><td>—</td><td>—</td><td colspan="2" class="hl">Most of the complex product work: privacy and security for your data and connected accounts, plus <b>discretion</b> (acts for you while revealing little about you).</td><td>For coding agents in shared-context settings, “discretion isn’t particularly important.”</td></tr>
+   <tr><th class="dim">Multimodality</th><td>Text-first.</td><td>—</td><td colspan="2" class="hl">A priority from day one: lots of visual-perception training data; strong video understanding (MMA frames); voice mode that can tell speakers apart.</td><td>“Consensus” earlier in the year was “all about coding”.</td></tr>
+   <tr><th class="dim">Coding</th><td>—</td><td>—</td><td>Users write code “without knowing” it (e.g. a video pipeline for the MMA coach).</td><td class="hl">State of the art on DeepSWE and SWE-Marathon; strong on Terminal-Bench 4.</td><td>Coding is their main focus.</td></tr>
+   <tr><th class="dim">Model choice UX</th><td>Model and effort pickers; “egregious” naming; “numbers go backwards”.</td><td>—</td><td colspan="2" class="hl">No model selector, no effort selector. Paying users “just get better”.</td><td>Confusing names that only make sense if you read API docs.</td></tr>
+   <tr><th class="dim">Alignment stance</th><td colspan="2">—</td><td colspan="2" class="hl">Aligned to <i>the user</i>: high-reliability instruction following, no moralizing; refuses gracefully only when the request is catastrophic.</td><td>“Very different from … how some of the others do.”</td></tr>
+   <tr><th class="dim">Eval philosophy</th><td colspan="2">—</td><td colspan="2" class="hl">Mostly internal evals; a “big model smell” metric (gap between in-distribution and out-of-distribution performance); a spreadsheet of small capabilities, each worth about 2%.</td><td>Public benchmarks get saturated quickly and amount to “outsourcing … product thinking” to a PhD student.</td></tr>
+   <tr><th class="dim">Price / access</th><td>Free.</td><td>Open source.</td><td>Free, with a large allowance of free tokens.</td><td>Paid subscription; API (Meta Model API and OpenRouter); Muse Code.</td><td>Via API and on OpenRouter.</td></tr>
+  </tbody></table></div>
+ <p class="note">“—” means the speakers didn’t address it. The OpenClaw column reflects only the speakers’ own experience: they say they are “extremely fond of OpenClaw” and “very happy OpenClaw user[s]”.</p>
+ <div class="qgrid"><figure class="quote j"><blockquote>“It&#x27;s retrieval, not delegation or something.”</blockquote><figcaption><span class="who">John Collison</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=566s" target="_blank" rel="noopener">▶ 0:09:26</a><span class="tag">Product</span></figcaption></figure><figure class="quote m"><blockquote>“gives the agent a dedicated VM, which I think is actually incredibly important for making you feel confident that the security and privacy of your information is”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=579s" target="_blank" rel="noopener">▶ 0:09:39</a><span class="tag">Privacy</span></figcaption></figure><figure class="quote m"><blockquote>“I mean, I did this with OpenClaw before we even had Muse working.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=220s" target="_blank" rel="noopener">▶ 0:03:40</a><span class="tag">OpenClaw</span></figcaption></figure><figure class="quote a"><blockquote>“so much of the consensus view within the AI industry was that it was just all about coding and coding was all that mattered.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=369s" target="_blank" rel="noopener">▶ 0:06:09</a><span class="tag">Strategy</span></figcaption></figure></div>
+</section>
+
+<section id="product">
+ <h2><span class="n">04 · PRODUCT THESIS</span>“The model is the product”</h2>
+ <p class="sub">John argues that winning AI products quickly converge on one simple shape (transformers, then chat, now persistent agents like OpenClaw and Muse). Mark and Alex disagree: the important differences are real, but they live inside the model.</p>
+ <div class="grid2">
+  <div class="card"><h4>Why the products look the same but aren’t</h4><ul>
+   <li>Alex compares it to early mobile: “it’s just an app”, until it turned out there was “a lot of nuance in what exactly an app is.”</li>
+   <li>What sets agents apart is <b>how proactive they are, when they step in, and how it feels when they talk to you</b>. All of this is written down as model behaviour specs, training data and evals.</li>
+   <li>Nat Friedman’s product team mainly improves the product by <i>post-training the model</i>, not by changing the UI.</li>
+   <li>The “complex product work” outside the model goes into privacy and security.</li></ul></div>
+  <div class="card"><h4>Breakout use cases mentioned</h4><ul>
+   <li><b>Alex:</b> his Muse, “Oiler”, sources “increasingly obscure teas” from farms in Taiwan and Japan every week.</li>
+   <li><b>Mark:</b> an MMA coach. Cameras in his gym feed video to Muse, which gives feedback in the 60-second breaks between rounds. Mark kept telling it to “optimize yourself”. He also uses it as his personal eval.</li>
+   <li><b>Mark:</b> weekend baking with his 3-year-old daughter, planned in voice mode, with Instacart orders that arrive on time. It added a watermelon to reach the delivery minimum.</li>
+   <li><b>Mark:</b> HomeLink dims the lights across the house when it’s time to wind down.</li></ul></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“the model is the product.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=724s" target="_blank" rel="noopener">▶ 0:12:04</a><span class="tag">Product</span></figcaption></figure><figure class="quote m"><blockquote>“the products are getting thinner and the model is getting to be more of the product, right?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=718s" target="_blank" rel="noopener">▶ 0:11:58</a><span class="tag">Product</span></figcaption></figure><figure class="quote a"><blockquote>“how do you specify these product decisions? Well, it&#x27;s ultimately in model design decisions, which ultimately boil down to training methods or data or evals or, you know, all these things.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=808s" target="_blank" rel="noopener">▶ 0:13:28</a><span class="tag">Product</span></figcaption></figure><figure class="quote a"><blockquote>“I mean, the naming of some of the models is like so egregious.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=853s" target="_blank" rel="noopener">▶ 0:14:13</a><span class="tag">Product</span></figcaption></figure></div>
+</section>
+
+<section id="training">
+ <h2><span class="n">05 · HOW IT’S MADE</span>How frontier models are actually built</h2>
+ <p class="sub">A rare walkthrough of the pipeline from both the CEO and the lab head.</p>
+ <div class="ladder">
+  <div class="step"><div class="k">STAGE 1 · PRE-TRAIN</div><h5>Huge data, huge compute</h5><p>The public internet, books and proprietary data, plus images, audio and video for perception. Domain data (health, legal, finance) goes in early: “you don’t just want to RL that in at the end.” Data can transfer positively or negatively. Few samples, high stakes: “7 stages of grief.” Training climbs a ladder of models about 4–5× bigger at each step.</p></div>
+  <div class="step"><div class="k">STAGE 2 · SFT</div><h5>Seed the behaviours</h5><p>Supervised fine-tuning gives the model the question and the ideal answer. This is where personality is shaped. By the end, a behaviour is “baked in” but appears only about 10% of the time.</p></div>
+  <div class="step"><div class="k">STAGE 3 · RL</div><h5>Draw the behaviours out</h5><p>Reinforcement learning raises how often the right behaviour shows up. Building environments and tasks is the craft. “Less is actually more” for RL data. Bad environments can teach the model that misaligned behaviour is the only way to succeed, so they need curating.</p></div>
+  <div class="step"><div class="k">STAGE 4 · SCALE ALL</div><h5>Grow everything together</h5><p>Grow pre-training, the RL recipe, RL compute and the agent harness at the same time. Spark 1 → 1.3 “feels night and day” from RL alone. Every lab is getting much more out of the same base models.</p></div>
+ </div>
+ <div class="grid2">
+  <div class="card"><h4>Team &amp; time</h4><ul>
+   <li>Each stage has tens of people at Meta, compared with “hundreds” elsewhere. The research team is under 200, “closer to 100”, plus infrastructure staff.</li>
+   <li>Lots of compute per researcher, not spread thin over competing efforts.</li>
+   <li>Wonder was planned from August of the previous year, and Spark was a “stepping stone”.</li>
+   <li>Early signals: perplexity evals during pre-training, benchmarks during RL. Researchers held “analog protractors” to their monitors to read the slope of loss curves.</li>
+   <li>When they knew Wonder was good: after pre-training, the team warned that RL might take a while to beat Spark. It beat Spark almost immediately.</li></ul></div>
+  <div class="card"><h4>Compute economics</h4><ul>
+   <li>A lab’s strength is “how big its largest single computer is”.</li>
+   <li>Prometheus (Ohio) is over 1 GW. Hyperion (Louisiana) will reach 5 GW over the next few years. Both were planned in 2023–24, before MSL existed.</li>
+   <li>About $15B to run 1 GW for a year; about $50–60B in capex to build it.</li>
+   <li>Research ablations cost roughly as much as the main training run. Then there is serving.</li>
+   <li>A frontier model costs “tens of billions of dollars”.</li></ul></div>
+ </div>
+ <div class="qgrid"><figure class="quote a"><blockquote>“all the 7 stages of grief, you know, happen while you&#x27;re pre-training a model.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2312s" target="_blank" rel="noopener">▶ 0:38:32</a><span class="tag">Training</span></figcaption></figure><figure class="quote m"><blockquote>“So if the internet isn&#x27;t growing that quickly and you want to scale bigger models that can be more intelligent, I think one of the interesting problems is, all right, where&#x27;s the data coming from?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2433s" target="_blank" rel="noopener">▶ 0:40:33</a><span class="tag">Training</span></figcaption></figure><figure class="quote a"><blockquote>“it has those behaviors kind of baked in, but it&#x27;ll only do it like 10% of the time.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2525s" target="_blank" rel="noopener">▶ 0:42:05</a><span class="tag">Training</span></figcaption></figure><figure class="quote a"><blockquote>“it&#x27;s just scale everything, you know?”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2574s" target="_blank" rel="noopener">▶ 0:42:54</a><span class="tag">Training</span></figcaption></figure></div>
+</section>
+
+<section id="alignment">
+ <h2><span class="n">06 · PHILOSOPHY</span>Alignment, discretion &amp; evals</h2>
+ <div class="grid2">
+  <div class="card"><h4>Alignment = serving the user</h4><p>Mark says alignment is “a very philosophical concept”, and the real question is aligned <i>to whom</i>. Meta’s answer is the person the agent works for. In practice that means doing what was asked, reliably and without lecturing, and declining gracefully when a request is catastrophic. Alex adds that alignment is “holistic” and spans the whole RL process, not a separate safety step.</p></div>
+  <div class="card"><h4>Discretion: a new capability</h4><p>Mark’s example: if you’re pregnant or have an allergy, your agent should book a suitable restaurant without disclosing your medical condition. Coding agents work where everyone shares the same context, so they never needed this skill.</p></div>
+  <div class="card"><h4>Against benchmaxing</h4><p>Public benchmarks are useful for finding “signs of life” while a lab is ramping up, but with each release Meta relies more on internal evals. Its “big model smell” metric measures the gap between in-distribution and out-of-distribution performance, and Alex says it improved sharply from Spark to Wonder.</p></div>
+  <div class="card"><h4>The capability spreadsheet</h4><p>Product quality comes from a carefully maintained spreadsheet of small capabilities. Each matters about 2% to users, but together they make models “that feel magical”.</p></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“we view alignment as more of a question of instruction and values alignment with the person who it&#x27;s intending to serve.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2888s" target="_blank" rel="noopener">▶ 0:48:08</a><span class="tag">Alignment</span></figcaption></figure><figure class="quote m"><blockquote>“You don&#x27;t want a moralizing lecture for why you&#x27;re wrong for asking it to do the thing.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2875s" target="_blank" rel="noopener">▶ 0:47:55</a><span class="tag">Alignment</span></figcaption></figure><figure class="quote a"><blockquote>“where the only way for the model to succeed is to do something misaligned or do something unsafe.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2705s" target="_blank" rel="noopener">▶ 0:45:05</a><span class="tag">Alignment</span></figcaption></figure><figure class="quote m"><blockquote>“It needs to be able to know a lot about you and get things done in the world while disclosing as little as possible.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1675s" target="_blank" rel="noopener">▶ 0:27:55</a><span class="tag">Privacy</span></figcaption></figure></div>
+</section>
+
+<section id="bet">
+ <h2><span class="n">07 · THE BET</span>Betting $100B before seeing the cards</h2>
+ <p class="sub">John’s framing: “you have to push your chips all in before you’ve been dealt the cards.”</p>
+ <div class="grid2">
+  <div class="card"><h4>The Hawaii moment</h4><p>At an exec offsite at the end of last year, Mark was about to commit $100–200B with only Alex’s “vibe report” and a few plots as evidence. CFO Susan Li took Alex aside several times to stress that the model had to work. Some executives pushed to be “a little more conservative”. Mark’s answer was “we’re going to burn the boats.”</p></div>
+  <div class="card"><h4>Why Mark thinks it’s less risky than it looks</h4><ol>
+   <li>If AI works at all, “plenty of other people want all our compute”, and would pay more than $15B per GW.</li>
+   <li>Even if AI as a whole fails, Meta has other productive uses for the compute.</li>
+   <li>A slow launch would still have been fine. Mark’s median expectation was a few iterations to product-market fit. Instead Muse was a home run, and growth tooling wasn’t even ready.</li></ol></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“I&#x27;m like, Alex, are you sure this is going to work?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=11s" target="_blank" rel="noopener">▶ 0:00:11</a><span class="tag">The Bet</span></figcaption></figure><figure class="quote a"><blockquote>“If it&#x27;s good, it&#x27;s all good. We&#x27;re great. But if it&#x27;s bad, it&#x27;s really, really, really bad.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=3302s" target="_blank" rel="noopener">▶ 0:55:02</a><span class="tag">The Bet</span></figcaption></figure><figure class="quote m"><blockquote>“We&#x27;re going to burn the boats.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=3431s" target="_blank" rel="noopener">▶ 0:57:11</a><span class="tag">The Bet</span></figcaption></figure><figure class="quote a"><blockquote>“I remember the visceral feeling at the time was like, this is a fuck ton of risk.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=3442s" target="_blank" rel="noopener">▶ 0:57:22</a><span class="tag">The Bet</span></figcaption></figure></div>
+</section>
+
+<section id="commerce">
+ <h2><span class="n">08 · ECONOMY</span>Agentic commerce</h2>
+ <div class="grid3">
+  <div class="card"><span class="pill">Phase 1</span><h4>Browser use as a bridge</h4><p>Strong browser and computer use are trained in, so businesses don’t need to integrate with Muse. John calls this the “ultimate backwards compatibility layer.”</p></div>
+  <div class="card"><span class="pill">Phase 2</span><h4>Direct APIs</h4><p>Key partners get direct API access, which is faster and more efficient. Mark says many more businesses are asking to integrate than are trying to block agents.</p></div>
+  <div class="card"><span class="pill">Phase 3</span><h4>Every business has agents</h4><p>Muse agents talk to business agents, especially Meta’s own. Agents get their own accounts, so the total market grows.</p></div>
+ </div>
+ <div class="grid2" style="margin-top:14px">
+  <div class="card"><h4>Value to users</h4><ul><li>Less friction in research and checkout.</li><li>Built-in constraints, e.g. “I need something by Wednesday”. John: relying on keyword search “was insane”.</li><li>Personalization from a complete picture of your life, e.g. a gift that suits your friend group.</li></ul></div>
+  <div class="card"><h4>Signals from the market</h4><ul><li>Mark signed up to Instacart for his Muse and now orders once or twice a week, where before it was about twice a year. That is new demand, not just a better conversion rate.</li><li>Stripe’s agentic commerce stats “only as of September basically started going vertical” (after announcements at Sessions in May).</li><li>Alex says he told Patrick Collison in 2023 that Stripe was “behind the 8-ball” on agentic commerce: “directionally correct, but … 3 years early.”</li></ul></div>
+ </div>
+ <div class="qgrid"><figure class="quote a"><blockquote>“Muse is one of the first products where you&#x27;re actually people are fully delegating purchases to the agents.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4285s" target="_blank" rel="noopener">▶ 1:11:25</a><span class="tag">Commerce</span></figcaption></figure><figure class="quote m"><blockquote>“every business is going to have agents too.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4150s" target="_blank" rel="noopener">▶ 1:09:10</a><span class="tag">Commerce</span></figcaption></figure><figure class="quote m"><blockquote>“so Muse using websites is just a moment in time thing.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4165s" target="_blank" rel="noopener">▶ 1:09:25</a><span class="tag">Commerce</span></figcaption></figure><figure class="quote m"><blockquote>“is that Instacart account really for me, or is it for the Muse?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4605s" target="_blank" rel="noopener">▶ 1:16:45</a><span class="tag">Commerce</span></figcaption></figure></div>
+</section>
+
+<section id="devices">
+ <h2><span class="n">09 · FORM FACTORS</span>Beyond the smartphone</h2>
+ <div class="grid2">
+  <div class="card"><h4>Why voice assistants struggled</h4><ul><li>Conversation timing: pauses, interruptions, talking over each other.</li><li>Older assistants couldn’t <i>do</i> anything, so talking to them felt pointless. Once an agent can act, it feels “much closer to … talking to a human”.</li><li>Voice is high-bandwidth for <i>input</i> but slow for <i>output</i>. The ideal interface is “not just strictly voice-voice”.</li><li>Voice input is booming: researchers dictate into their keyboards, and college students “word vomit” for 10–15 minutes and let the AI organize it.</li></ul></div>
+  <div class="card"><h4>The hardware roadmap discussed</h4><ul><li><b>Glasses</b>: camera and audio alone are useful. Small-display glasses are already “pretty powerful”. Eventually fully multimodal (voice in and out, sees what you see, “paint the pixels”), possibly with no app store.</li><li><b>Muse Gadgets</b>: an ecosystem for new device types. Phone makers are already integrating it.</li><li><b>HomeLink</b>: a nickel-sized USB device that connects Muse to everything in your home (Sonos, lights).</li><li>The live demo: John asks Muse by voice to order a watermelon to Stripe’s office.</li></ul></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“the glasses basically will eventually just be a pure multimodal product, right?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=412s" target="_blank" rel="noopener">▶ 0:06:52</a><span class="tag">Devices</span></figcaption></figure><figure class="quote m"><blockquote>“I don&#x27;t even know if we&#x27;re going to have an app store on the glasses.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=423s" target="_blank" rel="noopener">▶ 0:07:03</a><span class="tag">Devices</span></figcaption></figure><figure class="quote m"><blockquote>“having someone speak to you is very inefficient compared to having it be visual.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=4945s" target="_blank" rel="noopener">▶ 1:22:25</a><span class="tag">Devices</span></figcaption></figure><figure class="quote a"><blockquote>“they just will completely word vomit for 10, 15 minutes, being full stream of consciousness, chain of thought of all the things.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5003s" target="_blank" rel="noopener">▶ 1:23:23</a><span class="tag">Devices</span></figcaption></figure></div>
+</section>
+
+<section id="money">
+ <h2><span class="n">10 · BUSINESS MODEL</span>How do you fund the AI buildout?</h2>
+ <div class="grid3">
+  <div class="card"><h4>Muse revenue</h4><ul><li>Free at scale, because network effects and partner integrations depend on reach.</li><li>Subscriptions for expensive features (Wonder).</li><li>A small cut of the money Muse makes or saves you.</li><li>A “business in a box” for small businesses.</li></ul></div>
+  <div class="card"><h4>Platform revenue</h4><ul><li>The API: the models are general, so they create a “large surplus of value”.</li><li>The new <b>Meta Enterprise Platform</b>, with CJ Desai joining to build it, selling Muse Wonder to enterprises.</li><li>OpenRouter distribution.</li></ul></div>
+  <div class="card"><h4>Structural advantages</h4><ul><li>A core ads business worth hundreds of billions that is still growing fast. Using the models to grow it a few percent faster pays for much of the effort.</li><li>Owning data centres means capex can be depreciated. Researcher salaries can’t be capitalized, and cloud renters pay ongoing rates.</li><li>GPUs keep their value: “even like an H100” is worth more than a year ago.</li><li>Meta’s playbook: reach a billion people, then scale revenue.</li></ul></div>
+ </div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“we believe that Muse is actually going to make people money and save people money by using it”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5313s" target="_blank" rel="noopener">▶ 1:28:33</a><span class="tag">Economics</span></figcaption></figure><figure class="quote m"><blockquote>“a business in a box for small businesses.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5361s" target="_blank" rel="noopener">▶ 1:29:21</a><span class="tag">Economics</span></figcaption></figure><figure class="quote m"><blockquote>“the value of even like an H100 at this point is higher than it was last year, right?”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5632s" target="_blank" rel="noopener">▶ 1:33:52</a><span class="tag">Economics</span></figcaption></figure><figure class="quote a"><blockquote>“The Meta core business is a, is a like 8th wonder of the world.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5573s" target="_blank" rel="noopener">▶ 1:32:53</a><span class="tag">Economics</span></figcaption></figure></div>
+</section>
+
+<section id="competition">
+ <h2><span class="n">11 · MARKET STRUCTURE</span>Why AI won’t be winner-take-all</h2>
+ <p class="sub">The 2023 story was that one lab gets ahead, starts recursive self-improvement, and pulls away. Alex gives three reasons it hasn’t happened.</p>
+ <div class="grid3">
+  <div class="card"><span class="pill">Reason 1</span><h4>Execution averages out</h4><p>Every lab goes through strong and weak stretches. A lead holds only if the leader executes perfectly.</p></div>
+  <div class="card"><span class="pill">Reason 2</span><h4>Distillation</h4><p>“Nobody planned” for distillation to work this well. It puts strong capability into small models, which benefits open source and serving at scale.</p></div>
+  <div class="card"><span class="pill">Reason 3</span><h4>People choose</h4><p>Researchers, customers and dealmakers deliberately push toward a more balanced outcome. Many joined MSL to give AI to billions of people.</p></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h4>Mark’s safety argument for diversity</h4><p>Many models from many companies, widely available, act as checks and balances. A few strong models held by a couple of companies is “a riskier configuration”. Mark also praises recent NVIDIA moves supporting open source, and OpenRouter as infrastructure for a diverse ecosystem. Alex adds that benchmark leaderboards hide real differences in “texture” between models, and that developers need a “wine sommelier” level of understanding.</p></div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“there are going to probably be a small handful of companies that have the ability to build frontier superintelligence.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=3959s" target="_blank" rel="noopener">▶ 1:05:59</a><span class="tag">Strategy</span></figcaption></figure><figure class="quote m"><blockquote>“not like just having a couple of good models that are only in a couple companies&#x27; hands.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5823s" target="_blank" rel="noopener">▶ 1:37:03</a><span class="tag">Competition</span></figcaption></figure><figure class="quote j"><blockquote>“There&#x27;s an anti-hegemonic force in the phenomenon of distilling a model.”</blockquote><figcaption><span class="who">John Collison</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5931s" target="_blank" rel="noopener">▶ 1:38:51</a><span class="tag">Competition</span></figcaption></figure><figure class="quote a"><blockquote>“really small models today are like, you know, much more powerful than the biggest models a year ago or 2 years ago.”</blockquote><figcaption><span class="who">Alexandr Wang</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=5969s" target="_blank" rel="noopener">▶ 1:39:29</a><span class="tag">Competition</span></figcaption></figure></div>
+</section>
+
+<section id="msl">
+ <h2><span class="n">12 · ORG DESIGN</span>Inside Meta Superintelligence Labs</h2>
+ <div class="grid2">
+  <div>
+   <h3>Timeline</h3>
+   <div class="timeline">
+    <div class="tl"><div class="d">2023–2024</div><div class="e">The Prometheus and Hyperion clusters are planned under the Llama programme.</div></div>
+    <div class="tl"><div class="d">4 APR 2025</div><div class="e">Llama 4 launches. Meta is “not happy with the trajectory”.</div></div>
+    <div class="tl"><div class="d">~20–21 APR 2025</div><div class="e">Mark starts calling people for advice and WhatsApps Alex. They talk for 44 minutes, and two days later Alex sends a memo: talent density first.</div></div>
+    <div class="tl"><div class="d">MID-2025</div><div class="e">Meta invests in Scale AI (49%). Alex, Nat Friedman and Daniel Gross join. Mark clears his calendar for 1–2 months to recruit. The “supernova” forms.</div></div>
+    <div class="tl"><div class="d">AUG 2025</div><div class="e">Muse Wonder planning begins (offsite presentation).</div></div>
+    <div class="tl"><div class="d">DEC 2025</div><div class="e">Muse Spark pre-train completes. At the Hawaii exec offsite, Meta commits $100–200B.</div></div>
+    <div class="tl"><div class="d">2026 (date not stated)</div><div class="e">Muse launches as a “home run”. Spark 1 → 1.3. Muse Gadgets and HomeLink ship.</div></div>
+    <div class="tl"><div class="d">MAY → SEP 2026</div><div class="e">Stripe Sessions agentic-commerce announcements, then usage goes “vertical” in September.</div></div>
+    <div class="tl"><div class="d">OCT 2026</div><div class="e">Muse Wonder and Wonder Full launch. MSL is a little over a year old.</div></div>
+   </div>
+  </div>
+  <div>
+   <h3>The operating principles</h3>
+   <div class="card"><ul>
+    <li><b>Talent density</b> over headcount, with lots of compute per researcher.</li>
+    <li><b>A full reboot</b>, decided while recruiting, because top people wanted to start fresh. Strong people from Llama and FAIR were still brought in.</li>
+    <li><b>A flat structure</b> (close to 200 direct reports in theory). The point is the “absence of non-technical managers.”</li>
+    <li><b>Stay technical</b>: use the agents and write code. Managers who stop doing hands-on work fall behind quickly.</li>
+    <li><b>No deadlines</b>, relying on “insecure overachievers” who push themselves. Alex records their pessimistic forecasts and plays them back three months later.</li>
+    <li><b>Hire people who really care</b> and let them argue. People need to feel ownership.</li>
+    <li><b>A CEO in the details</b>: Mark rearranges the rest of the company (infrastructure, data centres) around MSL. Global optimization instead of local inertia.</li>
+   </ul></div>
+   <h3>John’s “4 things most CEOs wouldn’t do”</h3>
+   <div class="card"><ol><li>Publicly calling the previous effort not good enough, and rebooting it.</li><li>Paying “ungodly amounts” for talent, including 49% of Scale.</li><li>Hiring a lab head who had never trained a frontier model.</li><li>Clearing the CEO’s calendar for two months to recruit.</li></ol></div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:16px"><h4>The anecdote that showed a reboot was needed</h4><p>In one of Alex’s first meetings, a leader from the existing effort argued that consumers didn’t need a reasoning model. Alex’s reaction was “Oh, no, I’ve joined the wrong company”, and he called Nat right after. The lesson he drew was that leadership needed to be far more “AI-pilled”. Once Mark was, the rest of the leadership followed. Alex cites Adam Mosseri’s personal setup of vibe-coded mini-apps. Separately, Mark mentions bringing in Kunal Shah (founder of CRED) to run WhatsApp and push commerce in India.</p></div>
+ <div class="qgrid"><figure class="quote m"><blockquote>“quite famously, we were not happy with the trajectory that we were on with Llama 4.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1013s" target="_blank" rel="noopener">▶ 0:16:53</a><span class="tag">MSL</span></figcaption></figure><figure class="quote m"><blockquote>“talent density is the thing that matters.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=1949s" target="_blank" rel="noopener">▶ 0:32:29</a><span class="tag">MSL</span></figcaption></figure><figure class="quote m"><blockquote>“We&#x27;re not peanut buttering it across a lot of competing efforts.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2030s" target="_blank" rel="noopener">▶ 0:33:50</a><span class="tag">MSL</span></figcaption></figure><figure class="quote m"><blockquote>“The research team is less than 200 people.”</blockquote><figcaption><span class="who">Mark Zuckerberg</span><a class="ts" href="https://www.youtube.com/watch?v=XfdIhd1g6EI&t=2094s" target="_blank" rel="noopener">▶ 0:34:54</a><span class="tag">MSL</span></figcaption></figure></div>
+</section>
+
+<section id="trends">
+ <h2><span class="n">13 · OUTLOOK</span>Future trends signalled in the conversation</h2>
+ <p class="sub">My synthesis of where the speakers think things are going. Each trend is tied to what was actually said.</p>
+ <div class="grid2">
+  <div class="trend"><div class="ic">🧠</div><div><h4>Memory moves into the model</h4><p>Agent memory shifts from harness tricks (compaction, retrieval files) to model-native skills that are trained and benchmarked. Expect “memory benches” to become a competitive axis.</p><div class="src">Active memory · Memory Bench · OpenClaw critique</div></div></div>
+  <div class="trend"><div class="ic">🧩</div><div><h4>Products get thinner; the model is the product</h4><p>Differentiation moves into post-training: personality, when to be proactive, discretion. UI matters less. Model and effort pickers disappear from consumer apps.</p><div class="src">“the model is the product” · no selectors</div></div></div>
+  <div class="trend"><div class="ic">⏩</div><div><h4>Shorter gaps between model generations</h4><p>With the pipeline in place, the time between bigger models shortens. RL recipes improve so fast that point releases feel like new pre-trains.</p><div class="src">“will now start to compress” · Spark 1→1.3</div></div></div>
+  <div class="trend"><div class="ic">🧑‍💻</div><div><h4>Everyone codes without knowing it</h4><p>Agents quietly write the pipelines users need (e.g. video processing for MMA coaching). Code becomes an invisible means to an end.</p><div class="src">Mark’s MMA example</div></div></div>
+  <div class="trend"><div class="ic">🛒</div><div><h4>Agents as economic actors</h4><p>Agents hold their own accounts, businesses run their own agents, and direct APIs replace browsing. Commerce grows rather than just shifting channels. Businesses that opt out “end up feeling sad.”</p><div class="src">Instacart story · Stripe stats vertical in Sept</div></div></div>
+  <div class="trend"><div class="ic">👓</div><div><h4>Life after the app store</h4><p>Glasses become fully multimodal, and the AI generates interfaces as needed instead of you installing apps. Gadgets and home devices extend the agent’s reach.</p><div class="src">Glasses · Muse Gadgets · HomeLink</div></div></div>
+  <div class="trend"><div class="ic">🔒</div><div><h4>Privacy and discretion as core features</h4><p>Dedicated VMs per agent, plus models trained to reveal as little about you as possible while acting for you.</p><div class="src">Dedicated VM · restaurant/allergy example</div></div></div>
+  <div class="trend"><div class="ic">🌐</div><div><h4>A many-model world</h4><p>Distillation, execution swings and talent choices keep several labs at the frontier. Model routers (OpenRouter) and a “sommelier” level of understanding matter more as models specialize.</p><div class="src">Winner-take-all discussion</div></div></div>
+  <div class="trend"><div class="ic">⚡</div><div><h4>Compute as the moat, and a hedge</h4><p>Multi-gigawatt single clusters define lab strength. Owned infrastructure keeps its value (H100s worth more over time) and can be resold if needed.</p><div class="src">Prometheus · Hyperion · $15B/GW-yr</div></div></div>
+  <div class="trend"><div class="ic">📊</div><div><h4>Internal evals replace leaderboards</h4><p>Labs optimize for their own product evals and generalization gaps (“big model smell”) rather than saturated public benchmarks.</p><div class="src">ID vs OOD metric · 2% spreadsheet</div></div></div>
+  <div class="trend"><div class="ic">🎙️</div><div><h4>Voice in, visual out</h4><p>Dictation becomes the main way to give input, while information comes back visually. Better conversation timing makes voice agents usable.</p><div class="src">Voice discussion · college-student “word vomit”</div></div></div>
+  <div class="trend"><div class="ic">🏢</div><div><h4>AI-pilled organizations</h4><p>Flat, technical, deadline-free teams built for talent density, and companies reorganized around AI from the top. Leaders who don’t use the tools fall behind.</p><div class="src">MSL principles · Mosseri example</div></div></div>
+ </div>
+</section>
+
+<section id="sources">
+ <h2><span class="n">14 · SOURCES</span>Watch it, read the official transcript</h2>
+ <p class="sub">Every quote on this page is copied exactly from the episode captions, and every timestamp opens the video at that moment. Speaker labels are my inference from the conversation. For the full text, use the publisher’s transcript.</p>
+ <div class="grid2">
+  <div class="card"><h4>Video</h4><p><a href="https://www.youtube.com/watch?v=XfdIhd1g6EI" target="_blank" rel="noopener">Cheeky Pint: Zuckerberg’s $100 Billion Bet</a> on YouTube, 2h 14m.</p></div>
+  <div class="card"><h4>Official transcript</h4><p><a href="https://cheekypint.substack.com/p/muse-wonder-zuckerberg-and-wangs" target="_blank" rel="noopener">Cheeky Pint on Substack</a>.</p></div>
+ </div>
+</section>
+</main>
+<footer><div class="wrap">Source: <a href="https://www.youtube.com/watch?v=XfdIhd1g6EI" target="_blank" rel="noopener">Cheeky Pint, “Zuckerberg’s $100 Billion Bet”</a> (YouTube, 12 Oct 2026). Analysis by <a href="/">Bharat</a>. Quotes are taken exactly from the captions, with speaker labels inferred from the conversation. The comparison table reflects only claims made in the episode.</div></footer>
+
+<script>
+(function(){
+  const root=document.documentElement;
+  try{const t=localStorage.getItem('cp-theme'); if(t) root.dataset.theme=t;}catch(e){}
+  document.getElementById('themeBtn').onclick=()=>{
+    const dark = root.dataset.theme ? root.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark?'light':'dark';
+    try{localStorage.setItem('cp-theme',root.dataset.theme);}catch(e){}
+  };
+  const S=null, fmt=s=>`${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const yt=t=>`https://www.youtube.com/watch?v=${DATA.vid}&t=${t}s`;
+  //TX-END
+  // nav highlight
+  const links=[...document.querySelectorAll('nav.toc a')]; const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  addEventListener('scroll',()=>{let k=0; secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<120)k=i}); links.forEach((a,i)=>a.classList.toggle('on',i===k));},{passive:true});
+})();
+</script>
+</body>
+</html>
