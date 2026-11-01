@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ಯುಪಿಐ ಉಚಿತವಾದರೆ, ಖರ್ಚು ಯಾರದ್ದು? — ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು</title>
+<meta name="description" content="ನಿಖಿಲ್ ಕಾಮತ್ ಅವರ ಡಬ್ಲ್ಯೂಟಿಎಫ್ ಈಸ್ ಪೇಮೆಂಟ್ಸ್ ಸಂಚಿಕೆಯ ಕನ್ನಡ ಟಿಪ್ಪಣಿ: ಯುಪಿಐ ಪಾವತಿ ಹೇಗೆ ಸಾಗುತ್ತದೆ, ಅದರ ಖರ್ಚು ಯಾರು ಭರಿಸುತ್ತಾರೆ, ಕಾರ್ಡ್ ಶುಲ್ಕ, ಶೂನ್ಯ ಎಂಡಿಆರ್ ಮತ್ತು ಎಐ ಏಜೆಂಟ್‌ಗಳು.">
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #5b5b55;
+    --rule: #e6e3d9;
+    --link: #0969da;
+    --mark: #fff3a0;
+    --callout-bg: #eef4fa;
+    --callout-bar: #5684d6;
+    --tldr-bg: #fbf6e4;
+    --tldr-bar: #c8a93a;
+    --ann-bg: #f4f1e8;
+    --note-bg: #fef6e7;
+    --note-bar: #a37a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font: 16px/1.75 "Tiro Kannada", "Noto Sans Kannada", "Nirmala UI", "Kannada Sangam MN", "Kedage", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 56px 48px 72px; }
+  .eyebrow {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  h1 {
+    font: 600 36px/1.35 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    letter-spacing: -0.005em;
+    margin: 0 0 14px;
+  }
+  .meta { font-size: 13px; color: var(--muted); margin: 0 0 22px; line-height: 1.6; }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .meta .dot { margin: 0 8px; color: var(--rule); }
+  .source-banner {
+    background: var(--note-bg);
+    border-left: 3px solid var(--note-bar);
+    padding: 12px 18px;
+    border-radius: 2px;
+    margin: 0 0 30px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4d3d0e;
+  }
+  .source-banner a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .source-banner a:hover { text-decoration: underline; }
+  .tldr {
+    background: var(--tldr-bg);
+    border-left: 3px solid var(--tldr-bar);
+    padding: 18px 22px 14px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  .tldr h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a6a1a;
+    margin: 0 0 12px;
+  }
+  .tldr ul { margin: 0; padding: 0 0 0 18px; }
+  .tldr li { margin: 6px 0; font-size: 15px; line-height: 1.75; }
+  .columns {
+    columns: 2;
+    column-gap: 2.25rem;
+    column-fill: balance;
+    column-rule: 1px solid var(--rule);
+  }
+  .columns > section { break-inside: avoid-column; margin: 0 0 18px; }
+  .columns h2 {
+    font: 600 20px/1.4 "Tiro Kannada", "Noto Serif Kannada", "Kannada Sangam MN", Charter, Georgia, serif;
+    margin: 0 0 10px;
+  }
+  .columns p { margin: 0 0 12px; text-align: justify; }
+  .columns mark { background: var(--mark); padding: 0 2px; border-radius: 1px; }
+  .columns sup { font-size: 10px; vertical-align: super; line-height: 0; margin-left: 1px; }
+  .columns sup a { color: var(--link); text-decoration: none; font-weight: 600; }
+  .columns blockquote.pull {
+    break-inside: avoid;
+    background: #fff;
+    border-left: 3px solid #1a1a1a;
+    padding: 12px 16px;
+    margin: 10px 0 14px;
+    font: italic 15px/1.55 Charter, Georgia, serif;
+    color: #2a2a24;
+    border-radius: 2px;
+  }
+  .columns blockquote.pull .gloss {
+    display: block;
+    margin-top: 8px;
+    font: 400 14px/1.7 "Tiro Kannada", "Noto Sans Kannada", "Kannada Sangam MN", sans-serif;
+    color: #4a4a42;
+    font-style: normal;
+  }
+  .annotations { margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid var(--rule); }
+  .annotations h2 {
+    font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .annotations ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.25rem; }
+  .annotations li {
+    break-inside: avoid;
+    background: var(--ann-bg);
+    padding: 10px 12px;
+    margin: 0 0 10px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.75;
+    display: flex;
+    gap: 10px;
+  }
+  .annotations .ann-num {
+    font: 600 12px/1.4 Charter, Georgia, serif;
+    color: #7a6a1a;
+    min-width: 18px;
+  }
+  .annotations a { color: var(--link); text-decoration: none; }
+  .annotations a:hover { text-decoration: underline; }
+  .footer {
+    margin: 48px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer a { color: var(--link); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  @media (max-width: 860px) {
+    .page { padding: 32px 22px 48px; }
+    h1 { font-size: 28px; }
+    .columns, .annotations ol { columns: 1; column-rule: none; }
+  }
+  @media print { body { background: #fff; } .page { padding: 24px; max-width: none; } a { color: inherit; text-decoration: none; } }
+  .back { display: inline-block; font: 500 12px/1 -apple-system, sans-serif; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; margin-bottom: 28px; }
+  .back:hover { color: var(--ink); }
+  .columns figure.shot { break-inside: avoid; margin: 6px 0 16px; text-align: center; }
+  .columns figure.shot img { display: block; margin: 0 auto; width: auto; max-width: 100%; max-height: 460px; height: auto; border-radius: 8px; border: 1px solid #ddd; }
+  .columns figure.shot figcaption { margin-top: 8px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+  .columns a { color: var(--link); text-decoration: none; }
+  .columns a:hover { text-decoration: underline; }
+  .columns a.cta { display: inline-block; background: #c2410c; color: #fff; padding: 12px 16px; border-radius: 7px; font-weight: 600; text-decoration: none; }
+</style>
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="/chintane/">← ಚಿಂತನೆ</a>
+    <p class="eyebrow">ವೀಡಿಯೋ ಸಂಶೋಧನಾ ಟಿಪ್ಪಣಿಗಳು · ನವೆಂಬರ್ 1, 2026</p>
+    <h1>ಯುಪಿಐ ಉಚಿತವಾದರೆ, ಅದರ ಖರ್ಚನ್ನು ಯಾರು ಭರಿಸುತ್ತಾರೆ?</h1>
+    <p class="meta">
+      <strong>ಡಬ್ಲ್ಯೂಟಿಎಫ್ ಈಸ್ ಪೇಮೆಂಟ್ಸ್? · ನಿಖಿಲ್ ಕಾಮತ್</strong>
+      <span class="dot">·</span>ಸುಮಾರು 4 ಗಂಟೆ
+      <span class="dot">·</span><a href="https://www.youtube.com/watch?v=hBvInWQWpZ0" rel="noopener">ಪೂರ್ಣ ಸಂಚಿಕೆ ಯೂಟ್ಯೂಬ್‌ನಲ್ಲಿ →</a>
+      <span class="dot">·</span><a href="/2026/11/01/wtf-is-payments-upi-who-pays.html">ಇಂಗ್ಲಿಷ್ ಆವೃತ್ತಿ →</a>
+    </p>
+
+    <div class="source-banner">
+      ಇದು ನನ್ನ <a href="/2026/11/01/wtf-is-payments-upi-who-pays.html">ಇಂಗ್ಲಿಷ್ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್‌ನ</a> ಕನ್ನಡ ಆವೃತ್ತಿ. ಅಂಕಿಅಂಶಗಳು ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಹೇಳಿದಂತೆಯೇ ಇವೆ; ನಾನು ಅವನ್ನು ಬೇರೆ ಮೂಲಗಳೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿಲ್ಲ. ಪ್ರತಿ ಭಾಗದ ವಿವರ, ಉಲ್ಲೇಖಗಳು ಮತ್ತು ಪೂರ್ಣ ಉಪಶೀರ್ಷಿಕೆಗಳು ಇರುವ <a href="/explainers/wtf-is-payments/" target="_blank" rel="noopener">ದೃಶ್ಯ ವಿವರಣೆ (visual explainer)</a> ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ.
+    </div>
+
+    <div class="tldr">
+      <h2>ಸಂಕ್ಷಿಪ್ತ ಸಾರಾಂಶ</h2>
+      <ul>
+        <li>ಯುಪಿಐ ನಮಗೆ ಉಚಿತ, ವ್ಯವಸ್ಥೆಗೆ ಅಲ್ಲ. ಒಂದು ₹100 ವರ್ಗಾವಣೆಗೆ ಒಟ್ಟು ಸುಮಾರು 25 ಬೇಸಿಸ್ ಪಾಯಿಂಟ್ (basis points, ಅಂದರೆ 0.25%) ಖರ್ಚಾಗುತ್ತದೆ. ಅದನ್ನು ಹಣ ಕಳುಹಿಸುವವರ ಬ್ಯಾಂಕ್ ಭರಿಸುತ್ತದೆ.</li>
+        <li>ಫೋನ್‌ಪೇ ನಮ್ಮ ಹಣವನ್ನು ಮುಟ್ಟುವುದೇ ಇಲ್ಲ. ಅದು ಸೂಚನೆ ಮಾತ್ರ ಕಳುಹಿಸುತ್ತದೆ; ಹಣ ಚಲಿಸುವುದು ಬ್ಯಾಂಕುಗಳ ನಡುವೆ.</li>
+        <li>"ಯಶಸ್ವಿ" ಎಂದು ತೋರಿಸಿದಾಗ ಹಣ ಇನ್ನೂ ಚಲಿಸಿರುವುದಿಲ್ಲ. ಬ್ಯಾಂಕುಗಳು ಆರ್‌ಬಿಐ ಮೂಲಕ ದಿನಕ್ಕೆ ಸುಮಾರು 10 ಬಾರಿ ಲೆಕ್ಕ ಇತ್ಯರ್ಥ (settlement) ಮಾಡುತ್ತವೆ.</li>
+        <li>ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ ಶುಲ್ಕ 1.85% ನಲ್ಲಿ ಸುಮಾರು 1.45% ಕಾರ್ಡ್ ನೀಡಿದ ಬ್ಯಾಂಕಿಗೆ ಹೋಗುತ್ತದೆ.</li>
+        <li>ಶೂನ್ಯ ಎಂಡಿಆರ್ (zero MDR) ಮತ್ತು 30% ಮಾರುಕಟ್ಟೆ ಪಾಲಿನ ಮಿತಿಯ ಬಗ್ಗೆ ಫೋನ್‌ಪೇ, ರೇಜರ್‌ಪೇ ಮತ್ತು ಎನ್‌ಪಿಸಿಐ ನಡುವೆ ಒಮ್ಮತ ಮೂಡಲಿಲ್ಲ.</li>
+      </ul>
+    </div>
+
+    <div class="columns">
+
+      <section>
+        <h2>ಒಂದು ₹100 ಪಾವತಿಯ ಹಿಂದೆ</h2>
+        <p><a href="https://x.com/nikhilkamathcio" rel="noopener">ನಿಖಿಲ್ ಕಾಮತ್</a> ಅವರ ಇತ್ತೀಚಿನ ಡಬ್ಲ್ಯೂಟಿಎಫ್ ಸಂಚಿಕೆ ಪಾವತಿಗಳ ಬಗ್ಗೆ ನಾಲ್ಕು ಗಂಟೆಗಳ ಚರ್ಚೆ. <a href="https://www.phonepe.com" rel="noopener">ಫೋನ್‌ಪೇಯ</a> ಸಮೀರ್ ನಿಗಮ್, <a href="https://razorpay.com" rel="noopener">ರೇಜರ್‌ಪೇಯ</a> <a href="https://x.com/harshilmathur" rel="noopener">ಹರ್ಷಿಲ್ ಮಾಥುರ್</a> ಮತ್ತು <a href="https://www.npci.org.in" rel="noopener">ಎನ್‌ಪಿಸಿಐನ</a> ಸೋಹಿನಿ ರಾಜೋಲಾ ಅವರನ್ನು ಆಹ್ವಾನಿಸಿ, ಭಾರತದ ಪಾವತಿ ವ್ಯವಸ್ಥೆಯ ಬಗ್ಗೆ ಬಹಳ ಕುತೂಹಲಕಾರಿ ಮಾತುಕತೆ ನಡೆಸುತ್ತಾರೆ. ನಾನು ಬಹುತೇಕ ಎಲ್ಲದಕ್ಕೂ <a href="https://en.wikipedia.org/wiki/Unified_Payments_Interface" rel="noopener">ಯುಪಿಐ</a> ಮೂಲಕವೇ ಹಣ ಕೊಡುತ್ತೇನೆ, ಯಾರೂ ನನ್ನಿಂದ ಶುಲ್ಕ ಪಡೆಯುವುದಿಲ್ಲ. ಹಾಗಾದರೆ ಖರ್ಚು ಯಾರದ್ದು? ಈಗ ಸರ್ಕಾರವೂ ಯುಪಿಐ ಅನ್ನು ನಿಯಂತ್ರಿಸಲು ಮತ್ತು ಅದಕ್ಕೆ ಶುಲ್ಕ ವಿಧಿಸಲು ಮುಂದಾಗಿದೆ. ಹಾಗಾಗಿ ಸಂಚಿಕೆಯ ಪಠ್ಯ ಪ್ರತಿ (transcript) ತೆಗೆದು, ನನ್ನ ವಿವರಣಾ ಪರಿಕರದ (explainer tool) ಮೂಲಕ ಇದನ್ನು ಒಂದು ದೀರ್ಘ ದೃಶ್ಯ ಪುಟವಾಗಿ ಮಾಡಿದೆ.</p>
+        <p>ನನಗೆ ಅತ್ಯಂತ ಉಪಯುಕ್ತವಾದ ಭಾಗ, ಒಂದು ₹100 ವರ್ಗಾವಣೆ ವ್ಯವಸ್ಥೆಯ ಮೂಲಕ ಹೇಗೆ ಸಾಗುತ್ತದೆ ಎಂದು ಹರಿವಿನ ನಕ್ಷೆಯ (flowchart) ಮೂಲಕ ವಿವರಿಸಿದ ಒಂದು ಗಂಟೆ. ಈ ಚಕ್ರದಲ್ಲಿ <mark>ಫೋನ್‌ಪೇ ನಿಮ್ಮ ಹಣವನ್ನು ಎಂದೂ ಮುಟ್ಟುವುದಿಲ್ಲ</mark>. ಅದು ತನ್ನ ಪ್ರಾಯೋಜಕ ಬ್ಯಾಂಕಿಗೆ (sponsor bank, ಅಥವಾ PSP ಬ್ಯಾಂಕ್) ಒಂದು ಸೂಚನೆ ಕಳುಹಿಸುತ್ತದೆ. ಪ್ರಾಯೋಜಕ ಬ್ಯಾಂಕ್ ಅದನ್ನು ಕೇಂದ್ರ ಸಂಪರ್ಕ ವ್ಯವಸ್ಥೆಯಾದ (central switch) ಎನ್‌ಪಿಸಿಐಗೆ ತಲುಪಿಸುತ್ತದೆ. ಎನ್‌ಪಿಸಿಐ ನಿಮ್ಮ ಬ್ಯಾಂಕಿಗೆ ಪಿನ್ (PIN) ಪರಿಶೀಲಿಸಿ ಖಾತೆಯಿಂದ ಹಣ ಕಡಿತ (debit) ಮಾಡಲು ಹೇಳುತ್ತದೆ; ಹಣ ಪಡೆಯುವವರ ಬ್ಯಾಂಕ್ ಆ ಕಡೆ ಹಣ ಜಮಾ (credit) ಮಾಡುತ್ತದೆ. ಹರ್ಷಿಲ್ ಲೆಕ್ಕ ಹಾಕಿದಂತೆ ಒಂದು ಪಾವತಿಗೆ ಸುಮಾರು ಹತ್ತು ತಾಂತ್ರಿಕ ಕರೆಗಳು (API calls) ನಡೆಯುತ್ತವೆ, ಎಲ್ಲವೂ ಮಿಲಿಸೆಕೆಂಡುಗಳ ಒಳಗೆ.</p>
+        <figure class="shot">
+          <a href="/explainers/wtf-is-payments/#screens" target="_blank" rel="noopener"><img src="/explainers/wtf-is-payments/frames/3331.jpg" alt="ಸಂಚಿಕೆಯ ರೇಖಾಚಿತ್ರ: ಹಣ ಕಳುಹಿಸುವವರ ಆ್ಯಪ್, ಪ್ರಾಯೋಜಕ ಬ್ಯಾಂಕ್, ಎನ್‌ಪಿಸಿಐ, ಕಳುಹಿಸುವವರ ಬ್ಯಾಂಕ್ ಮತ್ತು ಪಡೆಯುವವರ ಬ್ಯಾಂಕ್ ಮೂಲಕ ಸಾಗುವ ಯುಪಿಐ ಪಾವತಿ"></a>
+          <figcaption>ಸಂಚಿಕೆಯಲ್ಲಿ ತೋರಿಸಿದ ಯುಪಿಐ ಸರಪಳಿ (55:31).</figcaption>
+        </figure>
+        <p>ಮಧ್ಯದಲ್ಲಿ ಪ್ರಾಯೋಜಕ ಬ್ಯಾಂಕ್ ಇರುವುದಕ್ಕೆ ಕಾರಣವಿದೆ. ತನಗೆ ಏನೂ ಗೊತ್ತಿಲ್ಲದ ನೂರಾರು ಆ್ಯಪ್‌ಗಳಿಗೆ (apps) ಎನ್‌ಪಿಸಿಐ ನೇರವಾಗಿ ತೆರೆದುಕೊಳ್ಳುವುದು ನಿಯಂತ್ರಕ ಸಂಸ್ಥೆಗೆ (regulator) ಇಷ್ಟವಿರಲಿಲ್ಲ. ಹಾಗಾಗಿ ಪ್ರತಿಯೊಂದು ಆ್ಯಪ್ ಒಂದು ಬ್ಯಾಂಕಿನ ಮೂಲಕವೇ ಒಳಬರಬೇಕು.</p>
+      </section>
+
+      <section>
+        <h2>ಹಾಗಾದರೆ ಖರ್ಚು ಯಾರದ್ದು?</h2>
+        <p>ಅವರು ಕೊಟ್ಟ ಉತ್ತರ: <mark>ನಿಮ್ಮ ಬ್ಯಾಂಕ್</mark>. ₹100 ವರ್ಗಾವಣೆಗೆ ಇಡೀ ವ್ಯವಸ್ಥೆಗೆ ಒಟ್ಟು ಸುಮಾರು 25 ಬೇಸಿಸ್ ಪಾಯಿಂಟ್ ಖರ್ಚಾಗುತ್ತದೆ. ಹಣ ಕಳುಹಿಸುವವರ ಬ್ಯಾಂಕ್ ಆ್ಯಪ್‌ನ ಪ್ರಾಯೋಜಕ ಬ್ಯಾಂಕಿಗೆ ಪ್ರತಿ ವರ್ಗಾವಣೆಗೆ 15 ರಿಂದ 50 ಪೈಸೆ ಕೊಡುತ್ತದೆ (ಗರಿಷ್ಠ 50 ಪೈಸೆ). ಆ ಹಣ ವಂಚನೆ ತಡೆ (fraud checks), ಸರ್ವರ್‌ಗಳು (servers) ಮತ್ತು ಲೆಕ್ಕ ಇತ್ಯರ್ಥದ ಖರ್ಚಿಗೆ ಹೋಗುತ್ತದೆ. ಫೋನ್‌ಪೇ ಒಂದೇ ಸುಮಾರು 30,000 ಸರ್ವರ್‌ಗಳನ್ನು ನಡೆಸುತ್ತದೆ. ಬ್ಯಾಂಕುಗಳು ಈ ಖರ್ಚನ್ನು ಒಪ್ಪಿಕೊಳ್ಳುತ್ತವೆ, ಏಕೆಂದರೆ ಯುಪಿಐನಿಂದ ಅವುಗಳಿಗೆ ಶಾಖೆ (branch), ಎಟಿಎಂ ಮತ್ತು ನಗದು ನಿರ್ವಹಣೆಯ ಖರ್ಚು ಉಳಿಯುತ್ತದೆ, ಮತ್ತು ಹಣ ಹೆಚ್ಚು ಕಾಲ ಅವುಗಳ ಖಾತೆಗಳಲ್ಲೇ ಇರುತ್ತದೆ.</p>
+        <p>ನನಗೆ ಇದುವರೆಗೆ ಸರಿಯಾಗಿ ಅರ್ಥವಾಗಿರದ ಇನ್ನೊಂದು ವಿಷಯ: <mark>"ಯಶಸ್ವಿ" (success) ಎಂಬ ಪರದೆ ಬಂದಾಗ ಹಣ ಚಲಿಸಿರುವುದಿಲ್ಲ</mark>. ಅದು ಲೆಕ್ಕಪುಸ್ತಕದ (ledger) ಒಂದು ನಮೂದು ಮಾತ್ರ. ಬ್ಯಾಂಕುಗಳು ಪರಸ್ಪರ ಕೊಡಬೇಕಾದ ಮೊತ್ತವನ್ನು ಚುಕ್ತಾ ಮಾಡಿ, ಆರ್‌ಬಿಐನಲ್ಲಿರುವ ತಮ್ಮ ಖಾತೆಗಳ ಮೂಲಕ ದಿನಕ್ಕೆ ಸುಮಾರು ಹತ್ತು ಬಾರಿ ಲೆಕ್ಕ ಇತ್ಯರ್ಥ (settlement) ಮಾಡುತ್ತವೆ. ಗರಿಷ್ಠ ದಟ್ಟಣೆಯ (peak) ಸಮಯದ ಸುಮಾರು 10 ಕೋಟಿ ಪಾವತಿಗಳು ಸುಮಾರು 800 ಇತ್ಯರ್ಥ ನಮೂದುಗಳಾಗಿ ಇಳಿಯುತ್ತವೆ ಎಂದು ಸೋಹಿನಿ ಹೇಳಿದರು.</p>
+      </section>
+
+      <section>
+        <h2>ಚರ್ಚೆ ಹೆಚ್ಚು ಕಾವೇರಿದ್ದು ಎಲ್ಲಿ</h2>
+        <p>ಎಲ್ಲ ವಿಷಯಗಳಲ್ಲೂ ಇದು ಸೌಹಾರ್ದ ಸಂವಾದವಾಗಿರಲಿಲ್ಲ. ಶೂನ್ಯ ಎಂಡಿಆರ್ (zero MDR), ಅಂದರೆ ಯುಪಿಐ ಪಾವತಿಗೆ ವ್ಯಾಪಾರಿಗಳು ಯಾವುದೇ ಶುಲ್ಕ ಕೊಡಬೇಕಿಲ್ಲ ಎಂಬ ನಿಯಮ, ಈ ವ್ಯವಸ್ಥೆಯನ್ನು ಕಟ್ಟಿದ ಖಾಸಗಿ ಕಂಪನಿಗಳಿಗೆ ಆದಾಯವಿಲ್ಲದಂತೆ ಮಾಡುತ್ತದೆ ಎಂದು ಸಮೀರ್ ಮತ್ತು ಹರ್ಷಿಲ್ ಇಬ್ಬರೂ ವಾದಿಸಿದರು. ಯುಪಿಐ ಆ್ಯಪ್‌ಗಳ ಮೇಲಿನ ಪ್ರಸ್ತಾವಿತ 30% ಮಾರುಕಟ್ಟೆ ಪಾಲಿನ ಮಿತಿಗೂ (market-share cap) ಅವರ ವಿರೋಧವಿತ್ತು; ಅದು ಗೆದ್ದವರನ್ನೇ ಶಿಕ್ಷಿಸುತ್ತದೆ ಎಂಬುದು ಅವರ ನಿಲುವು. ಇದು ಮಹತ್ವದ ಸಾರ್ವಜನಿಕ ಮೂಲಸೌಕರ್ಯ, ಒಂದೇ ಆ್ಯಪ್‌ನ ಕೈಯಲ್ಲಿ ಅತಿಯಾದ ಪಾಲು ಇರುವುದೇ ಒಂದು ಅಪಾಯ ಎಂಬ ಎನ್‌ಪಿಸಿಐ ನಿಲುವನ್ನು ಸೋಹಿನಿ ಬಿಟ್ಟುಕೊಡಲಿಲ್ಲ.</p>
+        <p>ಯಾರೂ ಸೋಲೊಪ್ಪಲಿಲ್ಲ. ಎರಡೂ ಕಡೆಯವರ ಮಾತಿನಲ್ಲಿ ಹುರುಳಿದೆ, ಒಂದು ಸಮತೋಲನ ಬೇಕು ಎಂಬುದು ನಿಖಿಲ್ ಅವರ ಅಭಿಪ್ರಾಯ. ನಿಯಂತ್ರಕ ಸಂಸ್ಥೆಯ ಪರ ಮತ್ತು ವಿರೋಧದ ಪಕ್ಷಗಳ ನಡುವಿನ ಈ ಚರ್ಚೆ ನೋಡಲು ತುಂಬಾ ಖುಷಿಯಾಯಿತು.</p>
+      </section>
+
+      <section>
+        <h2>ಕಾರ್ಡ್‌ಗಳು ಬೇರೆಯೇ ರೀತಿ ಕೆಲಸ ಮಾಡುತ್ತವೆ</h2>
+        <p>ನಮ್ಮಲ್ಲಿ ಹಲವರಿಗೆ ಗೊತ್ತಿಲ್ಲದ ಕೆಲವು ವಿಷಯಗಳನ್ನು ಕಾರ್ಡ್ ಭಾಗ ವಿವರಿಸಿತು. ಅಮೆಜಾನ್, ರೇಜರ್‌ಪೇ ಮೂಲಕ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ ಪಾವತಿ ಪಡೆದಾಗ ಸುಮಾರು 1.85% ಶುಲ್ಕ ಕೊಡುತ್ತದೆ. ರೇಜರ್‌ಪೇ ಇಟ್ಟುಕೊಳ್ಳುವುದು ಸುಮಾರು 10 ಬೇಸಿಸ್ ಪಾಯಿಂಟ್ ಮಾತ್ರ. <mark>ಸುಮಾರು 1.45% ಕಾರ್ಡ್ ನೀಡಿದ ಬ್ಯಾಂಕಿಗೆ ಹೋಗುತ್ತದೆ</mark>, ಬಡ್ಡಿರಹಿತ ಅವಧಿ ಮತ್ತು ಬಹುಮಾನ ಅಂಕಗಳ (rewards) ಖರ್ಚಿಗೆ. ಅದಕ್ಕಾಗಿಯೇ ಬ್ಯಾಂಕುಗಳು ವ್ಯಾಪಾರಿಗಳಿಗೆ ಕಡಿಮೆ ಬೆಲೆ ಕೊಡುವುದರಲ್ಲಿ ಅಲ್ಲ, ನಮಗೆ ಬಹುಮಾನ ಅಂಕಗಳನ್ನು ಕೊಡುವುದರಲ್ಲಿ ಪೈಪೋಟಿ ನಡೆಸುತ್ತವೆ.</p>
+        <p>ಪಾವತಿ ಗೇಟ್‌ವೇಗಳು (payment gateways) ನಿಗದಿತ ಮೊತ್ತದ ಬದಲು ಶೇಕಡಾವಾರು ಶುಲ್ಕ ಏಕೆ ವಿಧಿಸುತ್ತವೆ ಎಂಬುದನ್ನೂ ಹರ್ಷಿಲ್ ವಿವರಿಸಿದರು. ಒಬ್ಬ ವ್ಯಾಪಾರಿ ಹಣ ತೆಗೆದುಕೊಂಡು ನಾಪತ್ತೆಯಾದರೆ ಗ್ರಾಹಕರಿಗೆ ಹಣ ವಾಪಸ್ (refund) ಕೊಡುವ ಹೊಣೆ ಗೇಟ್‌ವೇ ಮೇಲೆ ಬೀಳುತ್ತದೆ. ಹಾಗಾಗಿ ಶುಲ್ಕವನ್ನು ಅಪಾಯದ ಆಧಾರದ ಮೇಲೆ ನಿಗದಿಪಡಿಸಲಾಗುತ್ತದೆ.</p>
+        <figure class="shot">
+          <a href="/explainers/wtf-is-payments/#screens" target="_blank" rel="noopener"><img src="/explainers/wtf-is-payments/frames/6233.jpg" alt="ಸಂಚಿಕೆಯ ರೇಖಾಚಿತ್ರ: ವ್ಯಾಪಾರಿ, ಗೇಟ್‌ವೇ, ಸ್ವೀಕರಿಸುವ ಬ್ಯಾಂಕ್, ಕಾರ್ಡ್ ಜಾಲ, ಕಾರ್ಡ್ ನೀಡಿದ ಬ್ಯಾಂಕ್, ಒಟಿಪಿ ಪುಟ ಮತ್ತು ಅನುಮೋದನೆಯ ಮೂಲಕ ಸಾಗುವ ಕಾರ್ಡ್ ಪಾವತಿ"></a>
+          <figcaption>ಕಾರ್ಡ್ ಪಾವತಿಯ ಹರಿವು (1:43:53): ವ್ಯಾಪಾರಿ → ಗೇಟ್‌ವೇ → ಸ್ವೀಕರಿಸುವ ಬ್ಯಾಂಕ್ (acquiring bank) → ಕಾರ್ಡ್ ಜಾಲ (card network) → ಕಾರ್ಡ್ ನೀಡಿದ ಬ್ಯಾಂಕ್ (issuing bank) → ಒಟಿಪಿ (OTP) → ಅನುಮೋದನೆ (authorization).</figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>ಪಾವತಿ ದತ್ತಾಂಶ ಭಾರತದ ಬಗ್ಗೆ ಏನು ಹೇಳುತ್ತದೆ</h2>
+        <p>ಫೋನ್‌ಪೇಯ ದತ್ತಾಂಶದಿಂದ (data) ಸಮೀರ್ ಕೆಲವು ಕುತೂಹಲಕಾರಿ ಅಂಕಿಅಂಶಗಳನ್ನು ಕೊಟ್ಟರು. <mark>ಡಿಜಿಟಲ್ ಪಾವತಿಗಳಲ್ಲಿ 65–70% ಎರಡನೇ ಹಂತದ (Tier 2) ನಗರಗಳು ಮತ್ತು ಸಣ್ಣ ಊರುಗಳಿಂದ</mark> ಬರುತ್ತವೆ. ಆದರೂ ಆನ್‌ಲೈನ್ ಮಾರಾಟದ (e-commerce) ಖರ್ಚಿನ 70% ಇನ್ನೂ ಸುಮಾರು 1.5 ಕೋಟಿ ಬಳಕೆದಾರರಿಂದಲೇ ಬರುತ್ತದೆ ಎಂದು ಹರ್ಷಿಲ್ ಸೇರಿಸಿದರು. ಕೆಲವು ವರ್ಗಗಳ ಮೇಲೆ ಜಿಎಸ್‌ಟಿ 2–5% ಇಳಿದಾಗ ಆ ವರ್ಗಗಳಲ್ಲಿ ಖರ್ಚು 5.5–13% ಏರಿತು; ಜಿಎಸ್‌ಟಿ ಇಳಿಯದ ವರ್ಗಗಳಲ್ಲಿ ಬದಲಾವಣೆ −0.2% ಮಾತ್ರ.</p>
+        <p>ವಸ್ತು ಕೈಸೇರಿದ ಮೇಲೆ ನಗದು ಪಾವತಿ (cash on delivery) ಒಂದು ನಂಬಿಕೆಯ ಸಮಸ್ಯೆ ಎಂದು ಹರ್ಷಿಲ್ ವಿವರಿಸಿದರು. ಹೊಸದಾಗಿ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಖರೀದಿಸುವವರಿಗೆ ವಸ್ತು ಬಂದೇ ಬರುತ್ತದೆ ಎಂಬ ಖಾತ್ರಿ ಇರುವುದಿಲ್ಲ, ಅದಕ್ಕೇ ಅವರು ನಗದು ಕೊಡುತ್ತಾರೆ.</p>
+      </section>
+
+      <section>
+        <h2>ಪಾವತಿ ಮಾಡುವ ಎಐ ಏಜೆಂಟ್‌ಗಳು</h2>
+        <p>ಕೊನೆಯ ಭಾಗದಲ್ಲಿ ಎಐ ಏಜೆಂಟ್‌ಗಳು (AI agents) ನಮ್ಮ ಪರವಾಗಿ ಪಾವತಿ ಮಾಡುವ ವಿಷಯ ಬಂತು. ನನ್ನ ಕೆಲಸಕ್ಕೆ ಇದೇ ಹೆಚ್ಚು ಹತ್ತಿರದ ಭಾಗ. ಏಜೆಂಟ್‌ಗಳು ನಮಗಿಂತ ಬೇರೆ ರೀತಿ ಖರೀದಿಸುತ್ತವೆ ಎಂಬುದು ಹರ್ಷಿಲ್ ಅವರ ಅಭಿಪ್ರಾಯ: ಅವುಗಳಿಗೆ ಸಮಯವಿದೆ, ಪ್ರತಿಯೊಂದು ಪದವನ್ನೂ ಓದುತ್ತವೆ, ಬೇರೆ ಏಜೆಂಟ್‌ಗಳ ಜೊತೆ ಚೌಕಾಸಿ ಮಾಡಬಲ್ಲವು. ಹಾಗಾಗಿ ಪಾವತಿಯ ಹಂತವನ್ನು (checkout) ಈಗಲೇ ಅವುಗಳಿಗಾಗಿ ಕಟ್ಟಬೇಕು. ಟೋಕನ್ (token) ಖರ್ಚಿನಿಂದಾಗಿ ಇದು ಇಂದು ಲಾಭದಾಯಕವಲ್ಲ ಎಂಬುದು ಸಮೀರ್ ಅವರ ನಿಲುವು. ಯುಪಿಐ ಮೇಲೆ ಏಜೆಂಟ್ ಪಾವತಿಗಳಿಗೆ ಒಂದು ಚೌಕಟ್ಟು (framework) ಕಟ್ಟುತ್ತಿರುವುದಾಗಿ ಎನ್‌ಪಿಸಿಐ ಹೇಳುತ್ತದೆ.</p>
+        <p>ಎರಡನೇ ಭಾಗದಲ್ಲಿ ಸೆವೆನ್, <a href="https://dodopayments.com" rel="noopener">ಡೋಡೋ ಪೇಮೆಂಟ್ಸ್</a> ಮತ್ತು <a href="https://www.payglocal.in" rel="noopener">ಪೇಗ್ಲೋಕಲ್‌ನ</a> ಮೂವರು ಯುವ ಸಂಸ್ಥಾಪಕರು ಪಾವತಿ ಉಂಗುರಗಳು (payment rings), ದೇಶಗಳ ನಡುವಿನ (cross-border) ಪಾವತಿಗಳು ಮತ್ತು ಏಜೆಂಟ್ ವಂಚನೆಯ (agent fraud) ಬಗ್ಗೆ ಮಾತಾಡಿದರು. ಭಾರತದಲ್ಲಿ ಏಜೆಂಟ್ ಪಾವತಿಗಳು ವ್ಯಾಪಕವಾಗಿ ಬಳಕೆಗೆ ಬರಲು ಇನ್ನೂ ಕೆಲವು ವರ್ಷಗಳು ಬೇಕು ಎಂಬುದು ಅವರ ಅಭಿಪ್ರಾಯ.</p>
+      </section>
+
+      <section>
+        <h2>ದೃಶ್ಯ ವಿವರಣೆ (visual explainer)</h2>
+        <p>ಈ ಪುಟದಲ್ಲಿ ಸಂಚಿಕೆಯ ಪ್ರತಿ ಭಾಗದ ಸಣ್ಣ ಸಾರಾಂಶ, ಕಠಿಣ ಪದಗಳಿಗೆ ಸರಳ ವಿವರಣೆ, ಸಮಯಮುದ್ರೆಯ (timestamp) ಜೊತೆಗೆ 77 ಉಲ್ಲೇಖಗಳು, ಮುಖ್ಯ ಅಂಕಿಅಂಶಗಳು, ಚರ್ಚೆಗಳು ಮತ್ತು ಪರದೆಯ ಮೇಲೆ ತೋರಿಸಿದ ರೇಖಾಚಿತ್ರಗಳು (diagrams) ಇವೆ (ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ). ಪ್ರತಿ ಭಾಗದ ಕೆಳಗೆ ಪೂರ್ಣ ಉಪಶೀರ್ಷಿಕೆಗಳು (captions) ಇವೆ. ಉಪಶೀರ್ಷಿಕೆಗಳು ಯಾರು ಮಾತಾಡುತ್ತಿದ್ದಾರೆ ಎಂದು ಹೇಳುವುದಿಲ್ಲವಾದ್ದರಿಂದ, ಮಾತಾಡುವವರ ಹೆಸರುಗಳು ಸಂಭಾಷಣೆಯ ಹರಿವಿನಿಂದ ನಾನು ಮಾಡಿದ ಊಹೆ. ಸ್ಟೇಬಲ್‌ಕಾಯಿನ್ (stablecoin) ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಮೌಲ್ಯದ (market cap) ಚರ್ಚೆಗಳಲ್ಲಿ ಹಾಗೂ ಎರಡನೇ ಭಾಗದ ಕೆಲವು ಕಡೆ ಈ ಊಹೆಗಳು ದುರ್ಬಲ.</p>
+        <p><a class="cta" href="/explainers/wtf-is-payments/" target="_blank" rel="noopener">ದೃಶ್ಯ ವಿವರಣೆ ತೆರೆಯಿರಿ →</a></p>
+        <p>ನಾಲ್ಕು ಗಂಟೆ ಸಮಯವಿದ್ದರೆ <a href="https://www.youtube.com/watch?v=hBvInWQWpZ0" rel="noopener">ಪೂರ್ಣ ಸಂಚಿಕೆಯನ್ನು ಯೂಟ್ಯೂಬ್‌ನಲ್ಲಿ</a> ನೋಡಿ. ಡಬ್ಲ್ಯೂಟಿಎಫ್ ವೇದಿಕೆಯಲ್ಲಿ ನಿಖಿಲ್ ನಡೆಸಿದ ಅತ್ಯುತ್ತಮ ಸಂಚಿಕೆಗಳಲ್ಲಿ ಇದೂ ಒಂದು.</p>
+      </section>
+
+    </div>
+
+    <footer class="footer">
+      <span><a href="/2026/11/01/wtf-is-payments-upi-who-pays.html">ಇಂಗ್ಲಿಷ್ ಆವೃತ್ತಿ</a> · <a href="/chintane/">ಚಿಂತನೆ</a></span>
+      <span>ಬರೆದದ್ದು ನವೆಂಬರ್ 1, 2026 · ಅಂಕಿಅಂಶಗಳು ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಹೇಳಿದಂತೆ</span>
+    </footer>
+  </main>
+</body>
+</html>
