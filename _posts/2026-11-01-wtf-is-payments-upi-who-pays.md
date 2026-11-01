@@ -58,4 +58,4 @@ The page has every section of the episode with a short summary per beat, a plain
   <small style="color:#5b5b55;">Opens in a new tab. Every timestamp links back to the original video.</small>
 </p>
 
-If you have four hours, watch the [full episode on YouTube]. It is one of the best one Nikhil ever hosted on WTF platform (https://www.youtube.com/watch?v=hBvInWQWpZ0).
+If you have four hours, watch the [full episode on YouTube](https://www.youtube.com/watch?v=hBvInWQWpZ0). It is one of the best one Nikhil ever hosted on WTF platform.
