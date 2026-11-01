@@ -5,7 +5,7 @@ date: 2026-11-01 09:00:00 +0530
 tags: [payments, UPI, NPCI, PhonePe, Razorpay, India, visual explainer]
 ---
 
-[Nikhil Kamath](https://x.com/nikhilkamathcio)'s latest WTF episode is four hours on payments. He invited Sameer Nigam of [PhonePe](https://www.phonepe.com), [Harshil Mathur](https://x.com/harshilmathur) of [Razorpay](https://razorpay.com) and Sohini Rajola of [NPCI](https://www.npci.org.in) and drives a fascinating conversation on payments in India. I pay for almost everything with [UPI](https://en.wikipedia.org/wiki/Unified_Payments_Interface) and nobody charges me for it, so who is paying? Currently, the Indian government also moved to regulate and also try charging UPI. So I ran the explainer tool I have after pulling the transcripts and turned the episode into a long visual page and explainer whose link is shared below.
+[Nikhil Kamath](https://x.com/nikhilkamathcio)'s latest WTF episode is four hours discussion on payments. He invited Sameer Nigam of [PhonePe](https://www.phonepe.com), [Harshil Mathur](https://x.com/harshilmathur) of [Razorpay](https://razorpay.com) and Sohini Rajola of [NPCI](https://www.npci.org.in) and drives a fascinating conversation on payments in India. I pay for almost everything with [UPI](https://en.wikipedia.org/wiki/Unified_Payments_Interface) and nobody charges me for it, so who is paying? Currently, the Indian government also moved to regulate and also try charging UPI. So I ran the explainer tool I have after pulling the transcripts and turned the episode into a long visual page and explainer whose link is shared below.
 
 ## Following one ₹100 payment
 
